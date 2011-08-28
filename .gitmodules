@@ -1,0 +1,3 @@
+[submodule "eskimo"]
+	path = eskimo
+	url = git@github.com:paytonrules/Eskimo.git
