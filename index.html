@@ -3,11 +3,11 @@
   <canvas id='feed_the_quinn' width=1024 height=768 color="green"></canvas>
   <script src="script/jquery.min.js"></script>
   <script src="script/eskimo.min.js"></script>
+  <script src="script/feed_the_quinn.js"</script>
+  <script src="script/feed_the_quinn/assets.js"</script>
+  <script src="script/feed_the_quinn/state_machine.js"</script>
+  <script src="script/feed_the_quinn/title_screen.js"</script>
   <script>
-    FeedTheQuinn = function(assets) {
-      this.update = function(imageList) {
-      };
-    };
     Eskimo({updater: FeedTheQuinn,
             jquery: $}).start({canvas: $('#feed_the_quinn'),
                                document: document});
