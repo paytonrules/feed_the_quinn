@@ -35,7 +35,7 @@ describe("FeedTheQuinn.TitleScreen", function() {
     imageList = [];
 
     TitleScreen.load(fakeAssets);
-    TitleScreen.render(imageList);
+    TitleScreen.update(imageList);
 
     expect(imageList[0].name).toEqual('background');
     expect(imageList[0].location.x).toEqual(0);
