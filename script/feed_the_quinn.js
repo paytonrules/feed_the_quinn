@@ -1,11 +1,10 @@
 FeedTheQuinn = function(assets) {
-  var stateMachine;
+  var stateMachine = FeedTheQuinn.StateMachine(assets);
 
   function update(imageList) {
     stateMachine.update(imageList);
   };
-
-  stateMachine = FeedTheQuinn.StateMachine(assets);
+  
   this.update = update;
 };
 

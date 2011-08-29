@@ -2,18 +2,21 @@ describe("FeedTheQuinn.TitleScreen", function() {
   var TitleScreen, fakeAssets;
 
   fakeAssets = (function() { 
-    var assets = {};
+    var imageAssets = {};
+    
     return {
-      get: function(key) {
-        return assets[key];
-      },
-      load: function(key, src) {
-        assets[key] = src;
+      images: {
+        get: function(key) {
+          return imageAssets[key];
+        },
+        load: function(key, src) {
+          imageAssets[key] = src;
+        }
       },
       clear: function() {
-        assets = {};
+        imageAssets = {};
       }
-    }
+    };
   })();
   
   beforeEach(function() {
@@ -25,7 +28,7 @@ describe("FeedTheQuinn.TitleScreen", function() {
   it("loads the assets from the global assets map", function() {
     TitleScreen.load(fakeAssets);
 
-    expect(fakeAssets.get("background")).toEqual("backgroundImage.src");
+    expect(fakeAssets.images.get("background")).toEqual("backgroundImage.src");
   });
 
   it("adds the background to the image list", function() {

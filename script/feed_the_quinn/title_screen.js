@@ -1,6 +1,6 @@
 FeedTheQuinn.TitleScreen = {
   load: function(assets) {
-    assets.load('background', FeedTheQuinn.Assets['title']['background']);  // Turn this into an 'asset loader' methinks
+    assets.images.load('background', FeedTheQuinn.Assets['title']['background']);  // Turn this into an 'asset loader' methinks
   },
 
   render: function() {
