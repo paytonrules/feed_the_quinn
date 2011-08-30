@@ -2,8 +2,9 @@ describe("FeedTheQuinn.TitleScreen", function() {
   var TitleScreen, fakeAssets;
 
   fakeAssets = (function() { 
-    var imageAssets = {};
-    var soundAssets = {};
+    var imageAssets = {},
+        soundAssets = {},
+        mockBox;
     
     return {
       images: {
@@ -14,7 +15,7 @@ describe("FeedTheQuinn.TitleScreen", function() {
           imageAssets[key] = src;
         }
       },
-      jukebox: {
+      sounds: {
         get: function(key) {
           return soundAssets[key];
         },
@@ -32,6 +33,11 @@ describe("FeedTheQuinn.TitleScreen", function() {
     TitleScreen = require("../spec_helper").FeedTheQuinn.TitleScreen;
     fakeAssets.clear();
     FeedTheQuinn.Assets = {"title": {"background": "backgroundImage.src"}};
+    
+    mockBox = Eskimo.Jukebox('');
+    spyOn(Eskimo, "Jukebox").andReturn(mockBox);
+    spyOn(mockBox, "play");
+
   });
 
   it("loads the assets from the global assets map", function() {
@@ -55,7 +61,14 @@ describe("FeedTheQuinn.TitleScreen", function() {
     FeedTheQuinn.Assets = {"title": {"song": "song.mp3"}};
     TitleScreen.load(fakeAssets);
 
-    expect(fakeAssets.jukebox.get("song")).toEqual("song.mp3");
+    expect(fakeAssets.sounds.get("song")).toEqual("song.mp3");
+  });
+
+  it("uses a jukebox to play the song", function() {
+    TitleScreen.load(fakeAssets);
+    TitleScreen.update(imageList);
+
+    expect(mockBox.play).toHaveBeenCalled();
   });
 
 });
