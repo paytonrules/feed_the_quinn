@@ -3,6 +3,7 @@ describe("FeedTheQuinn.TitleScreen", function() {
 
   fakeAssets = (function() { 
     var imageAssets = {};
+    var soundAssets = {};
     
     return {
       images: {
@@ -11,6 +12,14 @@ describe("FeedTheQuinn.TitleScreen", function() {
         },
         load: function(key, src) {
           imageAssets[key] = src;
+        }
+      },
+      jukebox: {
+        get: function(key) {
+          return soundAssets[key];
+        },
+        load: function(key, src) {
+          soundAssets[key] = src;
         }
       },
       clear: function() {
@@ -41,4 +50,12 @@ describe("FeedTheQuinn.TitleScreen", function() {
     expect(imageList[0].location.x).toEqual(0);
     expect(imageList[0].location.y).toEqual(0);
   });
+
+  it("loads the title song from the assets", function() {
+    FeedTheQuinn.Assets = {"title": {"song": "song.mp3"}};
+    TitleScreen.load(fakeAssets);
+
+    expect(fakeAssets.jukebox.get("song")).toEqual("song.mp3");
+  });
+
 });
