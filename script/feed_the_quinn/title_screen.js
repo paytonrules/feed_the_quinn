@@ -12,7 +12,7 @@ FeedTheQuinn.TitleScreen = (function() {
       box.play('song');
 
       imageList.push({name: 'background',
-                     location: Eskimo.Point(0, 0)});
+                      location: Eskimo.Point(0, 0)});
     }
   };
 })();
