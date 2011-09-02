@@ -5,12 +5,12 @@ describe("FeedTheQuinn", function() {
     FeedTheQuinn = require("spec_helper").FeedTheQuinn;
   });
 
-  it("initializes the state machine with the assets", function() {
+  it("initializes the state machine with the assets and the screen", function() {
     spyOn(FeedTheQuinn, "StateMachine");
 
-    quinn = new FeedTheQuinn('assets');
+    quinn = new FeedTheQuinn('assets', 'screen');
 
-    expect(FeedTheQuinn.StateMachine).toHaveBeenCalledWith('assets');
+    expect(FeedTheQuinn.StateMachine).toHaveBeenCalledWith('assets', 'screen');
   });
 
   it("delegates subsequent updates to the state machine", function() {
@@ -18,11 +18,11 @@ describe("FeedTheQuinn", function() {
     spyOn(FeedTheQuinn, "StateMachine").andReturn(sm);
     spyOn(sm, "update");
 
-    quinn = new FeedTheQuinn('');
+    quinn = new FeedTheQuinn('assets', 'screen');
 
-    quinn.update('image list');
+    quinn.update();
 
-    expect(sm.update).toHaveBeenCalledWith('image list');
+    expect(sm.update).toHaveBeenCalled();
   });
 
 });

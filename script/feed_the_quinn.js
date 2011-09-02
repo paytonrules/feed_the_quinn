@@ -1,8 +1,8 @@
-FeedTheQuinn = function(assets) {
-  var stateMachine = FeedTheQuinn.StateMachine(assets);
+FeedTheQuinn = function(assets, screen) {
+  var stateMachine = FeedTheQuinn.StateMachine(assets, screen);
 
-  function update(imageList) {
-    stateMachine.update(imageList);
+  function update() {
+    stateMachine.update();
   };
   
   this.update = update;

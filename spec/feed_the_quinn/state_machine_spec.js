@@ -6,31 +6,31 @@ describe("StateMachine", function() {
     assets = 'assets';
   });
 
-  it("begins by loading the title screen", function() {
-    spyOn(FeedTheQuinn.TitleScreen, "load");
-
-    sm = StateMachine(assets);
-
-    expect(FeedTheQuinn.TitleScreen.load).toHaveBeenCalledWith(assets);
-  });
-
   it("returns a state machine object", function() {
     spyOn(FeedTheQuinn.TitleScreen, "load");
 
-    sm = StateMachine(assets);
+    sm = StateMachine(assets, 'screen');
 
     expect(sm).not.toBeUndefined();
+  });
+
+  it("begins by loading the title screen", function() {
+    spyOn(FeedTheQuinn.TitleScreen, "load");
+
+    sm = StateMachine(assets, 'screen');
+
+    expect(FeedTheQuinn.TitleScreen.load).toHaveBeenCalledWith(assets, 'screen');
   });
 
   it("delegates the update method to the current states update", function() {
     spyOn(FeedTheQuinn.TitleScreen, "load");
     spyOn(FeedTheQuinn.TitleScreen, "update");
 
-    sm = StateMachine(assets);
+    sm = StateMachine(assets, 'screen');
 
-    sm.update('image list');
+    sm.update();
 
-    expect(FeedTheQuinn.TitleScreen.update).toHaveBeenCalledWith('image list');
+    expect(FeedTheQuinn.TitleScreen.update).toHaveBeenCalled();
   });
 
 });

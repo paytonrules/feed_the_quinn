@@ -1,5 +1,5 @@
 describe("FeedTheQuinn.TitleScreen", function() {
-  var TitleScreen, fakeAssets;
+  var TitleScreen, fakeAssets, screen;
 
   fakeAssets = (function() { 
     var imageAssets = {},
@@ -35,38 +35,34 @@ describe("FeedTheQuinn.TitleScreen", function() {
     FeedTheQuinn.Assets = {"title": {"background": "backgroundImage.src"}};
     
     mockBox = Eskimo.Jukebox('');
+    screen = new Eskimo.Screen([{getContext: function() {}}]);
     spyOn(Eskimo, "Jukebox").andReturn(mockBox);
     spyOn(mockBox, "play");
-
   });
 
-  it("loads the assets from the global assets map", function() {
-    TitleScreen.load(fakeAssets);
+  it("loads the background asset from the global assets map", function() {
+    TitleScreen.load(fakeAssets, screen);
 
     expect(fakeAssets.images.get("background")).toEqual("backgroundImage.src");
   });
 
-  it("adds the background to the image list", function() {
-    imageList = [];
+  it("puts the background on the screen", function() {
+    spyOn(screen, "put");
+    TitleScreen.load(fakeAssets, screen);
 
-    TitleScreen.load(fakeAssets);
-    TitleScreen.update(imageList);
-
-    expect(imageList[0].name).toEqual('background');
-    expect(imageList[0].location.x).toEqual(0);
-    expect(imageList[0].location.y).toEqual(0);
+    expect(screen.put).toHaveBeenCalledWith('background');
   });
 
   it("loads the title song from the assets", function() {
     FeedTheQuinn.Assets = {"title": {"song": "song.mp3"}};
-    TitleScreen.load(fakeAssets);
+    TitleScreen.load(fakeAssets, screen);
 
     expect(fakeAssets.sounds.get("song")).toEqual("song.mp3");
   });
 
   it("uses a jukebox to play the song", function() {
-    TitleScreen.load(fakeAssets);
-    TitleScreen.update(imageList);
+    TitleScreen.load(fakeAssets, screen);
+    TitleScreen.update();
 
     expect(mockBox.play).toHaveBeenCalled();
   });
