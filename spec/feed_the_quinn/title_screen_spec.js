@@ -47,10 +47,16 @@ describe("FeedTheQuinn.TitleScreen", function() {
   });
 
   it("puts the background on the screen", function() {
-    spyOn(screen, "put");
+    var image;
+    spyOn(screen, "put").andCallFake(function(theImage) {
+      image = theImage;
+    });
+
     TitleScreen.load(fakeAssets, screen);
 
-    expect(screen.put).toHaveBeenCalledWith('background');
+    expect(image.name).toEqual('background');
+    expect(image.x).toEqual(0);
+    expect(image.y).toEqual(0);
   });
 
   it("loads the title song from the assets", function() {
