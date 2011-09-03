@@ -49,7 +49,9 @@ describe("FeedTheQuinn.TitleScreen", function() {
   it("puts the background on the screen", function() {
     var image;
     spyOn(screen, "put").andCallFake(function(theImage) {
-      image = theImage;
+      if (theImage.name === 'background') {
+        image = theImage;
+      }
     });
 
     TitleScreen.load(fakeAssets, screen);
@@ -71,6 +73,29 @@ describe("FeedTheQuinn.TitleScreen", function() {
     TitleScreen.update();
 
     expect(mockBox.play).toHaveBeenCalled();
+  });
+
+  it("loads up the start button", function() {
+    FeedTheQuinn.Assets = {"title": {"start_button": "startButton.png"}};
+    TitleScreen.load(fakeAssets, screen);
+
+    expect(fakeAssets.images.get("start_button")).toEqual("startButton.png")
+  });
+
+  it("puts the start button on the screen", function() {
+    FeedTheQuinn.Assets = {"title": {"start_button": "startButton.png"}};
+    var image;
+    spyOn(screen, "put").andCallFake(function(theImage) {
+      if (theImage.name === 'start_button') {
+        image = theImage;
+      }
+    });
+
+    TitleScreen.load(fakeAssets, screen);
+
+    expect(image.name).toEqual('start_button');
+    expect(image.x).toEqual(400);
+    expect(image.y).toEqual(400);
   });
 
 });
