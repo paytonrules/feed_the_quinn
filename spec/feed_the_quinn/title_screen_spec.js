@@ -2,20 +2,11 @@ describe("FeedTheQuinn.TitleScreen", function() {
   var TitleScreen, fakeAssets, screen;
 
   fakeAssets = (function() { 
-    var imageAssets = {},
-        soundAssets = {},
+    var soundAssets = {},
         mockBox;
     
     return {
-      images: {
-        get: function(key) {
-          return imageAssets[key];
-        },
-        load: function(key, src) {
-          imageAssets[key] = src;
-        }
-      },
-      sounds: {
+       sounds: {
         get: function(key) {
           return soundAssets[key];
         },
@@ -40,25 +31,23 @@ describe("FeedTheQuinn.TitleScreen", function() {
     spyOn(mockBox, "play");
   });
 
-  it("loads the background asset from the global assets map", function() {
-    TitleScreen.load(fakeAssets, screen);
-
-    expect(fakeAssets.images.get("background")).toEqual("backgroundImage.src");
-  });
-
-  it("puts the background on the screen", function() {
-    var image;
-    spyOn(screen, "put").andCallFake(function(theImage) {
-      if (theImage.name === 'background') {
-        image = theImage;
+  it("loads the title screen images", function() {
+    FeedTheQuinn.Assets = {
+      'title': {
+        'images': {
+          'image': {'prop': 'for testing'}
+        }
       }
-    });
+    };
 
+    var imageList;    
+    spyOn(screen, "loadScreen").andCallFake(function(json) {
+      imageList = json;
+    });
+    
     TitleScreen.load(fakeAssets, screen);
 
-    expect(image.name).toEqual('background');
-    expect(image.x).toEqual(0);
-    expect(image.y).toEqual(0);
+    expect(imageList.images.image.prop).toEqual('for testing');
   });
 
   it("loads the title song from the assets", function() {
@@ -74,28 +63,4 @@ describe("FeedTheQuinn.TitleScreen", function() {
 
     expect(mockBox.play).toHaveBeenCalled();
   });
-
-  it("loads up the start button", function() {
-    FeedTheQuinn.Assets = {"title": {"start_button": "startButton.png"}};
-    TitleScreen.load(fakeAssets, screen);
-
-    expect(fakeAssets.images.get("start_button")).toEqual("startButton.png")
-  });
-
-  it("puts the start button on the screen", function() {
-    FeedTheQuinn.Assets = {"title": {"start_button": "startButton.png"}};
-    var image;
-    spyOn(screen, "put").andCallFake(function(theImage) {
-      if (theImage.name === 'start_button') {
-        image = theImage;
-      }
-    });
-
-    TitleScreen.load(fakeAssets, screen);
-
-    expect(image.name).toEqual('start_button');
-    expect(image.x).toEqual(400);
-    expect(image.y).toEqual(400);
-  });
-
 });

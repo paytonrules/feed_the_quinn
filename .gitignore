@@ -1,2 +1,4 @@
 script/eskimo.min.js
 session.vim
+*.swp
+*.swo
