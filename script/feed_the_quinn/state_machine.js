@@ -1,9 +1,11 @@
 FeedTheQuinn.StateMachine = function(assets, screen) {
   currentState = FeedTheQuinn.TitleScreen;
   currentState.load(assets, screen);
+
   return {
+    currentState: currentState, 
     update: function() {
-      currentState.update();
+      this.currentState.update();
     }
   };
 };

@@ -13,41 +13,37 @@ describe("FeedTheQuinn.TitleScreen", function() {
         load: function(key, src) {
           soundAssets[key] = src;
         }
-      },
-      clear: function() {
-        imageAssets = {};
       }
     };
   })();
   
   beforeEach(function() {
     TitleScreen = require("../spec_helper").FeedTheQuinn.TitleScreen;
-    fakeAssets.clear();
     FeedTheQuinn.Assets = {"title": {"background": "backgroundImage.src"}};
+  
+    // Change to a real screen  
+    screen = {
+      loadScreen: function(assets, context) {
+      }
+    };
     
     mockBox = Eskimo.Jukebox('');
-    screen = new Eskimo.Screen([{getContext: function() {}}]);
     spyOn(Eskimo, "Jukebox").andReturn(mockBox);
     spyOn(mockBox, "play");
   });
 
-  it("loads the title screen images", function() {
+  it("loads the title screen images with this as the context", function() {
+    spyOn(screen, "loadScreen");
+    
     FeedTheQuinn.Assets = {
       'title': {
-        'images': {
-          'image': {'prop': 'for testing'}
-        }
+        'image': {'prop': 'for testing'}
       }
     };
 
-    var imageList;    
-    spyOn(screen, "loadScreen").andCallFake(function(json) {
-      imageList = json;
-    });
-    
     TitleScreen.load(fakeAssets, screen);
 
-    expect(imageList.images.image.prop).toEqual('for testing');
+    expect(screen.loadScreen).toHaveBeenCalledWith(FeedTheQuinn.Assets['title'], TitleScreen);
   });
 
   it("loads the title song from the assets", function() {

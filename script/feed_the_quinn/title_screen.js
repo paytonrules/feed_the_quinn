@@ -1,9 +1,9 @@
 FeedTheQuinn.TitleScreen = (function() {
-  var box;
+  var box, startButton;
 
   return {
     load: function(assets, screen) {
-      screen.loadScreen(FeedTheQuinn.Assets['title']);
+      screen.loadScreen(FeedTheQuinn.Assets['title'], this);
 
       assets.sounds.load('song', FeedTheQuinn.Assets['title']['song']);
       box = Eskimo.Jukebox(assets.sounds);

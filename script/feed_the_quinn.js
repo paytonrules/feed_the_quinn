@@ -4,7 +4,6 @@ FeedTheQuinn = function(assets, screen) {
   function update() {
     stateMachine.update();
   };
-  
   this.update = update;
 };
 
