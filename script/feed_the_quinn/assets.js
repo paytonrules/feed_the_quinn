@@ -17,6 +17,10 @@ FeedTheQuinn.Assets = {
         }
       }
     },
-    'song': 'songs/The_Mighty_Quinn.MP3',
+    'sounds': {
+      'song' : {
+        'src': 'songs/The_Mighty_Quinn.MP3'
+      }
+    }
   }
 };

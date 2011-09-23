@@ -9,7 +9,7 @@ describe("StateMachine", function() {
   it("returns a state machine object", function() {
     spyOn(FeedTheQuinn.TitleScreen, "load");
 
-    sm = StateMachine(assets, 'screen');
+    sm = StateMachine('screen');
 
     expect(sm).not.toBeUndefined();
   });
@@ -17,16 +17,16 @@ describe("StateMachine", function() {
   it("begins by loading the title screen", function() {
     spyOn(FeedTheQuinn.TitleScreen, "load");
 
-    sm = StateMachine(assets, 'screen');
+    sm = StateMachine('screen');
 
-    expect(FeedTheQuinn.TitleScreen.load).toHaveBeenCalledWith(assets, 'screen');
+    expect(FeedTheQuinn.TitleScreen.load).toHaveBeenCalledWith('screen');
   });
 
   it("delegates the update method to the current states update", function() {
     spyOn(FeedTheQuinn.TitleScreen, "load");
     spyOn(FeedTheQuinn.TitleScreen, "update");
 
-    sm = StateMachine(assets, 'screen');
+    sm = StateMachine('screen');
 
     sm.update();
 

@@ -1,5 +1,5 @@
-FeedTheQuinn = function(assets, screen) {
-  var stateMachine = FeedTheQuinn.StateMachine(assets, screen);
+FeedTheQuinn = function(screen) {
+  var stateMachine = FeedTheQuinn.StateMachine(screen);
 
   function update() {
     stateMachine.update();

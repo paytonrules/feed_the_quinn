@@ -1,5 +1,5 @@
 describe("FeedTheQuinn.TitleScreen", function() {
-  var TitleScreen, fakeAssets, screen;
+  var TitleScreen, fakeAssets, screen, levels;
 
   fakeAssets = (function() { 
     var soundAssets = {},
@@ -21,42 +21,48 @@ describe("FeedTheQuinn.TitleScreen", function() {
     TitleScreen = require("../spec_helper").FeedTheQuinn.TitleScreen;
     FeedTheQuinn.Assets = {"title": {"background": "backgroundImage.src"}};
   
-    // Change to a real screen  
+    spyOn(Eskimo.LevelLoader, 'load');
+   
     screen = {
-      loadScreen: function(assets, context) {
-      }
+      put: function() {}
     };
-    
-    mockBox = Eskimo.Jukebox('');
-    spyOn(Eskimo, "Jukebox").andReturn(mockBox);
-    spyOn(mockBox, "play");
+
+    this.addMatchers({
+      toHaveBeenCalledWithImage: function(imageDocLiteral) {
+        var actual = this.actual.argsForCall[0][0];
+        return actual.name === imageDocLiteral.name &&
+               actual.x === imageDocLiteral.x &&
+               actual.y === imageDocLiteral.y;
+      }
+    });
+
   });
 
   it("loads the title screen images with this as the context", function() {
-    spyOn(screen, "loadScreen");
-    
-    FeedTheQuinn.Assets = {
-      'title': {
-        'image': {'prop': 'for testing'}
-      }
-    };
+    TitleScreen.load(screen);
 
-    TitleScreen.load(fakeAssets, screen);
-
-    expect(screen.loadScreen).toHaveBeenCalledWith(FeedTheQuinn.Assets['title'], TitleScreen);
-  });
-
-  it("loads the title song from the assets", function() {
-    FeedTheQuinn.Assets = {"title": {"song": "song.mp3"}};
-    TitleScreen.load(fakeAssets, screen);
-
-    expect(fakeAssets.sounds.get("song")).toEqual("song.mp3");
+    expect(Eskimo.LevelLoader.load).toHaveBeenCalledWith('title', TitleScreen);
   });
 
   it("uses a jukebox to play the song", function() {
-    TitleScreen.load(fakeAssets, screen);
+    var mockBox = {play: function(name) {}};
+    spyOn(mockBox, "play");
+    spyOn(Eskimo.LevelLoader, "getJukebox").andReturn(mockBox);
+    
+    TitleScreen.load(screen);
     TitleScreen.update();
 
-    expect(mockBox.play).toHaveBeenCalled();
+    expect(mockBox.play).toHaveBeenCalledWith('song');
   });
+
+  it("puts the background on the screen in the load method", function() {
+    spyOn(screen, "put");
+
+    TitleScreen.load(screen);
+
+    expect(screen.put).toHaveBeenCalledWithImage({name: "background",
+                                                  x: 0,
+                                                  y: 0 });
+  });
+
 });
