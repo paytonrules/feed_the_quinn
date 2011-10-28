@@ -1,0 +1,4 @@
+FeedTheQuinn.StartButton = {
+  create: function() {
+  }
+};

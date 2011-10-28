@@ -4,8 +4,6 @@ FeedTheQuinn.TitleScreen = (function() {
   return {
     load: function(theScreen) {
       screen = theScreen;
-      // Also no likey - insulate from framework, even your own
-      // and you dont need levels or screen
       Eskimo.LevelLoader.load('title', this);
       screen.put(Eskimo.Image("background", 0, 0));
     },

@@ -10,6 +10,7 @@ FeedTheQuinn.Assets = {
         }
       },
       'start_button': {
+        'control': 'FeedTheQuinn.StartButton',
         'src': 'images/start.png',
         'location': {
           'x': 300,
