@@ -1,7 +1,13 @@
 describe("FeedTheQuinn.TitleScreen", function() {
-  var TitleScreen, fakeAssets, screen, levels;
+  var TitleScreen, 
+      fakeAssets, 
+      screen, 
+      should = require('should'),
+      LevelLoader = require('eskimo').LevelLoader,
+      Spies = require('../spies'),
+      levels;
 
-  fakeAssets = (function() { 
+  fakerssets = (function() { 
     var soundAssets = {},
         mockBox;
     
@@ -20,49 +26,41 @@ describe("FeedTheQuinn.TitleScreen", function() {
   beforeEach(function() {
     TitleScreen = require("../spec_helper").FeedTheQuinn.TitleScreen;
     FeedTheQuinn.Assets = {"title": {"background": "backgroundImage.src"}};
-  
-    spyOn(Eskimo.LevelLoader, 'load');
    
     screen = {
       put: function() {}
     };
-
-    this.addMatchers({
-      toHaveBeenCalledWithImage: function(imageDocLiteral) {
-        var actual = this.actual.argsForCall[0][0];
-        return actual.name === imageDocLiteral.name &&
-               actual.x === imageDocLiteral.x &&
-               actual.y === imageDocLiteral.y;
-      }
-    });
-
   });
 
   it("loads the title screen images with this as the context", function() {
+    var levelLoaderSpy = Spies.spyOn(LevelLoader, 'load');
+
     TitleScreen.load(screen);
 
-    expect(Eskimo.LevelLoader.load).toHaveBeenCalledWith('title', TitleScreen);
+    levelLoaderSpy.passedArguments().should.eql({'0' : 'title', '1' : TitleScreen});
   });
 
   it("uses a jukebox to play the song", function() {
     var mockBox = {play: function(name) {}};
-    spyOn(mockBox, "play");
-    spyOn(Eskimo.LevelLoader, "getJukebox").andReturn(mockBox);
+    var jukeboxSpy = Spies.spyOn(mockBox, "play");
+    Spies.stub(LevelLoader, "getJukebox", mockBox);
     
     TitleScreen.load(screen);
     TitleScreen.update();
 
-    expect(mockBox.play).toHaveBeenCalledWith('song');
+    jukeboxSpy.passedArguments().should.eql({'0' : 'song'});
   });
 
   it("puts the background on the screen in the load method", function() {
-    spyOn(screen, "put");
+    var screenSpy = Spies.spyOn(screen, "put");
 
     TitleScreen.load(screen);
 
-    expect(screen.put).toHaveBeenCalledWithImage({name: "background",
-                                                  x: 0,
-                                                  y: 0 });
+    var image = screenSpy.passedArguments()['0'];
+
+    image.name.should.equal('background');
+    image.x.should.equal(0);
+    image.y.should.equal(0);
   });
 
 });

@@ -1,5 +1,8 @@
 FeedTheQuinn.TitleScreen = (function() {
-  var box, imageAssets, screen;
+  var box, 
+      imageAssets, 
+      screen,
+      Eskimo = require("eskimo");
 
   return {
     load: function(theScreen) {

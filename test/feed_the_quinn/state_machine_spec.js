@@ -1,36 +1,39 @@
 describe("StateMachine", function() {
-  var sm, assets, StateMachine;
+  var sm, 
+      assets, 
+      StateMachine = require("../spec_helper").FeedTheQuinn.StateMachine,
+      should = require("should"),
+      Spies = require("../spies");
 
   beforeEach(function() {
-    StateMachine = require("../spec_helper").FeedTheQuinn.StateMachine;
     assets = 'assets';
   });
 
   it("returns a state machine object", function() {
-    spyOn(FeedTheQuinn.TitleScreen, "load");
+    Spies.stub(FeedTheQuinn.TitleScreen, "load");
 
     sm = StateMachine('screen');
 
-    expect(sm).not.toBeUndefined();
+    sm.should.be.ok;
   });
 
   it("begins by loading the title screen", function() {
-    spyOn(FeedTheQuinn.TitleScreen, "load");
+    var loadSpy = Spies.spyOn(FeedTheQuinn.TitleScreen, "load");
 
     sm = StateMachine('screen');
 
-    expect(FeedTheQuinn.TitleScreen.load).toHaveBeenCalledWith('screen');
+    loadSpy.passedArguments()['0'].should.equal('screen');
   });
 
   it("delegates the update method to the current states update", function() {
-    spyOn(FeedTheQuinn.TitleScreen, "load");
-    spyOn(FeedTheQuinn.TitleScreen, "update");
+    Spies.stub(FeedTheQuinn.TitleScreen, "load");
+    var updateSpy = Spies.spyOn(FeedTheQuinn.TitleScreen, "update");
 
     sm = StateMachine('screen');
 
     sm.update();
 
-    expect(FeedTheQuinn.TitleScreen.update).toHaveBeenCalled();
+    updateSpy.wasCalled().should.be.true;
   });
 
 });
