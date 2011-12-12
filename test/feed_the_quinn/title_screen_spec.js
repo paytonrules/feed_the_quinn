@@ -25,7 +25,6 @@ describe("FeedTheQuinn.TitleScreen", function() {
   
   beforeEach(function() {
     TitleScreen = require("../spec_helper").FeedTheQuinn.TitleScreen;
-    FeedTheQuinn.Assets = {"title": {"background": "backgroundImage.src"}};
    
     screen = {
       put: function() {}
