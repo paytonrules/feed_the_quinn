@@ -1,5 +1,5 @@
 FeedTheQuinn.StateMachine = function(screen) {
-  currentState = FeedTheQuinn.TitleScreen;
+  var currentState = FeedTheQuinn.TitleScreen;
   currentState.load(screen);
 
   return {
