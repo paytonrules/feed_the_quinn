@@ -1,9 +1,11 @@
-FeedTheQuinn = function(screen) {
-  var stateMachine = FeedTheQuinn.StateMachine(screen);
+var Eskimo = require('eskimo');
+var FeedTheQuinn = {};
+require('./feed_the_quinn/updater');
+var Assets = require('./feed_the_quinn/assets');
 
-  function update() {
-    stateMachine.update();
-  };
-  this.update = update;
-};
+Eskimo({updater: FeedTheQuinn.Updater,
+         jquery: $}).start({canvas: $('#feed_the_quinn'),
+                            document: document,
+                            levels: Assets   
+                           });
 

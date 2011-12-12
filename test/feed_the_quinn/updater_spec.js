@@ -1,12 +1,12 @@
-describe("FeedTheQuinn", function() {
-  var FeedTheQuinn = require('./spec_helper').FeedTheQuinn,
+describe("FeedTheQuinn#Updater", function() {
+  var Updater = require('../spec_helper').FeedTheQuinn.Updater,
       should = require('should'),
-      Spies  = require('./spies');
+      Spies  = require('../spies');
 
   it("initializes the state machine with the screen", function() {
     var stateMachineSpy = Spies.spyOn(FeedTheQuinn, "StateMachine");
 
-    new FeedTheQuinn('screen');
+    new Updater('screen');
 
     stateMachineSpy.passedArguments()['0'].should.equal('screen');
   });
@@ -19,7 +19,7 @@ describe("FeedTheQuinn", function() {
     };
     Spies.stub(FeedTheQuinn, "StateMachine", sm);
 
-    var quinn = new FeedTheQuinn('irrelevant');
+    var quinn = new Updater('irrelevant');
     quinn.update();
 
     sm.updated.should.be.true;
