@@ -1,5 +1,5 @@
-describe("FeedTheQuinn.TitleScreen", function() {
-  var TitleScreen, 
+describe("TitleScreen", function() {
+  var TitleScreen = require('../../script/feed_the_quinn/title_screen'), 
       fakeAssets, 
       screen, 
       should = require('should'),
@@ -24,8 +24,6 @@ describe("FeedTheQuinn.TitleScreen", function() {
   })();
   
   beforeEach(function() {
-    TitleScreen = require("../spec_helper").FeedTheQuinn.TitleScreen;
-   
     screen = {
       put: function() {}
     };

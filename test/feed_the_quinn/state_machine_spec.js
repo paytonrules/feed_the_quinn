@@ -1,7 +1,8 @@
 describe("StateMachine", function() {
   var sm, 
       assets, 
-      StateMachine = require("../spec_helper").FeedTheQuinn.StateMachine,
+      StateMachine = require('../../script/feed_the_quinn/state_machine'),
+      TitleScreen = require('../../script/feed_the_quinn/title_screen'),
       should = require("should"),
       Spies = require("../spies");
 
@@ -10,26 +11,26 @@ describe("StateMachine", function() {
   });
 
   it("returns a state machine object", function() {
-    Spies.stub(FeedTheQuinn.TitleScreen, "load");
+    Spies.stub(TitleScreen, "load");
 
-    sm = StateMachine('screen');
+    sm = StateMachine.init('screen');
 
     sm.should.be.ok;
   });
 
   it("begins by loading the title screen", function() {
-    var loadSpy = Spies.spyOn(FeedTheQuinn.TitleScreen, "load");
+    var loadSpy = Spies.spyOn(TitleScreen, "load");
 
-    sm = StateMachine('screen');
+    sm = StateMachine.init('screen');
 
     loadSpy.passedArguments()['0'].should.equal('screen');
   });
 
   it("delegates the update method to the current states update", function() {
-    Spies.stub(FeedTheQuinn.TitleScreen, "load");
-    var updateSpy = Spies.spyOn(FeedTheQuinn.TitleScreen, "update");
+    Spies.stub(TitleScreen, "load");
+    var updateSpy = Spies.spyOn(TitleScreen, "update");
 
-    sm = StateMachine('screen');
+    sm = StateMachine.init('screen');
 
     sm.update();
 

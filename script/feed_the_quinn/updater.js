@@ -1,5 +1,7 @@
-FeedTheQuinn.Updater = function(screen) {
-  var stateMachine = FeedTheQuinn.StateMachine(screen);
+var StateMachine = require("./state_machine");
+
+module.exports = function(screen) {
+  var stateMachine = StateMachine.init(screen);
 
   function update() {
     stateMachine.update();

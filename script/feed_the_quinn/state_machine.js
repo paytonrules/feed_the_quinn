@@ -1,11 +1,14 @@
-FeedTheQuinn.StateMachine = function(screen) {
-  var currentState = FeedTheQuinn.TitleScreen;
-  currentState.load(screen);
+var currentState = require('./title_screen');
 
-  return {
-    currentState: currentState, 
-    update: function() {
-      this.currentState.update();
-    }
-  };
+module.exports = {
+  init: function(screen) {
+    currentState.load(screen);
+
+    return {
+      currentState: currentState, 
+      update: function() {
+        this.currentState.update();
+      }
+    };
+  }
 };

@@ -1,4 +1,4 @@
-FeedTheQuinn.TitleScreen = (function() {
+module.exports = (function() {
   var box, 
       imageAssets, 
       screen,
@@ -6,6 +6,7 @@ FeedTheQuinn.TitleScreen = (function() {
 
   return {
     load: function(theScreen) {
+      // Not what I want is it.
       screen = theScreen;
       Eskimo.LevelLoader.load('title', this);
       screen.put(Eskimo.Image("background", 0, 0));
