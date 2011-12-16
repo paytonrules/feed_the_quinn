@@ -1,4 +1,4 @@
-FeedTheQuinn.StartButton = {
+module.exports = {
   create: function() {
   }
 };

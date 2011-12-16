@@ -1,5 +1,4 @@
-// NOTE - this is JSON Data and as such is untested.  You put logic here you get nupunched.
-FeedTheQuinn.Assets = {
+module.exports = {
   'title': {
     'images': {
       'background': {
@@ -10,7 +9,7 @@ FeedTheQuinn.Assets = {
         }
       },
       'start_button': {
-        'control': 'FeedTheQuinn.StartButton',
+        'control': 'StartButton',
         'src': 'images/start.png',
         'location': {
           'x': 300,
