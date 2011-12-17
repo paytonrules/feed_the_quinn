@@ -1,11 +1,15 @@
-var StateMachine = require("./state_machine");
+var StateMachine = require("./state_machine"),
+    stateMachine;
 
-module.exports = function(screen) {
-  var stateMachine = StateMachine.init(screen);
+function sm() {
+  if (typeof(stateMachine) === "undefined") {
+    stateMachine = StateMachine.init(module.exports.screen);
+  }
+  return stateMachine;
+}
 
-  function update() {
-    stateMachine.update();
-  };
-  this.update = update;
+module.exports = {
+  update: function() {
+    sm().update();
+  }
 };
-
