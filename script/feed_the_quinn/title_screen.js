@@ -15,10 +15,8 @@ module.exports = (function() {
       startButton = StartButton.create(LevelLoader.gameObject('start_button'));
 
       // No business being in load - you should have a draw
-      /*
-       *screen.put(Image("background", background.location.x, background.location.y));
-       *startButton.draw(screen);
-       */
+      screen.put(Image("background", background.location.x, background.location.y));
+      startButton.draw(screen);
     },
 
     update: function() {
