@@ -8,7 +8,10 @@ module.exports = {
     return {
       currentState: currentState, 
       update: function() {
-        this.currentState.update();
+        currentState.update();
+      },
+      draw: function(screen) {
+        currentState.draw(screen);
       }
     };
   }

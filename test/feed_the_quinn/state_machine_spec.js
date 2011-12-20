@@ -37,4 +37,14 @@ describe("StateMachine", function() {
     updateSpy.wasCalled().should.be.true;
   });
 
+  it("delegates the draw method to the current states draw", function() {
+    var drawSpy = Spies.spyOn(TitleScreen, "draw");
+
+    sm = StateMachine.init('screen');
+
+    sm.draw('screen');
+
+    drawSpy.passedArguments().should.eql({'0' : 'screen'});
+  });
+
 });
