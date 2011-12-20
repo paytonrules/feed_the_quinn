@@ -9,6 +9,9 @@ describe("FeedTheQuinn", function() {
         draw: function(screen) {
           this.screen = screen;
         },
+        click: function(event) {
+          this.event = event;
+        },
         reset: function() {
           this.updated = false;
           this.screen = null;
@@ -39,6 +42,12 @@ describe("FeedTheQuinn", function() {
     Game.draw('screen');
 
     machine.screen.should.eql('screen');
+  });
+
+  it("sends clicks to the state machine", function() {
+    Game.click('click');
+
+    machine.event.should.eql('click');
   });
 
 });

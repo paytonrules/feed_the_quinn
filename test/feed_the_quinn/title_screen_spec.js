@@ -88,4 +88,20 @@ describe("TitleScreen", function() {
     button.screen.should.eql(screen);
   });
 
+  it("sends clicks to the button to see if you clicked it", function() {
+    var button = {
+      click: function(state_machine, event) { 
+        this.state_machine = state_machine; 
+        this.event = event; 
+      }
+    };
+    Spies.stub(StartButton, 'create', button);
+
+    TitleScreen.load();
+    TitleScreen.click('state_machine', 'event');
+
+    button.state_machine.should.equal('state_machine');
+    button.event.should.equal('event');
+  });
+
 });

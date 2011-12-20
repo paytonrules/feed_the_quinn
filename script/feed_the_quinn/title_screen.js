@@ -1,6 +1,5 @@
 module.exports = (function() {
   var jukebox, 
-      screen,
       startButton,
       StartButton = require("./start_button"),
       LevelLoader = require("eskimo").LevelLoader,
@@ -22,7 +21,10 @@ module.exports = (function() {
     draw: function(screen) {
       screen.put(Image("background", background.location.x, background.location.y));
       startButton.draw(screen);
-    }
+    },
 
+    click: function(state_machine, event) {
+      startButton.click(state_machine, event);
+    }
   };
 })();

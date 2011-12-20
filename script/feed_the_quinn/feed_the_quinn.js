@@ -3,7 +3,7 @@ var StateMachine = require("./state_machine"),
 
 function sm() {
   if (typeof(stateMachine) === "undefined") {
-    stateMachine = StateMachine.init(module.exports.screen);
+    stateMachine = StateMachine.init();
   }
   return stateMachine;
 }
@@ -12,7 +12,12 @@ module.exports = {
   update: function() {
     sm().update();
   },
+
   draw: function(screen) {
     sm().draw(screen);
+  },
+
+  click: function(evt) {
+    sm().click(evt);
   }
 };
