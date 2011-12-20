@@ -1,3 +1,4 @@
+// Rename to feed the quinn
 var StateMachine = require("./state_machine"),
     stateMachine;
 

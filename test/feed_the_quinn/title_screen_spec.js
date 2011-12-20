@@ -1,40 +1,47 @@
 describe("TitleScreen", function() {
   var TitleScreen = require('../../script/feed_the_quinn/title_screen'), 
-      fakeAssets, 
+      StartButton = require('../../script/feed_the_quinn/start_button'),
       screen, 
       should = require('should'),
-      LevelLoader = require('eskimo').LevelLoader,
       Spies = require('../spies'),
+      LevelLoader = require('eskimo').LevelLoader,
+      jquery = require('jquery'),
       levels;
 
-  fakerssets = (function() { 
-    var soundAssets = {},
-        mockBox;
-    
-    return {
-       sounds: {
-        get: function(key) {
-          return soundAssets[key];
-        },
-        load: function(key, src) {
-          soundAssets[key] = src;
-        }
-      }
-    };
-  })();
-  
   beforeEach(function() {
     screen = {
       put: function() {}
     };
+  
+    // Maybe just use real assets ?
+    LevelLoader.levels = {
+      "title" : {
+        "background" : {
+          'images': {
+            'src': 'images/title_screen_background.jpg'
+          },
+          'sounds': {
+            'song' : {
+              'src': 'songs/The_Mighty_Quinn.MP3'
+            }
+          },
+          'location': {
+            'x': 20,
+            'y': 4
+          }
+        },
+        "start_button" : {
+          'button' : 'data'
+        }
+      }
+    };
+    LevelLoader.initializeAssets(jquery);
   });
 
   it("loads the title screen images with this as the context", function() {
-    var levelLoaderSpy = Spies.spyOn(LevelLoader, 'load');
-
     TitleScreen.load(screen);
 
-    levelLoaderSpy.passedArguments().should.eql({'0' : 'title', '1' : TitleScreen});
+    LevelLoader.gameObject('background').should.be.ok;
   });
 
   it("uses a jukebox to play the song", function() {
@@ -43,6 +50,7 @@ describe("TitleScreen", function() {
     Spies.stub(LevelLoader, "getJukebox", mockBox);
     
     TitleScreen.load(screen);
+
     TitleScreen.update();
 
     jukeboxSpy.passedArguments().should.eql({'0' : 'song'});
@@ -56,8 +64,25 @@ describe("TitleScreen", function() {
     var image = screenSpy.passedArguments()['0'];
 
     image.name.should.equal('background');
-    image.x.should.equal(0);
-    image.y.should.equal(0);
+    image.x.should.equal(20);
+    image.y.should.equal(4);
+  });
+
+  it("creates a start button on load", function() {
+    var startButtonSpy = Spies.spyOn(StartButton, 'create', {draw: function() {}});
+
+    TitleScreen.load(screen);
+
+    startButtonSpy.passedArguments().should.eql({'0' : {'button' : 'data' }});
+  });
+
+  it("draws the start button", function() {
+    var button = {draw: function(screen) { this.screen = screen; }};
+    Spies.stub(StartButton, 'create', button);
+
+    TitleScreen.load(screen);
+
+    button.screen.should.eql(screen);
   });
 
 });

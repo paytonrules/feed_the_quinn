@@ -1,5 +1,5 @@
-describe("FeedTheQuinn#Updater", function() {
-  var Updater = require('../../script/feed_the_quinn/updater'),
+describe("FeedTheQuinn", function() {
+  var Updater = require('../../script/feed_the_quinn/feed_the_quinn'),
       StateMachine = require('../../script/feed_the_quinn/state_machine'),
       should = require('should'),
       machine = { 
