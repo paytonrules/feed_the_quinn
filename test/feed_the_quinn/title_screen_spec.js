@@ -39,7 +39,7 @@ describe("TitleScreen", function() {
   });
 
   it("loads the title screen images with this as the context", function() {
-    TitleScreen.load(screen);
+    TitleScreen.load();
 
     LevelLoader.gameObject('background').should.be.ok;
   });
@@ -49,17 +49,19 @@ describe("TitleScreen", function() {
     var jukeboxSpy = Spies.spyOn(mockBox, "play");
     Spies.stub(LevelLoader, "getJukebox", mockBox);
     
-    TitleScreen.load(screen);
+    TitleScreen.load();
 
     TitleScreen.update();
 
     jukeboxSpy.passedArguments().should.eql({'0' : 'song'});
   });
 
-  it("puts the background on the screen in the load method", function() {
+  it("puts the background on the screen in the draw method", function() {
     var screenSpy = Spies.spyOn(screen, "put");
+    Spies.stub(StartButton, "create", {draw: function() {}});
 
-    TitleScreen.load(screen);
+    TitleScreen.load();
+    TitleScreen.draw(screen);
 
     var image = screenSpy.passedArguments()['0'];
 
@@ -71,16 +73,17 @@ describe("TitleScreen", function() {
   it("creates a start button on load", function() {
     var startButtonSpy = Spies.spyOn(StartButton, 'create', {draw: function() {}});
 
-    TitleScreen.load(screen);
+    TitleScreen.load();
 
     startButtonSpy.passedArguments().should.eql({'0' : {'button' : 'data' }});
   });
 
-  it("draws the start button", function() {
+  it("draws the start button on draw", function() {
     var button = {draw: function(screen) { this.screen = screen; }};
     Spies.stub(StartButton, 'create', button);
 
-    TitleScreen.load(screen);
+    TitleScreen.load();
+    TitleScreen.draw(screen);
 
     button.screen.should.eql(screen);
   });

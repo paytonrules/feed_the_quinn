@@ -4,24 +4,25 @@ module.exports = (function() {
       startButton,
       StartButton = require("./start_button"),
       LevelLoader = require("eskimo").LevelLoader,
-      Image = require("eskimo").Image;
+      Image = require("eskimo").Image,
+      background;
 
   return {
-    load: function(theScreen) {
-      var background;
-      screen = theScreen;
+    load: function() {
       LevelLoader.load('title');
       background = LevelLoader.gameObject('background');
       startButton = StartButton.create(LevelLoader.gameObject('start_button'));
-
-      // No business being in load - you should have a draw
-      screen.put(Image("background", background.location.x, background.location.y));
-      startButton.draw(screen);
     },
 
     update: function() {
       jukebox = LevelLoader.getJukebox();
       jukebox.play('song');
+    },
+
+    draw: function(screen) {
+      screen.put(Image("background", background.location.x, background.location.y));
+      startButton.draw(screen);
     }
+
   };
 })();
