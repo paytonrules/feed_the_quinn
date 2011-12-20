@@ -1,4 +1,3 @@
-// Rename to feed the quinn
 var StateMachine = require("./state_machine"),
     stateMachine;
 
@@ -12,5 +11,8 @@ function sm() {
 module.exports = {
   update: function() {
     sm().update();
+  },
+  draw: function(screen) {
+    sm().draw(screen);
   }
 };

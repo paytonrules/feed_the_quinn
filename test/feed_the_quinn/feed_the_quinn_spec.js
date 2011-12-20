@@ -6,8 +6,12 @@ describe("FeedTheQuinn", function() {
         update: function() {
           this.updated = true;
         },
+        draw: function(screen) {
+          this.screen = screen;
+        },
         reset: function() {
           this.updated = false;
+          this.screen = null;
         }
       },
       Spies  = require('../spies');
@@ -17,18 +21,24 @@ describe("FeedTheQuinn", function() {
     Game.screen = 'screen';
   });
 
-  it("initializes the state machine with the screen", function() {
+  it("initializes the state machine on the first update", function() {
     var stateMachineSpy = Spies.spyOn(StateMachine, 'init', machine);
 
     Game.update();
 
-    stateMachineSpy.passedArguments()['0'].should.equal('screen');
+    stateMachineSpy.wasCalled().should.be.true;
   });
 
   it("delegates subsequent updates to initialized the state machine", function() {
     Game.update();
 
     machine.updated.should.be.true;
+  });
+
+  it("sends draw to the state machine with the screen", function() {
+    Game.draw('screen');
+
+    machine.screen.should.eql('screen');
   });
 
 });
