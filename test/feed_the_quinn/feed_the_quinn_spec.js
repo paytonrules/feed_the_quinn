@@ -1,5 +1,5 @@
 describe("FeedTheQuinn", function() {
-  var Updater = require('../../script/feed_the_quinn/feed_the_quinn'),
+  var Game = require('../../script/feed_the_quinn/feed_the_quinn'),
       StateMachine = require('../../script/feed_the_quinn/state_machine'),
       should = require('should'),
       machine = { 
@@ -14,19 +14,19 @@ describe("FeedTheQuinn", function() {
 
   beforeEach(function() {
     machine.reset();
-    Updater.screen = 'screen';
+    Game.screen = 'screen';
   });
 
   it("initializes the state machine with the screen", function() {
     var stateMachineSpy = Spies.spyOn(StateMachine, 'init', machine);
 
-    Updater.update();
+    Game.update();
 
     stateMachineSpy.passedArguments()['0'].should.equal('screen');
   });
 
   it("delegates subsequent updates to initialized the state machine", function() {
-    Updater.update();
+    Game.update();
 
     machine.updated.should.be.true;
   });
