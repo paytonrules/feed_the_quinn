@@ -1,8 +1,8 @@
-var currentState = require('./title_screen');
+var currentState;
 
 module.exports = {
-  // first state probably?  Initial state?  This is the init method after all.
   init: function(screen) {
+    currentState = require('./title_screen');
     currentState.load(screen);
 
     return {
