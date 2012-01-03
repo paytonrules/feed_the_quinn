@@ -235,83 +235,42 @@ module.exports = {
       ({ length: 12 }).should.not.have.ownProperty('length');
     }, "expected { length: 12 } to not have own property 'length'");
   },
-  
-  'test string()': function(){
-    'foobar'.should.include.string('bar');
-    'foobar'.should.include.string('foo');
-    'foobar'.should.not.include.string('baz');
 
+  'test include() with string': function(){
+    'foobar'.should.include('bar');
+    'foobar'.should.include('foo');
+    'foobar'.should.not.include('baz');
+  
     err(function(){
-      (3).should.include.string('baz');
-    }, "expected 3 to be a string");
-    
-    err(function(){
-      'foobar'.should.include.string('baz');
+      'foobar'.should.include('baz');
     }, "expected 'foobar' to include 'baz'");
     
     err(function(){
-      'foobar'.should.not.include.string('bar');
+      'foobar'.should.not.include('bar');
     }, "expected 'foobar' to not include 'bar'");
   },
 
-  'test object()': function(){
-    var obj = {foo: 'bar', baz: {baaz: 42}, qux: 13};
-    obj.should.include.object({foo: 'bar'});
-    obj.should.include.object({baz: {baaz: 42}});
-    obj.should.include.object({foo: 'bar', qux: 13});
-    obj.should.not.include.object({foo: 'baz'});
-    obj.should.not.include.object({foo: 'bar', baz: {baaz: -42}});
+  'test include() with array': function(){
+    ['foo', 'bar'].should.include('foo');
+    ['foo', 'bar'].should.include('foo');
+    ['foo', 'bar'].should.include('bar');
+    [1,2].should.include(1);
+    ['foo', 'bar'].should.not.include('baz');
+    ['foo', 'bar'].should.not.include(1);
 
     err(function(){
-      (3).should.include.object({foo: 'bar'});
-    }, "expected 3 to be a object");
-
-    err(function(){
-      var obj = {foo: 'bar'};
-      obj.should.include.object({foo: 'baz'});
-    }, "expected { foo: 'bar' } to include { foo: 'baz' }");
-
-    err(function(){
-      var obj = {foo: 'bar'};
-      obj.should.not.include.object({foo: 'bar'});
-    }, "expected { foo: 'bar' } to not include { foo: 'bar' }");
-  },
-  'test contain()': function(){
-    ['foo', 'bar'].should.contain('foo');
-    ['foo', 'bar'].should.contain('foo');
-    ['foo', 'bar'].should.contain('bar');
-    [1,2].should.contain(1);
-    ['foo', 'bar'].should.not.contain('baz');
-    ['foo', 'bar'].should.not.contain(1);
-
-    err(function(){
-      ['foo'].should.contain('bar');
-    }, "expected [ 'foo' ] to contain 'bar'");
+      ['foo'].should.include('bar');
+    }, "expected [ 'foo' ] to include 'bar'");
     
     err(function(){
-      ['bar', 'foo'].should.not.contain('foo');
-    }, "expected [ 'bar', 'foo' ] to not contain 'foo'");
+      ['bar', 'foo'].should.not.include('foo');
+    }, "expected [ 'bar', 'foo' ] to not include 'foo'");
   },
   
   'test keys(array)': function(){
     ({ foo: 1 }).should.have.keys(['foo']);
     ({ foo: 1, bar: 2 }).should.have.keys(['foo', 'bar']);
     ({ foo: 1, bar: 2 }).should.have.keys('foo', 'bar');
-    ({ foo: 1, bar: 2, baz: 3 }).should.include.keys('foo', 'bar');
-    ({ foo: 1, bar: 2, baz: 3 }).should.include.keys('bar', 'foo');
-    ({ foo: 1, bar: 2, baz: 3 }).should.include.keys('baz');
-
-    ({ foo: 1, bar: 2 }).should.include.keys('foo');
-    ({ foo: 1, bar: 2 }).should.include.keys('bar', 'foo');
-    ({ foo: 1, bar: 2 }).should.include.keys(['foo']);
-    ({ foo: 1, bar: 2 }).should.include.keys(['bar']);
-    ({ foo: 1, bar: 2 }).should.include.keys(['bar', 'foo']);
-
-    ({ foo: 1, bar: 2 }).should.not.have.keys('baz');
-    ({ foo: 1, bar: 2 }).should.not.have.keys('foo', 'baz');
-    ({ foo: 1, bar: 2 }).should.not.include.keys('baz');
-    ({ foo: 1, bar: 2 }).should.not.include.keys('foo', 'baz');
-    ({ foo: 1, bar: 2 }).should.not.include.keys('baz', 'foo');
 
     err(function(){
       ({ foo: 1 }).should.have.keys();
@@ -326,10 +285,6 @@ module.exports = {
     }, "keys required");
     
     err(function(){
-      ({ foo: 1 }).should.include.keys([]);
-    }, "keys required");
-
-    err(function(){
       ({ foo: 1 }).should.have.keys(['bar']);
     }, "expected { foo: 1 } to have key 'bar'");
     
@@ -340,7 +295,7 @@ module.exports = {
     err(function(){
       ({ foo: 1 }).should.have.keys(['foo', 'bar', 'baz']);
     }, "expected { foo: 1 } to have keys 'foo', 'bar', and 'baz'");
-
+  
     err(function(){
       ({ foo: 1 }).should.not.have.keys(['foo']);
     }, "expected { foo: 1 } to not have key 'foo'");
@@ -352,19 +307,6 @@ module.exports = {
     err(function(){
       ({ foo: 1, bar: 2 }).should.not.have.keys(['foo', 'bar']);
     }, "expected { foo: 1, bar: 2 } to not have keys 'foo', and 'bar'");
-    
-    err(function(){
-      ({ foo: 1 }).should.not.include.keys(['foo']);
-    }, "expected { foo: 1 } to not include key 'foo'");
-    
-    err(function(){
-      ({ foo: 1 }).should.include.keys('foo', 'bar');
-    }, "expected { foo: 1 } to include keys 'foo', and 'bar'");
-  },
-  
-  'test respondTo(method)': function(){
-    'test'.should.respondTo('toString');
-    'test'.should.not.respondTo('toBuffer');
   },
   
   'test chaining': function(){
@@ -376,5 +318,20 @@ module.exports = {
     }, "expected [ 'tobi', 'loki', 'jane', 'bandit' ] to have a length of 5 but got 4");
  
     user.should.be.a('object').and.have.property('name', 'tj');
+  },
+
+  'test throw()': function(){
+    (function(){}).should.not.throw();
+    (function(){ throw new Error('fail') }).should.throw();
+
+    err(function(){
+      (function(){}).should.throw();
+    }, 'expected an exception to be thrown');
+
+    err(function(){
+      (function(){
+        throw new Error('fail');
+      }).should.not.throw();
+    }, 'expected no exception to be thrown, got "fail"');
   }
 };

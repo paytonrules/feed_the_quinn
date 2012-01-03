@@ -12,12 +12,12 @@ _should_ literally extends node's _assert_ module, in fact, it is node's assert 
     };
 
     user.should.have.property('name', 'tj');
-    user.should.have.property('pets').with.lengthOf(4)
+    user.should.have.property('pets').with.lengthOf(4);
     
-    someAsyncTask(foo, function (err, result) {
-        should.not.exist(err);
-        should.exist(result);
-        result.bar.should.equal(foo);
+    someAsyncTask(foo, function(err, result){
+      should.not.exist(err);
+      should.exist(result);
+      result.bar.should.equal(foo);
     });
 
 ## Installation
@@ -39,12 +39,6 @@ This is equivalent to `should.ok`, which is equivalent to `assert.ok`, but reads
     should.not.exist({})    // will throw
 
 We may add more _assert_ extras in the future... ;)
-
-## modifiers
-
- _should_'s assertion chaining provides an expressive way to build up an assertion, along with dummy getters such as _an_, _have_, and _be_, provided are what I am simply calling **modifiers**, which have a meaning effect on the assertion. An example of this is the _not_ getter, which negates the meaning, aka `user.should.not.have.property('name')`. In the previous example note the use of _have_, as we could omit it and still construct a valid assertion.
-
-Some modifiers such as _include_ only have an effect with specific assertion methods, for example when asserting a substring like so: `str.should.include.string('test')`, we could omit _include_, but it helps express the meaning, however _keys_ has a strict effect, unless the _include_ modifier is used.
 
 ## chaining assertions
 
@@ -211,15 +205,6 @@ Substring assertion:
     'foobar'.should.include.string('bar')
     'foobar'.should.not.include.string('baz')
 
-## object
-
-Assert inclusion of object:
-
-    var obj = {foo: 'bar', baz: {baaz: 42}};
-    obj.should.include.object({foo: 'bar'});
-    obj.should.include.object({baz: {baaz: 42}});
-    obj.should.not.include.object({foo: 'baz'});
-
 ## property
 
 Assert property exists and has optional value:
@@ -235,13 +220,52 @@ Assert own property (on the immediate object):
 
     ({ foo: 'bar' }).should.have.ownProperty('foo')
 
-## contain
+## status(code)
+
+ Asserts that `.statusCode` is `code`:
+
+   res.should.have.status(200);
+
+## header(field[, value])
+
+ Asserts that a `.headers` object with `field` and optional `value` are present:
+
+   res.should.have.header('content-length');
+   res.should.have.header('Content-Length', '123');
+   res.should.have.header('content-length', '123');
+
+## include(obj)
+
+Assert that the given `obj` is present via `indexOf()`:
 
 Assert array value:
 
-    [1,2,3].should.contain(3)
-    [1,2,3].should.contain(2)
-    [1,2,3].should.not.contain(4)
+    [1,2,3].should.include(3)
+    [1,2,3].should.include(2)
+    [1,2,3].should.not.include(4)
+
+Assert substring:
+
+    'foo bar baz'.should.include('foo')
+    'foo bar baz'.should.include('bar')
+    'foo bar baz'.should.include('baz')
+    'foo bar baz'.should.not.include('FOO')
+
+## throw()
+
+  Assert exceptions:
+
+```js
+(function(){
+ 
+}).should.not.throw();
+```
+
+```js
+(function(){
+  throw new Error('fail');
+}).should.throw();
+```
 
 ## keys
 
@@ -251,19 +275,6 @@ and will fail if you omit a key or two:
     var obj = { foo: 'bar', baz: 'raz' };
     obj.should.have.keys('foo', 'bar');
     obj.should.have.keys(['foo', 'bar']);
-
-using the _include_ modifier, we can check inclusion of a key,
-but not fail when we omit a few:
-
-    obj.should.include.keys('foo')
-    obj.should.include.keys('bar')
-    obj.should.not.include.keys('baz')
-
-## respondTo
-
-Assert that the given property is a function:
-
-    user.should.respondTo('email')
 
 ## Express example
 

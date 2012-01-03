@@ -17,7 +17,7 @@ module.exports = {
     sm().draw(screen);
   },
 
-  click: function(evt) {
-    sm().click(evt);
+  click: function(location) {
+    sm().click(location);
   }
 };

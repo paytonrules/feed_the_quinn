@@ -3,10 +3,11 @@ describe("TitleScreen", function() {
       StartButton = require('../../script/feed_the_quinn/start_button'),
       screen, 
       should = require('should'),
-      Spies = require('../spies'),
+      sinon = require('sinon'),
       LevelLoader = require('eskimo').LevelLoader,
       jquery = require('jquery'),
-      levels;
+      levels,
+      sandbox;
 
   beforeEach(function() {
     screen = {
@@ -31,11 +32,20 @@ describe("TitleScreen", function() {
           }
         },
         "start_button" : {
-          'button' : 'data'
+          'location' : {
+            'x' : 0,
+            'y' : 0
+          }
         }
       }
     };
     LevelLoader.initializeAssets(jquery);
+    
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function() {
+    sandbox.restore();
   });
 
   it("loads the title screen images with this as the context", function() {
@@ -46,24 +56,30 @@ describe("TitleScreen", function() {
 
   it("uses a jukebox to play the song", function() {
     var mockBox = {play: function(name) {}};
-    var jukeboxSpy = Spies.spyOn(mockBox, "play");
-    Spies.stub(LevelLoader, "getJukebox", mockBox);
+    var jukeboxSpy = sandbox.mock(mockBox);
+    sandbox.stub(LevelLoader, "getJukebox", function() {
+      return mockBox;
+    });
     
+    jukeboxSpy.expects("play").once().withArgs('song');
+   
     TitleScreen.load();
 
     TitleScreen.update();
 
-    jukeboxSpy.passedArguments().should.eql({'0' : 'song'});
+    jukeboxSpy.verify();
   });
 
   it("puts the background on the screen in the draw method", function() {
-    var screenSpy = Spies.spyOn(screen, "put");
-    Spies.stub(StartButton, "create", {draw: function() {}});
+    sandbox.stub(StartButton, 'create', function() {
+      return {draw: function() {}};
+    });
+    var screenSpy = sandbox.spy(screen, 'put');
 
     TitleScreen.load();
     TitleScreen.draw(screen);
 
-    var image = screenSpy.passedArguments()['0'];
+    var image = screenSpy.args[0][0];
 
     image.name.should.equal('background');
     image.x.should.equal(20);
@@ -71,16 +87,20 @@ describe("TitleScreen", function() {
   });
 
   it("creates a start button on load", function() {
-    var startButtonSpy = Spies.spyOn(StartButton, 'create', {draw: function() {}});
+    var startButtonSpy = sandbox.spy(StartButton, 'create', function() {
+      return {draw: function() {}};
+    });
 
     TitleScreen.load();
 
-    startButtonSpy.passedArguments().should.eql({'0' : {'button' : 'data' }});
+    startButtonSpy.args[0][0].should.eql({'location' : {'x' : 0, 'y' : 0}});
   });
 
   it("draws the start button on draw", function() {
     var button = {draw: function(screen) { this.screen = screen; }};
-    Spies.stub(StartButton, 'create', button);
+    sandbox.stub(StartButton, 'create', function() {
+      return button;
+    });
 
     TitleScreen.load();
     TitleScreen.draw(screen);
@@ -88,20 +108,39 @@ describe("TitleScreen", function() {
     button.screen.should.eql(screen);
   });
 
-  it("sends clicks to the button to see if you clicked it", function() {
+  it("sends clicks to the button and their location", function() {
     var button = {
-      click: function(state_machine, event) { 
-        this.state_machine = state_machine; 
-        this.event = event; 
+      click: function(location, callback) { 
+        this.location = location; 
       }
     };
-    Spies.stub(StartButton, 'create', button);
+    sandbox.stub(StartButton, 'create', function() {
+      return button;
+    });
 
     TitleScreen.load();
-    TitleScreen.click('state_machine', 'event');
+    TitleScreen.click('state_machine', 'location');
 
-    button.state_machine.should.equal('state_machine');
-    button.event.should.equal('event');
+    button.location.should.equal('location');
+  });
+
+  it("also sends a callback to the button, which when called sends an event to the state machine", function() {
+    var state_machine = {start_game: function() {this.started = true;}};
+    var button = {
+      click: function(location, callback) { 
+        this.callback = callback; 
+      }
+    };
+    sandbox.stub(StartButton, 'create', function() {
+      return button;
+    });
+
+    TitleScreen.load();
+    TitleScreen.click(state_machine, '');
+
+    button.callback();
+
+    state_machine.started.should.be.true;
   });
 
 });

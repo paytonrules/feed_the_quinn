@@ -1,10 +1,15 @@
 module.exports = (function() {
   var jukebox, 
       startButton,
+      _ = require('underscore'), 
       StartButton = require("./start_button"),
       LevelLoader = require("eskimo").LevelLoader,
       Image = require("eskimo").Image,
       background;
+
+  function start_game(state_machine) {
+    state_machine.start_game();
+  }
 
   return {
     load: function() {
@@ -23,8 +28,8 @@ module.exports = (function() {
       startButton.draw(screen);
     },
 
-    click: function(state_machine, event) {
-      startButton.click(state_machine, event);
+    click: function(state_machine, location) {
+      startButton.click(location, _.bind(start_game, this, state_machine));
     }
   };
 })();

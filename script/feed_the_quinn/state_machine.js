@@ -21,9 +21,9 @@ module.exports = {
         currentState.draw(screen);
       },
 
-      click: function(event) {
+      click: function(location) {
         if (currentState['click']) {
-          currentState.click(this, event);
+          currentState.click(this, location);
         }
       }
     };

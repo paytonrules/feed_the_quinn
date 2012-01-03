@@ -9,15 +9,15 @@ describe("FeedTheQuinn", function() {
         draw: function(screen) {
           this.screen = screen;
         },
-        click: function(event) {
-          this.event = event;
+        click: function(location) {
+          this.location = location;
         },
         reset: function() {
           this.updated = false;
           this.screen = null;
         }
       },
-      Spies  = require('../spies');
+      sinon = require('sinon');
 
   beforeEach(function() {
     machine.reset();
@@ -25,11 +25,14 @@ describe("FeedTheQuinn", function() {
   });
 
   it("initializes the state machine on the first update", function() {
-    var stateMachineSpy = Spies.spyOn(StateMachine, 'init', machine);
+    var stateMachineSpy = sinon.stub(StateMachine, 'init', function() {
+      return machine;
+    });
 
     Game.update();
 
-    stateMachineSpy.wasCalled().should.be.true;
+    stateMachineSpy.called.should.be.true;
+    stateMachineSpy.restore();
   });
 
   it("delegates subsequent updates to initialized the state machine", function() {
@@ -45,9 +48,9 @@ describe("FeedTheQuinn", function() {
   });
 
   it("sends clicks to the state machine", function() {
-    Game.click('click');
+    Game.click({x: 0});
 
-    machine.event.should.eql('click');
+    machine.location.should.eql({x: 0});
   });
 
 });
