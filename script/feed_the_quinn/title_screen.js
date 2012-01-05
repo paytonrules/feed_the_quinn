@@ -3,7 +3,7 @@ module.exports = (function() {
       startButton,
       _ = require('underscore'), 
       StartButton = require("./start_button"),
-      LevelLoader = require("eskimo").LevelLoader,
+      Level = require("eskimo").Level,
       Image = require("eskimo").Image,
       background;
 
@@ -13,13 +13,13 @@ module.exports = (function() {
 
   return {
     load: function() {
-      LevelLoader.load('title');
-      background = LevelLoader.gameObject('background');
-      startButton = StartButton.create(LevelLoader.gameObject('start_button'));
+      Level.load('title');
+      background = Level.gameObject('background');
+      startButton = StartButton.create(Level.gameObject('start_button'));
     },
 
     update: function() {
-      jukebox = LevelLoader.getJukebox();
+      jukebox = Level.getJukebox();
       jukebox.play('song');
     },
 

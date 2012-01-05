@@ -14,7 +14,10 @@ module.exports = {
       },
 
       click: function(location, callback) {
-        callback();
+        if (location.x > buttonImage.x &&
+            location.x < buttonImage.right()) {
+          callback();
+        }
       }
     };
   },

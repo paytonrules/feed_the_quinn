@@ -4,7 +4,7 @@ describe("TitleScreen", function() {
       screen, 
       should = require('should'),
       sinon = require('sinon'),
-      LevelLoader = require('eskimo').LevelLoader,
+      Level = require('eskimo').Level,
       jquery = require('jquery'),
       levels,
       sandbox;
@@ -15,7 +15,7 @@ describe("TitleScreen", function() {
     };
   
     // Maybe just use real assets ?
-    LevelLoader.levels = {
+    Level.levels = {
       "title" : {
         "background" : {
           'images': {
@@ -39,7 +39,7 @@ describe("TitleScreen", function() {
         }
       }
     };
-    LevelLoader.initializeAssets(jquery);
+    Level.initializeAssets(jquery);
     
     sandbox = sinon.sandbox.create();
   });
@@ -51,13 +51,13 @@ describe("TitleScreen", function() {
   it("loads the title screen images with this as the context", function() {
     TitleScreen.load();
 
-    LevelLoader.gameObject('background').should.be.ok;
+    Level.gameObject('background').should.be.ok;
   });
 
   it("uses a jukebox to play the song", function() {
     var mockBox = {play: function(name) {}};
     var jukeboxSpy = sandbox.mock(mockBox);
-    sandbox.stub(LevelLoader, "getJukebox", function() {
+    sandbox.stub(Level, "getJukebox", function() {
       return mockBox;
     });
     

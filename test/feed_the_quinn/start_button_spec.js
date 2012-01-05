@@ -3,11 +3,19 @@ describe("StartButton", function() {
       Image = require("eskimo").Image,
       should = require('should'),
       sm = StartButton.create({'location' : 
-                                   { 'x' : 1, 'y' : 2}, 
+                                   { 'x' : 1, 'y' : 1}, 
                                  'images' : {
                                    'start_button' : { 'src' : 'imageName'}
                                  }
                                });
+  beforeEach(function() {
+    var jquery = require('jquery'),
+        level = require('eskimo').Level;
+
+    level.initializeAssets(jquery);
+    level.addImage('start_button', jquery("<img src='bleh' height='20' width='20'></img>"));
+  });
+
   it("draws on the screen", function() {
     var screen = {
       put: function(image) {
@@ -22,13 +30,11 @@ describe("StartButton", function() {
         
     sm.draw(screen);
 
-    screen.shouldHaveImage(Image('start_button',  1, 2)); 
+    screen.shouldHaveImage(Image('start_button',  1, 1)); 
   });
 
   it("accepts a click, and calls the handler if the location is within the button", function() {
-    var sm = StartButton.create({'location' : {'x' : 1, 'y' : 2}}),
-        called;
-    
+    var called = false;
 
     sm.click({x : 2, y : 3}, function() {
       called = true;
@@ -37,12 +43,20 @@ describe("StartButton", function() {
     called.should.be.true;
   });
 
-  it("doesn't call the handler if the image is to the left of the bounding box", function() {
-     var sm = StartButton.create({'location' : {'x' : 1, 'y' : 2}}),
-        called = false;
+  it("doesn't make the callback if the click is to the left of the image", function() {
+    var called = false;
+   
+    sm.click({x : 0, y : 3}, function() {
+      called = true;
+    });
 
-    // This location returns false to isInBoundingBox
-    sm.click({x : 3, y : 4}, function() {
+    called.should.be.false;
+  });
+
+  it("doesn't make the callback if the click is to the right of the image", function() {
+    var called = false;
+
+    sm.click({x : 22, y: 3}, function() {
       called = true;
     });
 
