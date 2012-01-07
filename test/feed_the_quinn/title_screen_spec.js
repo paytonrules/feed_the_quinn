@@ -1,6 +1,7 @@
 describe("TitleScreen", function() {
   var TitleScreen = require('../../script/feed_the_quinn/title_screen'), 
       StartButton = require('../../script/feed_the_quinn/start_button'),
+      StateMachine = require('../../script/feed_the_quinn/state_machine'),
       screen, 
       should = require('should'),
       sinon = require('sinon'),
@@ -55,19 +56,19 @@ describe("TitleScreen", function() {
   });
 
   it("uses a jukebox to play the song", function() {
-    var mockBox = {play: function(name) {}};
-    var jukeboxSpy = sandbox.mock(mockBox);
+    var jukebox = require('eskimo').Jukebox();
+    var jukeboxMock = sandbox.mock(jukebox);
     sandbox.stub(Level, "getJukebox", function() {
-      return mockBox;
+      return jukebox;
     });
     
-    jukeboxSpy.expects("play").once().withArgs('song');
+    jukeboxMock.expects("play").once().withArgs('song');
    
     TitleScreen.load();
 
     TitleScreen.update();
 
-    jukeboxSpy.verify();
+    jukeboxMock.verify();
   });
 
   it("puts the background on the screen in the draw method", function() {
@@ -124,8 +125,7 @@ describe("TitleScreen", function() {
     button.location.should.equal('location');
   });
 
-  it("also sends a callback to the button, which when called sends an event to the state machine", function() {
-    var state_machine = {start_game: function() {this.started = true;}};
+  function setupTitleScreenWithFakeButton() {
     var button = {
       click: function(location, callback) { 
         this.callback = callback; 
@@ -136,11 +136,35 @@ describe("TitleScreen", function() {
     });
 
     TitleScreen.load();
-    TitleScreen.click(state_machine, '');
+    return button;
+  }
+
+  it("also sends a callback to the button, which when called sends an event to the state machine", function() {
+    var stateMachine = {startGame: sandbox.stub()} 
+    var button = setupTitleScreenWithFakeButton();
+
+    TitleScreen.click(stateMachine, '');
 
     button.callback();
 
-    state_machine.started.should.be.true;
+    stateMachine.startGame.called.should.be.true;
+  });
+
+  it("stops the song on click", function() {
+    var jukebox = require('eskimo').Jukebox();
+    var mockJukebox = sandbox.mock(jukebox);
+    sandbox.stub(Level, "getJukebox", function() {
+      return jukebox;
+    });
+    var button = setupTitleScreenWithFakeButton();
+
+    mockJukebox.expects('stop').once(); 
+
+    TitleScreen.click({startGame: sandbox.stub()}, '');
+
+    button.callback();
+
+    mockJukebox.verify();
   });
 
 });

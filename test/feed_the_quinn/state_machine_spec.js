@@ -1,6 +1,7 @@
 describe("StateMachine", function() {
   var StateMachine = require('../../script/feed_the_quinn/state_machine'),
       TitleScreen = require('../../script/feed_the_quinn/title_screen'),
+      GameScreen = require('../../script/feed_the_quinn/game_screen'),
       should = require("should"),
       sinon = require("sinon"),
       loadStub;
@@ -63,6 +64,17 @@ describe("StateMachine", function() {
     sm.setState(simpleState);
 
     sm.click('event');  // Test fails if this throws an exception
+  });
+
+  it("loads the first level when the player hits start", function() {
+    var sm = StateMachine.init();
+    var mockGameScreen = sinon.mock(GameScreen);
+    
+    mockGameScreen.expects('load').once();
+
+    sm.startGame();
+
+    mockGameScreen.verify();
   });
 
 });

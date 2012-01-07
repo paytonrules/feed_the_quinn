@@ -62,4 +62,25 @@ describe("StartButton", function() {
 
     called.should.be.false;
   });
+
+  it("doesn't make the callback if the click below the image", function() {
+    var called = false;
+
+    sm.click({x :2, y: 22}, function() {
+      called = true;
+    });
+
+    called.should.be.false;
+  });
+
+  it("doesn't make the call back if the click is above the image", function() {
+    var called = false;
+
+    sm.click({x :2, y: 0}, function() {
+      called = true;
+    });
+
+    called.should.be.false;
+  });
+
 });

@@ -1,14 +1,14 @@
 module.exports = (function() {
-  var jukebox, 
-      startButton,
+  var startButton,
       _ = require('underscore'), 
       StartButton = require("./start_button"),
       Level = require("eskimo").Level,
       Image = require("eskimo").Image,
+      jukebox,
       background;
 
-  function start_game(state_machine) {
-    state_machine.start_game();
+  function startGame(state_machine) {
+    state_machine.startGame();
   }
 
   return {
@@ -16,10 +16,10 @@ module.exports = (function() {
       Level.load('title');
       background = Level.gameObject('background');
       startButton = StartButton.create(Level.gameObject('start_button'));
+      jukebox = Level.getJukebox();
     },
 
     update: function() {
-      jukebox = Level.getJukebox();
       jukebox.play('song');
     },
 
@@ -29,7 +29,8 @@ module.exports = (function() {
     },
 
     click: function(state_machine, location) {
-      startButton.click(location, _.bind(start_game, this, state_machine));
+      jukebox.stop('song');
+      startButton.click(location, _.bind(startGame, this, state_machine));
     }
   };
 })();

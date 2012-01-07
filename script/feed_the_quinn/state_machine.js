@@ -1,4 +1,6 @@
 var currentState;
+var gameScreen = require("./game_screen");
+var level = require("eskimo").Level;
 
 // This isn't a state machine.  Perhaps you could write it as one?  
 // Although update/draw are not events
@@ -25,7 +27,12 @@ module.exports = {
         if (currentState['click']) {
           currentState.click(this, location);
         }
-      }
+      },
+
+      startGame: function() {
+        gameScreen.load();
+      },
+
     };
   }
 };

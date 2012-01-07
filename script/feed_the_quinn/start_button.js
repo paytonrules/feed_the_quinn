@@ -15,7 +15,9 @@ module.exports = {
 
       click: function(location, callback) {
         if (location.x > buttonImage.x &&
-            location.x < buttonImage.right()) {
+            location.x < buttonImage.right() && 
+            location.y > buttonImage.y &&
+            location.y < buttonImage.bottom()) {
           callback();
         }
       }
