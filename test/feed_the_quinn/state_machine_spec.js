@@ -79,6 +79,7 @@ describe("StateMachine", function() {
 
   it("sets the current state to be the gameScreen on startGame", function() {
     var sm = StateMachine.init();
+    sandbox.stub(GameScreen, 'load');
 
     sm.startGame();
 

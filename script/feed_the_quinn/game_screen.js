@@ -1,3 +1,6 @@
+var level = require('eskimo').Level;
 module.exports = {
-  load: function() {}
+  load: function() {
+    level.load('levelOne');
+  }
 };
