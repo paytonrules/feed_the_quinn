@@ -30,9 +30,13 @@ module.exports = {
       },
 
       startGame: function() {
-        gameScreen.load();
+        currentState = gameScreen;
+        currentState.load();
       },
 
+      currentState: function() {
+        return currentState;
+      }
     };
   }
 };

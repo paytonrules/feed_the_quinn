@@ -3,15 +3,15 @@ describe("StateMachine", function() {
       TitleScreen = require('../../script/feed_the_quinn/title_screen'),
       GameScreen = require('../../script/feed_the_quinn/game_screen'),
       should = require("should"),
-      sinon = require("sinon"),
+      sandbox = require("sinon").sandbox.create(),
       loadStub;
 
   beforeEach(function() {
-    loadStub = sinon.stub(TitleScreen, "load");
+    loadStub = sandbox.stub(TitleScreen, "load");
   });
 
   afterEach(function() {
-    loadStub.restore();
+    sandbox.restore();
   });
 
   it("returns a state machine object", function() {
@@ -27,7 +27,7 @@ describe("StateMachine", function() {
   });
 
   it("delegates the update method to the current states update", function() {
-    var mockScreen = sinon.mock(TitleScreen);
+    var mockScreen = sandbox.mock(TitleScreen);
     var sm = StateMachine.init();
     mockScreen.expects("update").once().withArgs(sm);
 
@@ -37,7 +37,7 @@ describe("StateMachine", function() {
   });
 
   it("delegates the draw method to the current states draw", function() {
-    var mockScreen = sinon.mock(TitleScreen);
+    var mockScreen = sandbox.mock(TitleScreen);
     mockScreen.expects("draw").once().withArgs('screen');
 
     var sm = StateMachine.init();
@@ -48,7 +48,7 @@ describe("StateMachine", function() {
   });
 
   it("delegates the click method to the current states click", function() {
-    var mockScreen = sinon.mock(TitleScreen);
+    var mockScreen = sandbox.mock(TitleScreen);
     var sm = StateMachine.init();
     mockScreen.expects("click").once().withArgs(sm, 'location');
 
@@ -66,9 +66,9 @@ describe("StateMachine", function() {
     sm.click('event');  // Test fails if this throws an exception
   });
 
-  it("loads the first level when the player hits start", function() {
+  it("loads the gameScreen when the player hits start", function() {
     var sm = StateMachine.init();
-    var mockGameScreen = sinon.mock(GameScreen);
+    var mockGameScreen = sandbox.mock(GameScreen);
     
     mockGameScreen.expects('load').once();
 
@@ -77,4 +77,11 @@ describe("StateMachine", function() {
     mockGameScreen.verify();
   });
 
+  it("sets the current state to be the gameScreen on startGame", function() {
+    var sm = StateMachine.init();
+
+    sm.startGame();
+
+    sm.currentState().should.eql(require('../../script/feed_the_quinn/game_screen'));
+  });
 });
