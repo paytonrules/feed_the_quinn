@@ -27,5 +27,40 @@ module.exports = {
         'y': 450
       }
     }
+  },
+  'levelOne' : {
+    'baby' : {
+      'images' : {
+        'mario' : {
+          'src' : 'images/baby_mario.png'
+        }
+      },
+      'location': {
+        'x': 200,
+        'y': 200
+      }
+    },
+    'floor' : {
+      'images' : {
+        'floor' : {
+          'src' : 'images/crete-pave2-0.jpg'
+        }
+      },
+      'location': {
+        'x': 0,
+        'y': 0
+      }
+    },
+    'daddy' : {
+      'images' : {
+        'daddy' : { 
+          'src' : 'images/king_0.svg'
+        }
+      },
+      'location': {
+        'x': 100,
+        'y': 100
+      }
+    }
   }
 };
