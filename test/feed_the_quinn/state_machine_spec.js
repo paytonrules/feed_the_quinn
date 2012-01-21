@@ -85,4 +85,24 @@ describe("StateMachine", function() {
 
     sm.currentState().should.eql(require('../../script/feed_the_quinn/game_screen'));
   });
+
+  it("delegates the keydown event to the current state", function() {
+    var sm = StateMachine.init();
+    var stateWithKeydown = {keydown: sandbox.spy()}
+
+    sm.setState(stateWithKeydown);
+
+    sm.keydown({which: 3});
+
+    stateWithKeydown.keydown.calledWith({which: 3}).should.be.true;
+  });
+
+  it("does not throw an exception when the keydown wasn't defined", function() {
+    var sm = StateMachine.init();
+    var stateWithoutKeydown = {};
+
+    sm.setState(stateWithoutKeydown);
+
+    sm.keydown({which: 3});
+  });
 });

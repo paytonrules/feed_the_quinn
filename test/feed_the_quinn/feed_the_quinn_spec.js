@@ -12,6 +12,9 @@ describe("FeedTheQuinn", function() {
         click: function(location) {
           this.location = location;
         },
+        keydown: function(event) {
+          this.event = event;
+        },
         reset: function() {
           this.updated = false;
           this.screen = null;
@@ -51,6 +54,12 @@ describe("FeedTheQuinn", function() {
     Game.click({x: 0});
 
     machine.location.should.eql({x: 0});
+  });
+
+  it("delegates keydown to the state machine", function() {
+    Game.keydown({which: 3});
+    
+    machine.event.should.eql({which: 3});
   });
 
 });

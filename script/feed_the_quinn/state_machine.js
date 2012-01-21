@@ -29,6 +29,12 @@ module.exports = {
         }
       },
 
+      keydown: function(event) {
+        if (currentState['keydown']) {
+          currentState.keydown(event);
+        }
+      },
+
       startGame: function() {
         currentState = gameScreen;
         currentState.load();

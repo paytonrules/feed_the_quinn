@@ -19,5 +19,9 @@ module.exports = {
 
   click: function(location) {
     sm().click(location);
-  }
+  },
+
+  keydown: function(event) {
+    sm().keydown(event);
+  },
 };
