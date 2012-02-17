@@ -73,24 +73,12 @@ describe("TitleScreen", function() {
 
   it("creates a start button on load", function() {
     var startButtonSpy = sandbox.spy(StartButton, 'create', function() {
-      return {draw: function() {}};
+      return {};
     });
 
     TitleScreen.load();
 
     startButtonSpy.args[0][0].should.eql({'location' : {'x' : 0, 'y' : 0}});
-  });
-
-  it("draws the start button on draw", function() {
-    var button = {draw: function(screen) { this.screen = screen; }};
-    sandbox.stub(StartButton, 'create', function() {
-      return button;
-    });
-
-    TitleScreen.load();
-    TitleScreen.draw(screen);
-
-    button.screen.should.eql(screen);
   });
 
   it("sends clicks to the button and their location", function() {

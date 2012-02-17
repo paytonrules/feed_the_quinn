@@ -13,10 +13,6 @@ module.exports = {
     sm().update();
   },
 
-  draw: function(screen) {
-    sm().draw(screen);
-  },
-
   click: function(location) {
     sm().click(location);
   },

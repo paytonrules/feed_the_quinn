@@ -6,9 +6,6 @@ describe("FeedTheQuinn", function() {
         update: function() {
           this.updated = true;
         },
-        draw: function(screen) {
-          this.screen = screen;
-        },
         click: function(location) {
           this.location = location;
         },
@@ -42,12 +39,6 @@ describe("FeedTheQuinn", function() {
     Game.update();
 
     machine.updated.should.be.true;
-  });
-
-  it("sends draw to the state machine with the screen", function() {
-    Game.draw('screen');
-
-    machine.screen.should.eql('screen');
   });
 
   it("sends clicks to the state machine", function() {

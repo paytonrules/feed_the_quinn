@@ -36,17 +36,6 @@ describe("StateMachine", function() {
     mockScreen.verify();
   });
 
-  it("delegates the draw method to the current states draw", function() {
-    var mockScreen = sandbox.mock(TitleScreen);
-    mockScreen.expects("draw").once().withArgs('screen');
-
-    var sm = StateMachine.init();
-
-    sm.draw('screen');
-
-    mockScreen.verify();
-  });
-
   it("delegates the click method to the current states click", function() {
     var mockScreen = sandbox.mock(TitleScreen);
     var sm = StateMachine.init();

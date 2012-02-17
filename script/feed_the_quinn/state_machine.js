@@ -3,7 +3,7 @@ var gameScreen = require("./game_screen");
 var level = require("eskimo").Level;
 
 // This isn't a state machine.  Perhaps you could write it as one?  
-// Although update/draw are not events
+// Although update is not an event
 // Actually perhaps you need a delegate pattern here - anything automatically goes to its defined thingy
 
 module.exports = {
@@ -18,11 +18,7 @@ module.exports = {
       update: function() {
         currentState.update(this);
       },
-
-      draw: function(screen) {
-        currentState.draw(screen);
-      },
-
+      
       click: function(location) {
         if (currentState['click']) {
           currentState.click(this, location);
