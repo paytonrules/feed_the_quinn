@@ -10,10 +10,7 @@ module.exports = {
     return {
 
       click: function(location, callback) {
-        if (location.x > objectData.location.x &&
-            location.x < buttonImage.right() && 
-            location.y > objectData.location.y &&
-            location.y < buttonImage.bottom()) {
+        if (buttonImage.contains(location.x, location.y)) {
           callback();
         }
       }
