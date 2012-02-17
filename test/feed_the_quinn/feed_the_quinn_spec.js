@@ -12,6 +12,9 @@ describe("FeedTheQuinn", function() {
         keydown: function(event) {
           this.event = event;
         },
+        keyup: function(event) {
+          this.event = event;
+        },
         reset: function() {
           this.updated = false;
           this.screen = null;
@@ -53,4 +56,9 @@ describe("FeedTheQuinn", function() {
     machine.event.should.eql({which: 3});
   });
 
+  it("delegates keyup to the state machine", function() {
+    Game.keyup({which: 3});
+    
+    machine.event.should.eql({which: 3});
+  });
 });

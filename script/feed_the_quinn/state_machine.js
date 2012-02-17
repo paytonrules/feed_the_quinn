@@ -31,6 +31,12 @@ module.exports = {
         }
       },
 
+      keyup: function(event) {
+        if (currentState['keyup']) {
+          currentState.keyup(event);
+        }
+      },
+
       startGame: function() {
         currentState = gameScreen;
         currentState.load();

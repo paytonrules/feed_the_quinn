@@ -2,8 +2,10 @@ describe("FeedTheQuinn#GameScreen", function() {
   var sandbox = require('sinon').sandbox.create(),
       eskimo = require('eskimo'),
       level = eskimo.Level,
-      KeyCodes = eskimo.KeyCodes,
-      game = require('../../script/feed_the_quinn/game_screen');
+      Keyboard = eskimo.Keyboard,
+      should = require('should'),
+      game = require('../../script/feed_the_quinn/game_screen'),
+      Daddy = require("../../script/feed_the_quinn/daddy.js");
 
   function setupLevelWithDaddy() {
     level.initializeAssets(require('jquery'));
@@ -16,50 +18,73 @@ describe("FeedTheQuinn#GameScreen", function() {
     sandbox.restore();
   });
 
-  it("loads the levelOne on load", function() {
-    var levelLoad = sandbox.stub(level, 'load');
-    sandbox.stub(level, 'gameObject', function() {
-      return {};
+  describe("load", function() {
+    var levelLoad;
+  
+    beforeEach(function() {
+      levelLoad = sandbox.stub(level, 'load');
+      sandbox.stub(level, 'gameObject', function() {
+        return 'daddy object';
+      });
     });
 
-    game.load();
+    // Note - should add a test method to the level and say "is this level loaded?"
+    it("loads the levelOne on load", function() {
+      game.load();
 
-    levelLoad.calledWith('levelOne').should.be.true;
+      levelLoad.calledWith('levelOne').should.be.true;
+    });
+
+    it("sends updates to the daddy in the load", function() {
+      var daddyMock = sandbox.spy(Daddy, 'create');
+
+      game.load();
+
+      daddyMock.calledWith('daddy object').should.be.true;
+    });
   });
 
-  it("moves the daddy object PLAYER_VELOCITY*value horizontally", function() {
-    setupLevelWithDaddy();
-    game.load();
-    game.moveHoriz(-1);
-    game.update();
-
-    var daddy = level.gameObject("daddy");
-
-    daddy.location.x.should.eql(10 - game.PLAYER_VELOCITY);
-  });
-
-  it("keeps moving the daddy object left until stop moving left is sent", function() {
-    setupLevelWithDaddy();
-    game.load();
-    game.moveHoriz(-1);
-    game.update();
-    game.update();
+  describe("update", function() {
+    var daddy,
+        daddyMock;
     
-    var daddy = level.gameObject("daddy");
+    beforeEach(function() {
+      daddy = Daddy.create();
+      game.setDaddy(daddy);
 
-    daddy.location.x.should.eql(10 - (2 * game.PLAYER_VELOCITY));
-  });
+      daddyMock = sandbox.mock(daddy);
+    });
 
-  it("doesnt move more than maximum velocity horizontally", function() {
-    setupLevelWithDaddy();
-    game.load();
-    game.moveHoriz(1);
-    game.moveHoriz(1);
-    game.update();
+    it("updates the daddy with the keystate of left: true when the left key is pressed", function() {
+      daddyMock.expects('update').withArgs({left: true});
 
-    var daddy = level.gameObject("daddy");
+      game.keydown({which: Keyboard.LEFT_ARROW});
+      game.update();
 
-    daddy.location.x.should.eql(10 + game.PLAYER_VELOCITY);
+      daddyMock.verify();
+    });
+
+    it("doesnt change the key state until a keyup is sent", function() {
+      daddyMock.expects('update').twice().withArgs({left: true});
+
+      game.keydown({which: Keyboard.LEFT_ARROW});
+      game.update();
+      game.update();
+
+      daddyMock.verify();
+    });
+
+    it("Stops moving left on a keyup", function() {
+      daddyMock.expects('update').withArgs({left: true});
+      daddyMock.expects('update').withArgs({left: false});
+      
+      game.keydown({which: Keyboard.LEFT_ARROW});
+      game.update();
+      game.keyup({which: Keyboard.LEFT_ARROW});
+      game.update();
+
+      daddyMock.verify();
+    });
   });
    
 });

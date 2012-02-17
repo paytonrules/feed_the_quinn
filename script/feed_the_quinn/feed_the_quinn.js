@@ -20,4 +20,8 @@ module.exports = {
   keydown: function(event) {
     sm().keydown(event);
   },
+
+  keyup: function(event) {
+    sm().keyup(event);
+  }
 };

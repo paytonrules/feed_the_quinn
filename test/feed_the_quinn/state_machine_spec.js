@@ -86,6 +86,17 @@ describe("StateMachine", function() {
     stateWithKeydown.keydown.calledWith({which: 3}).should.be.true;
   });
 
+  it("delegates the keyup event to the current state", function() {
+    var sm = StateMachine.init();
+    var stateWithKeyup = {keyup: sandbox.spy()}
+
+    sm.setState(stateWithKeyup);
+
+    sm.keyup({which: 3});
+
+    stateWithKeyup.keyup.calledWith({which: 3}).should.be.true;
+  });
+
   it("does not throw an exception when the keydown wasn't defined", function() {
     var sm = StateMachine.init();
     var stateWithoutKeydown = {};
@@ -93,5 +104,14 @@ describe("StateMachine", function() {
     sm.setState(stateWithoutKeydown);
 
     sm.keydown({which: 3});
+  });
+
+  it("does not throw an exception when the keyup wasn't defined", function() {
+    var sm = StateMachine.init();
+    var stateWithoutKeyup = {};
+
+    sm.setState(stateWithoutKeyup);
+
+    sm.keyup({which: 3});
   });
 });

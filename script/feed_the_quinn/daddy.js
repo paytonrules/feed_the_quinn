@@ -1,21 +1,26 @@
 var Daddy = module.exports = {
   create: function(gameObject) {
-    var currentVelocity = 0;
     
-    function moveHoriz(direction) {
-      if (currentVelocity < Daddy.PLAYER_VELOCITY) {
-        currentVelocity += direction * Daddy.PLAYER_VELOCITY;
+    function update(keystate) {
+      if (keystate.left) {
+        gameObject.location.x -= Daddy.PLAYER_VELOCITY;
+      }
+
+      if (keystate.right) {
+        gameObject.location.x += Daddy.PLAYER_VELOCITY;
+      }
+
+      if (keystate.up) {
+        gameObject.location.y -= Daddy.PLAYER_VELOCITY;
+      }
+
+      if (keystate.down) {
+        gameObject.location.y += Daddy.PLAYER_VELOCITY;
       }
     };
 
-    function update() {
-      gameObject.location.x += currentVelocity;
-    };
-
-
     return {
-      update: update,
-      moveHoriz: moveHoriz
+      update: update
     };
   },
   PLAYER_VELOCITY: 5
