@@ -19,17 +19,17 @@ describe("TitleScreen", function() {
     Level.levels = {
       "title" : {
         "background" : {
-          'images': {
+          'image': {
             'src': 'images/title_screen_background.jpg'
-          },
-          'sounds': {
-            'song' : {
-              'src': 'songs/The_Mighty_Quinn.MP3'
-            }
-          },
+            },
           'location': {
             'x': 20,
             'y': 4
+          },
+        },
+        'backgroundMusic': {
+          'sound' : {
+            'src': 'songs/The_Mighty_Quinn.MP3'
           }
         },
         "start_button" : {
@@ -62,7 +62,7 @@ describe("TitleScreen", function() {
       return jukebox;
     });
     
-    jukeboxMock.expects("play").once().withArgs('song');
+    jukeboxMock.expects("play").once().withArgs('backgroundMusic');
    
     TitleScreen.load();
 

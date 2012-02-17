@@ -17,11 +17,11 @@ module.exports = (function() {
     },
 
     update: function() {
-      jukebox.play('song');
+      jukebox.play('backgroundMusic');
     },
 
     click: function(state_machine, location) {
-      jukebox.stop('song');
+      jukebox.stop('backgroundMusic');
       startButton.click(location, _.bind(startGame, this, state_machine));
     }
   };

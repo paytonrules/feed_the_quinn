@@ -22,7 +22,8 @@ module.exports = {
       'location': {
         'x': 450,
         'y': 450
-      }
+      },
+      'visible' : true
     }
   },
   'levelOne' : {
@@ -33,7 +34,8 @@ module.exports = {
       'location': {
         'x': 0,
         'y': 0
-      }
+      },
+      'visible' : true
     },
     'baby' : {
       'image' : {
@@ -42,7 +44,8 @@ module.exports = {
       'location': {
         'x': 200,
         'y': 200
-      }
+      },
+      'visible' : true
     },
     'daddy' : {
       'image' : {
@@ -51,7 +54,8 @@ module.exports = {
       'location': {
         'x': 100,
         'y': 100
-      }
+      },
+      'visible' : true
     }
   }
 };
