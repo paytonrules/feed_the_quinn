@@ -2,35 +2,13 @@ describe("StartButton", function() {
   var StartButton = require("../../script/feed_the_quinn/start_button"),
       Image = require("eskimo").Image,
       should = require('should'),
-      sm = StartButton.create({'location' : 
-                                   { 'x' : 1, 'y' : 1}, 
-                                 'images' : {
-                                   'start_button' : { 'src' : 'imageName'}
-                                 }
-                               });
+      sm;
+  
   beforeEach(function() {
-    var jquery = require('jquery'),
-        level = require('eskimo').Level;
-
-    level.initializeAssets(jquery);
-    level.addImage('start_button', jquery("<img src='bleh' height='20' width='20'></img>"));
-  });
-
-  it("draws on the screen", function() {
-    var screen = {
-      put: function(image) {
-        this.image = image;
-      },
-      shouldHaveImage: function(image) {
-        this.image.name.should.equal(image.name);
-        this.image.x.should.equal(image.x);
-        this.image.y.should.equal(image.y);
-      }
-    };
-        
-    sm.draw(screen);
-
-    screen.shouldHaveImage(Image('start_button',  1, 1)); 
+    var jquery = require('jquery');
+    var image = jquery("<img src='bleh' height='20' width='20'></img>")[0];
+    sm = StartButton.create({asset: image,
+                             location : {x: 1, y: 1}});
   });
 
   it("accepts a click, and calls the handler if the location is within the button", function() {

@@ -71,22 +71,6 @@ describe("TitleScreen", function() {
     jukeboxMock.verify();
   });
 
-  it("puts the background on the screen in the draw method", function() {
-    sandbox.stub(StartButton, 'create', function() {
-      return {draw: function() {}};
-    });
-    var screenSpy = sandbox.spy(screen, 'put');
-
-    TitleScreen.load();
-    TitleScreen.draw(screen);
-
-    var image = screenSpy.args[0][0];
-
-    image.name.should.equal('background');
-    image.x.should.equal(20);
-    image.y.should.equal(4);
-  });
-
   it("creates a start button on load", function() {
     var startButtonSpy = sandbox.spy(StartButton, 'create', function() {
       return {draw: function() {}};

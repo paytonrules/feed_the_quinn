@@ -1,26 +1,23 @@
 var level = require('eskimo').Level,
     Image = require('eskimo').Image,
-    currentVelocity = 0,
+    Daddy = require('./daddy.js'),
+    currentVelocity,
     daddy;
-
-function daddy() {
-  return level.gameObject('daddy');
-}
 
 module.exports = {
   PLAYER_VELOCITY: 5,
   load: function() {
     level.load('levelOne');
+    daddy = Daddy.create(level.gameObject('daddy'));
+    currentVelocity = 0;
   },
-
+  
   update: function() {
-    daddy().location.x += currentVelocity;
+    daddy.update();
   },
 
-  moveLeft: function() {
-    if (currentVelocity == 0) {
-      currentVelocity -= this.PLAYER_VELOCITY;
-    }
+  moveHoriz: function(direction) {
+    daddy.moveHoriz(direction);
   },
 
   // Eventually want to remove the idea of draw methods in favor
