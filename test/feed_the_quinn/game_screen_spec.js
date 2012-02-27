@@ -55,7 +55,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       daddyMock = sandbox.mock(daddy);
     });
 
-    it("updates the daddy with the keystate of left: true when the left key is pressed", function() {
+    it("updates the daddy with the keystate when something is pressed", function() {
       daddyMock.expects('update').withArgs({left: true});
 
       game.keydown({which: Keyboard.LEFT_ARROW});
@@ -86,5 +86,4 @@ describe("FeedTheQuinn#GameScreen", function() {
       daddyMock.verify();
     });
   });
-   
 });
