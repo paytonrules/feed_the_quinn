@@ -27,6 +27,15 @@ module.exports = {
     }
   },
   'levelOne' : {
+    'progressBar' : {
+      'image' : {
+        'src' : 'images/progressBar.png'
+      },
+      'location' : {
+        'x' : 300,
+        'y' : 20
+      },
+    },
     'floor' : {
       'image' : {
         'src' : 'images/crete-pave2-0.jpg'

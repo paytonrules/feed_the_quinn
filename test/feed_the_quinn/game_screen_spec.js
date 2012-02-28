@@ -5,14 +5,10 @@ describe("FeedTheQuinn#GameScreen", function() {
       Keyboard = eskimo.Keyboard,
       should = require('should'),
       game = require('../../script/feed_the_quinn/game_screen'),
-      Daddy = require("../../script/feed_the_quinn/daddy.js");
+      gameObject = {},
+      Daddy = require("../../script/feed_the_quinn/daddy.js"),
+      ProgressBar = require("../../script/feed_the_quinn/progress_bar.js");
 
-  function setupLevelWithDaddy() {
-    level.initializeAssets(require('jquery'));
-    level.levels = { 'levelOne' : {}};
-    level.load('levelOne');
-    level.addGameObject('daddy', {location: {x: 10}});
-  }
 
   afterEach(function() {
     sandbox.restore();
@@ -23,9 +19,10 @@ describe("FeedTheQuinn#GameScreen", function() {
   
     beforeEach(function() {
       levelLoad = sandbox.stub(level, 'load');
-      sandbox.stub(level, 'gameObject', function() {
-        return 'daddy object';
+      sandbox.stub(level, 'gameObject', function(key) {
+        return gameObject[key];
       });
+               
     });
 
     // Note - should add a test method to the level and say "is this level loaded?"
@@ -35,12 +32,36 @@ describe("FeedTheQuinn#GameScreen", function() {
       levelLoad.calledWith('levelOne').should.be.true;
     });
 
-    it("sends updates to the daddy in the load", function() {
+    it("createes the daddy object in the load", function() {
+      gameObject['daddy'] = 'daddy object';
       var daddyMock = sandbox.spy(Daddy, 'create');
 
       game.load();
 
       daddyMock.calledWith('daddy object').should.be.true;
+    });
+
+    it("creates a progress bar object in the load", function() {
+      gameObject['progressBar'] = 'progress bar';
+      var progressBarMock = sandbox.spy(ProgressBar, 'create');
+      
+      game.load();
+
+      progressBarMock.calledWith('progress bar').should.be.true;
+    });
+
+    it("updates the progress bar with the state of daddy's stress", function() {
+      gameObject['progressBar'] = {stress: 0 };
+      var fakeDaddy = {
+        stress: 40,
+        update: sandbox.stub()
+      };
+      sandbox.stub(Daddy, 'create').returns(fakeDaddy);
+      game.load();
+
+      game.update();
+
+      gameObject['progressBar'].stress.should.equal(40);
     });
   });
 
