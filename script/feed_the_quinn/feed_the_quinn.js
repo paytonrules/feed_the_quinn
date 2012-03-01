@@ -1,27 +1,26 @@
-var StateMachine = require("./state_machine"),
-    stateMachine;
-
-function sm() {
-  if (typeof(stateMachine) === "undefined") {
-    stateMachine = StateMachine.init();
-  }
-  return stateMachine;
-}
+var StateMachine = require("./state_machine");
 
 module.exports = {
-  update: function() {
-    sm().update();
-  },
+  create: function(screen) {
+    var stateMachine = StateMachine.init(screen);
 
-  click: function(location) {
-    sm().click(location);
-  },
+    return {
+      update: function() {
+        stateMachine.update();
+      },
+   
+      click: function(location) {
+        stateMachine.click(location);
+      },
+      
+      keydown: function(event) {
+        stateMachine.keydown(event);
+      },
 
-  keydown: function(event) {
-    sm().keydown(event);
-  },
+      keyup: function(event) {
+        stateMachine.keyup(event);
+      }
 
-  keyup: function(event) {
-    sm().keyup(event);
-  }
+    };
+  },
 };

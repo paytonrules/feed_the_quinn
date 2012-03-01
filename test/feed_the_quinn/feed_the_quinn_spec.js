@@ -20,44 +20,56 @@ describe("FeedTheQuinn", function() {
           this.screen = null;
         }
       },
-      sinon = require('sinon');
+      sandbox = require('sinon').sandbox.create();
 
   beforeEach(function() {
     machine.reset();
-    Game.screen = 'screen';
   });
 
-  it("initializes the state machine on the first update", function() {
-    var stateMachineSpy = sinon.stub(StateMachine, 'init', function() {
-      return machine;
-    });
-
-    Game.update();
-
-    stateMachineSpy.called.should.be.true;
-    stateMachineSpy.restore();
+  afterEach(function() {
+    sandbox.restore();
   });
 
-  it("delegates subsequent updates to initialized the state machine", function() {
-    Game.update();
+  it("initializes the state machine on creation", function() {
+    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
+    
+    var game = Game.create('screen');
+
+    stateMachineSpy.calledWith('screen').should.be.true;
+  });
+
+  it("delegates updates to initialized the state machine", function() {
+    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
+    var game = Game.create('screen');
+    
+    game.update();
 
     machine.updated.should.be.true;
   });
 
   it("sends clicks to the state machine", function() {
-    Game.click({x: 0});
+    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
+    var game = Game.create('screen');
+    
+    game.click({x: 0});
 
     machine.location.should.eql({x: 0});
   });
 
   it("delegates keydown to the state machine", function() {
-    Game.keydown({which: 3});
+    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
+    var game = Game.create('screen');
+    
+    game.keydown({which: 3});
     
     machine.event.should.eql({which: 3});
   });
 
   it("delegates keyup to the state machine", function() {
-    Game.keyup({which: 3});
+    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
+    var game = Game.create('screen');
+    
+    game.keyup({which: 3});
     
     machine.event.should.eql({which: 3});
   });
