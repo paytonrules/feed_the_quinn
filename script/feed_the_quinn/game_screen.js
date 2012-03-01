@@ -15,10 +15,11 @@ KEYMAP[String(Keyboard.UP_ARROW)] = 'up';
 KEYMAP[String(Keyboard.DOWN_ARROW)] = 'down';
 
 module.exports = {
-  load: function() {
+  load: function(screen) {
     level.load('levelOne');
     daddy = Daddy.create(level.gameObject('daddy'));
-    progressBar = ProgressBar.create(level.gameObject('progressBar'));
+    progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
+    screen.put(progressBar);
   },
   
   update: function() {

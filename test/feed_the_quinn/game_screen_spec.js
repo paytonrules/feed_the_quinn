@@ -7,7 +7,8 @@ describe("FeedTheQuinn#GameScreen", function() {
       game = require('../../script/feed_the_quinn/game_screen'),
       gameObject = {},
       Daddy = require("../../script/feed_the_quinn/daddy.js"),
-      ProgressBar = require("../../script/feed_the_quinn/progress_bar.js");
+      ProgressBar = require("../../script/feed_the_quinn/progress_bar.js"),
+      screen;
 
 
   afterEach(function() {
@@ -22,12 +23,17 @@ describe("FeedTheQuinn#GameScreen", function() {
       sandbox.stub(level, 'gameObject', function(key) {
         return gameObject[key];
       });
-               
+      var Screen = require('eskimo').Screen;
+      var Canvas = require('canvas');
+      var canvas = new Canvas(200, 200);
+      var $ = require('jquery');
+
+      screen = new Screen($(canvas));
     });
 
     // Note - should add a test method to the level and say "is this level loaded?"
     it("loads the levelOne on load", function() {
-      game.load();
+      game.load(screen);
 
       levelLoad.calledWith('levelOne').should.be.true;
     });
@@ -36,18 +42,9 @@ describe("FeedTheQuinn#GameScreen", function() {
       gameObject['daddy'] = 'daddy object';
       var daddyMock = sandbox.spy(Daddy, 'create');
 
-      game.load();
+      game.load(screen);
 
       daddyMock.calledWith('daddy object').should.be.true;
-    });
-
-    it("creates a progress bar object in the load", function() {
-      gameObject['progressBar'] = 'progress bar';
-      var progressBarMock = sandbox.spy(ProgressBar, 'create');
-      
-      game.load();
-
-      progressBarMock.calledWith('progress bar').should.be.true;
     });
 
     it("updates the progress bar with the state of daddy's stress", function() {
@@ -57,11 +54,22 @@ describe("FeedTheQuinn#GameScreen", function() {
         update: sandbox.stub()
       };
       sandbox.stub(Daddy, 'create').returns(fakeDaddy);
-      game.load();
+      game.load(screen);
 
       game.update();
 
       gameObject['progressBar'].stress.should.equal(40);
+    });
+
+    it("puts a progress bar on the screen", function() {
+      gameObject['progressBar'] = 'progress bar';
+      var progressBarMock = sandbox.spy(ProgressBar, 'create');
+
+      game.load(screen);
+
+      var bar = screen.findObjectNamed('progressBar');
+      bar.should.not.be.nil;
+      progressBarMock.calledWith('progressBar', 'progress bar').should.be.true;
     });
   });
 
