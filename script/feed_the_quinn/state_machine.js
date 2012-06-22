@@ -7,7 +7,7 @@ var level = require("eskimo").Level;
 // Actually perhaps you need a delegate pattern here - anything automatically goes to its defined thingy
 
 module.exports = {
-  init: function() {
+  init: function(screen) {
     currentState = require('./title_screen');
     currentState.load();
 
@@ -15,6 +15,7 @@ module.exports = {
       setState: function(state) {
         currentState = state;
       },
+      
       update: function() {
         currentState.update(this);
       },
@@ -26,20 +27,20 @@ module.exports = {
       },
 
       keydown: function(event) {
-        if (currentState['keydown']) {
+        if (currentState.keydown) {
           currentState.keydown(event);
         }
       },
 
       keyup: function(event) {
-        if (currentState['keyup']) {
+        if (currentState.keyup) {
           currentState.keyup(event);
         }
       },
 
       startGame: function() {
         currentState = gameScreen;
-        currentState.load();
+        currentState.load(screen);
       },
 
       currentState: function() {

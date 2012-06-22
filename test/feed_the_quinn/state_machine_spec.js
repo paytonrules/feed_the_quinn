@@ -17,11 +17,11 @@ describe("StateMachine", function() {
   it("returns a state machine object", function() {
     var sm = StateMachine.init();
 
-    sm.should.be.ok;
+    should.exist(sm);
   });
 
   it("begins by loading the title screen state", function() {
-    var sm = StateMachine.init();
+    var sm = StateMachine.init('screen');
 
     loadStub.called.should.be.true;
   });
@@ -56,10 +56,10 @@ describe("StateMachine", function() {
   });
 
   it("loads the gameScreen when the player hits start", function() {
-    var sm = StateMachine.init();
+    var sm = StateMachine.init('screen');
     var mockGameScreen = sandbox.mock(GameScreen);
     
-    mockGameScreen.expects('load').once();
+    mockGameScreen.expects('load').once().withExactArgs('screen');
 
     sm.startGame();
 
@@ -77,7 +77,7 @@ describe("StateMachine", function() {
 
   it("delegates the keydown event to the current state", function() {
     var sm = StateMachine.init();
-    var stateWithKeydown = {keydown: sandbox.spy()}
+    var stateWithKeydown = {keydown: sandbox.spy()};
 
     sm.setState(stateWithKeydown);
 
@@ -88,7 +88,7 @@ describe("StateMachine", function() {
 
   it("delegates the keyup event to the current state", function() {
     var sm = StateMachine.init();
-    var stateWithKeyup = {keyup: sandbox.spy()}
+    var stateWithKeyup = {keyup: sandbox.spy()};
 
     sm.setState(stateWithKeyup);
 
