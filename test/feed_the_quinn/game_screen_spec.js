@@ -20,6 +20,7 @@ describe("FeedTheQuinn#GameScreen", function() {
   
     beforeEach(function() {
       levelLoad = sandbox.stub(level, 'load');
+      levelLoad.callsArg(1);
       sandbox.stub(level, 'gameObject', function(key) {
         return gameObject[key];
       });
@@ -38,7 +39,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       levelLoad.calledWith('levelOne').should.be.true;
     });
 
-    it("createes the daddy object in the load", function() {
+    it("creates the daddy object in the load", function() {
       gameObject['daddy'] = 'daddy object';
       var daddyMock = sandbox.spy(Daddy, 'create');
 
@@ -68,8 +69,23 @@ describe("FeedTheQuinn#GameScreen", function() {
       game.load(screen);
 
       var bar = screen.findObjectNamed('progressBar');
-      bar.should.not.be.nil;
-      progressBarMock.calledWith('progressBar', 'progress bar').should.be.true;
+      should.exist(bar);
+      progressBarMock.calledWith('progressBar', 'progress bar').should.eql(true);
+    });
+
+    it("does not do any of these things if the levelLoader doesn't make its callback", function() {
+      gameObject['daddy'] = 'daddy object';
+      var daddyMock = sandbox.spy(Daddy, 'create');
+      gameObject['progressBar'] = 'progress bar';
+      var progressBarMock = sandbox.spy(ProgressBar, 'create');
+      levelLoad.callArgAt = null;
+
+      game.load(screen);
+
+      daddyMock.called.should.eql(false);
+      progressBarMock.called.should.eql(false);
+      var bar = screen.findObjectNamed('progressBar');
+      should.not.exist(bar);
     });
   });
 

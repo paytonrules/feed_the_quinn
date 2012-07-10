@@ -1,4 +1,5 @@
 var Daddy = module.exports = {
+  stress: 50,
   create: function(gameObject) {
     
     function update(keystate) {
