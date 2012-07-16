@@ -17,7 +17,7 @@ var Daddy = module.exports = {
       if (keystate.down) {
         gameObject.location.y += Daddy.PLAYER_VELOCITY;
       }
-    };
+    }
 
     return {
       update: update,
