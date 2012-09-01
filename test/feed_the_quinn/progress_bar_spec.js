@@ -1,5 +1,6 @@
 describe("Progress Bar", function() {
   var ProgressBar = require('../../script/feed_the_quinn/progress_bar'),
+      Assert = require('assert'),
       sandbox = require('sinon').sandbox.create();
 
   afterEach(function() {
@@ -9,7 +10,7 @@ describe("Progress Bar", function() {
   it("is created with a name", function() {
     var bar = ProgressBar.create("blah", {});
 
-    bar.name.should.equal("blah");
+    Assert.equal(bar.name, "blah");
   });
 
   it("updates its stress", function() {
@@ -18,7 +19,7 @@ describe("Progress Bar", function() {
 
     bar.update(40);
     
-    a.stress.should.equal(40);
+    Assert.equal(a.stress, 40);
   });
 
   it("draws the image with its asset, location, and width and height", function() {
@@ -33,7 +34,7 @@ describe("Progress Bar", function() {
 
     bar.draw(context);
 
-    contextStub.calledWith(image, 0, 0, 0, 200, 10, 20, 0, 200).should.be.true;
+    Assert.ok(contextStub.calledWith(image, 0, 0, 0, 200, 10, 20, 0, 200));
   });
 
   it("scales the width to the full width when stress is at 100", function() {
@@ -49,7 +50,7 @@ describe("Progress Bar", function() {
 
     bar.draw(context);
 
-    contextStub.calledWith(image, 0, 0, 100, 200, 0, 0, 100, 200).should.be.true;
+    Assert.ok(contextStub.calledWith(image, 0, 0, 100, 200, 0, 0, 100, 200));
   });
 
 });

@@ -1,7 +1,7 @@
 
 describe("Daddy", function() {
   var Daddy = require('../../script/feed_the_quinn/daddy.js'),
-      should = require('should');
+      assert = require('assert');
 
   it("does not change the location on update if it hasnt been moved yet", function() {
     var daddyGameObject = {location: {x: 0, y: 0}};
@@ -9,8 +9,8 @@ describe("Daddy", function() {
 
     daddy.update({left: false, right: false, up: false, down: false});
 
-    daddyGameObject.location.x.should.eql(0);
-    daddyGameObject.location.y.should.eql(0);
+    assert.strictEqual(daddyGameObject.location.x, 0);
+    assert.strictEqual(daddyGameObject.location.y, 0);
   });
 
   it("moves left PLAYER_VELOCITY when left button is pressed", function() {
@@ -19,7 +19,7 @@ describe("Daddy", function() {
 
     daddy.update({left: true});
 
-    daddyGameObject.location.x.should.eql(-Daddy.PLAYER_VELOCITY);
+    assert.strictEqual(daddyGameObject.location.x, -Daddy.PLAYER_VELOCITY);
   });
 
   it("moves right PLAYER_VELOCITY when right button is pressed", function() {
@@ -28,7 +28,7 @@ describe("Daddy", function() {
 
     daddy.update({right: true});
 
-    daddyGameObject.location.x.should.eql(Daddy.PLAYER_VELOCITY);
+    assert.strictEqual(daddyGameObject.location.x, Daddy.PLAYER_VELOCITY);
   });
 
   it("Moves nowhere when left and right buttons are pressed", function() {
@@ -37,7 +37,7 @@ describe("Daddy", function() {
 
     daddy.update({left: true, right: true});
 
-    daddyGameObject.location.x.should.eql(0);
+    assert.strictEqual(daddyGameObject.location.x, 0);
   });
 
   it("Moves up when up is pressed", function() {
@@ -46,7 +46,7 @@ describe("Daddy", function() {
 
     daddy.update({up: true});
 
-    daddyGameObject.location.y.should.eql(-Daddy.PLAYER_VELOCITY);
+    assert.strictEqual(daddyGameObject.location.y, -Daddy.PLAYER_VELOCITY);
   });
 
   it("Moves down when down is pressed", function() {
@@ -55,7 +55,7 @@ describe("Daddy", function() {
 
     daddy.update({down: true});
 
-    daddyGameObject.location.y.should.eql(Daddy.PLAYER_VELOCITY);
+    assert.strictEqual(daddyGameObject.location.y, Daddy.PLAYER_VELOCITY);
   });
 
   it("Goes nowhere when down and up are pressed", function() {
@@ -64,7 +64,7 @@ describe("Daddy", function() {
 
     daddy.update({up: true, down: true});
 
-    daddyGameObject.location.y.should.eql(0);
+    assert.strictEqual(daddyGameObject.location.y, 0);
   });
 
 });

@@ -5,6 +5,5 @@ var Assets = require('./feed_the_quinn/assets');
 Eskimo({game: game,
          jquery: $}).start({canvas: $('#feed_the_quinn'),
                             document: document,
-                            levels: Assets   
+                            levels: Assets // Overloaded term
                            });
-

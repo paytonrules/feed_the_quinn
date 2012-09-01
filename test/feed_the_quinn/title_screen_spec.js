@@ -1,22 +1,13 @@
-describe("TitleScreen", function() {
-  var TitleScreen = require('../../script/feed_the_quinn/title_screen'), 
+describe("TitleScreen", function() { var TitleScreen = require('../../script/feed_the_quinn/title_screen'), 
       StartButton = require('../../script/feed_the_quinn/start_button'),
-      StateMachine = require('../../script/feed_the_quinn/state_machine'),
-      screen, 
-      should = require('should'),
+      assert = require('assert'),
       sinon = require('sinon'),
-      Level = require('eskimo').Level,
-      jquery = require('jquery'),
-      levels,
+      gameSpec,
       sandbox;
 
   beforeEach(function() {
-    screen = {
-      put: function() {}
-    };
-  
-    // Maybe just use real assets ?
-    Level.levels = {
+    sandbox = sinon.sandbox.create();
+    var levels = {
       "title" : {
         "background" : {
           'image': {
@@ -40,32 +31,61 @@ describe("TitleScreen", function() {
         }
       }
     };
-    Level.initializeAssets(jquery);
-    
-    sandbox = sinon.sandbox.create();
+
+    var jukebox = require('eskimo').Jukebox();
+    var mockJukebox = sandbox.mock(jukebox);
+    gameSpec = {
+      mockJukebox: function() { return mockJukebox; },
+      load: function(name, func) {
+        this.levelName = name;
+        func({
+          getJukebox: function() {return jukebox;},
+          gameObject: function(objectName) {
+            return levels[name][objectName];
+          },
+          levelName: name
+        });
+      }
+    };
   });
 
   afterEach(function() {
     sandbox.restore();
   });
 
-  it("loads the title screen images with this as the context", function() {
-    TitleScreen.load();
+  function setupTitleScreenWithFakeButton(jukebox) {
+    var button = {
+      click: function(location, callback) { 
+        this.callback = callback; 
+      }
+    };
+    var gameSpec = {
+      getJukebox: function() { return jukebox; },
+      gameObject: function() {},
+      load: function(name, func) {
+        func(this);
+      }
+    };
 
-    Level.gameObject('background').should.be.ok;
+    sandbox.stub(StartButton, 'create', function() {
+      return button;
+    });
+
+    TitleScreen.load(gameSpec);
+    return button;
+  }
+
+  it("loads the title screen images for the title", function() {
+    TitleScreen.load(gameSpec, 'screen');
+
+    assert.equal('title', gameSpec.levelName);
   });
 
-  it("uses a jukebox to play the song", function() {
-    var jukebox = require('eskimo').Jukebox();
-    var jukeboxMock = sandbox.mock(jukebox);
-    sandbox.stub(Level, "getJukebox", function() {
-      return jukebox;
-    });
-    
+  it("uses the jukebox from the gameSpec to play the song", function() {
+    var jukeboxMock = gameSpec.mockJukebox();
     jukeboxMock.expects("play").once().withArgs('backgroundMusic');
-   
-    TitleScreen.load();
-
+     
+    TitleScreen.load(gameSpec, 'screen');
     TitleScreen.update();
 
     jukeboxMock.verify();
@@ -76,59 +96,45 @@ describe("TitleScreen", function() {
       return {};
     });
 
-    TitleScreen.load();
+    TitleScreen.load(gameSpec);
 
-    startButtonSpy.args[0][0].should.eql({'location' : {'x' : 0, 'y' : 0}});
+    assert.deepEqual(startButtonSpy.args[0][0], {'location' : {'x' : 0, 'y' : 0}});
   });
 
-  it("sends clicks to the button and their location", function() {
+  it("sends clicks to the start button and their location", function() {
     var button = {
       click: function(location, callback) { 
         this.location = location; 
       }
     };
-    sandbox.stub(StartButton, 'create', function() {
+    var jukeboxMock = gameSpec.mockJukebox();
+    jukeboxMock.expects("stop");
+    sandbox.stub(StartButton, 'create', function() { 
       return button;
     });
 
-    TitleScreen.load();
+    TitleScreen.load(gameSpec);
     TitleScreen.click('state_machine', 'location');
 
-    button.location.should.equal('location');
+    assert.equal(button.location, 'location');
   });
-
-  function setupTitleScreenWithFakeButton() {
-    var button = {
-      click: function(location, callback) { 
-        this.callback = callback; 
-      }
-    };
-    sandbox.stub(StartButton, 'create', function() {
-      return button;
-    });
-
-    TitleScreen.load();
-    return button;
-  }
 
   it("also sends a callback to the button, which when called sends an event to the state machine", function() {
     var stateMachine = {startGame: sandbox.stub()} 
-    var button = setupTitleScreenWithFakeButton();
+    var jukebox = { stop: function () {}};
+    var button = setupTitleScreenWithFakeButton(jukebox);
 
     TitleScreen.click(stateMachine, '');
 
     button.callback();
 
-    stateMachine.startGame.called.should.be.true;
+    assert(stateMachine.startGame.called);
   });
 
   it("stops the song on click", function() {
     var jukebox = require('eskimo').Jukebox();
     var mockJukebox = sandbox.mock(jukebox);
-    sandbox.stub(Level, "getJukebox", function() {
-      return jukebox;
-    });
-    var button = setupTitleScreenWithFakeButton();
+    var button = setupTitleScreenWithFakeButton(jukebox);
 
     mockJukebox.expects('stop').once(); 
 
@@ -138,5 +144,4 @@ describe("TitleScreen", function() {
 
     mockJukebox.verify();
   });
-
 });

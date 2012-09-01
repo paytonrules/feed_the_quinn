@@ -1,7 +1,7 @@
 describe("StartButton", function() {
   var StartButton = require("../../script/feed_the_quinn/start_button"),
       Image = require("eskimo").Image,
-      should = require('should'),
+      assert = require('assert'),
       sm;
   
   beforeEach(function() {
@@ -18,7 +18,7 @@ describe("StartButton", function() {
       called = true;
     });
 
-    called.should.be.true;
+    assert(called);
   });
 
   it("doesn't make the callback if the click is to the left of the image", function() {
@@ -27,8 +27,8 @@ describe("StartButton", function() {
     sm.click({x : 0, y : 3}, function() {
       called = true;
     });
-
-    called.should.be.false;
+  
+    assert(called !== true); 
   });
 
   it("doesn't make the callback if the click is to the right of the image", function() {
@@ -38,7 +38,7 @@ describe("StartButton", function() {
       called = true;
     });
 
-    called.should.be.false;
+    assert(called !== true); 
   });
 
   it("doesn't make the callback if the click below the image", function() {
@@ -48,7 +48,7 @@ describe("StartButton", function() {
       called = true;
     });
 
-    called.should.be.false;
+    assert(called !== true); 
   });
 
   it("doesn't make the call back if the click is above the image", function() {
@@ -58,7 +58,7 @@ describe("StartButton", function() {
       called = true;
     });
 
-    called.should.be.false;
+    assert(called !== true); 
   });
 
 });

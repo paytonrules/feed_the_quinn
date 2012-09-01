@@ -1,8 +1,8 @@
 var StateMachine = require("./state_machine");
 
 module.exports = {
-  create: function(screen) {
-    var stateMachine = StateMachine.init(screen);
+  create: function(spec, screen) {
+    var stateMachine = StateMachine.init(spec, screen);
 
     return {
       update: function() {

@@ -1,91 +1,89 @@
 describe("FeedTheQuinn#GameScreen", function() {
   var sandbox = require('sinon').sandbox.create(),
       eskimo = require('eskimo'),
-      level = eskimo.Level,
       Keyboard = eskimo.Keyboard,
-      should = require('should'),
+      Assert = require('assert'),
       game = require('../../script/feed_the_quinn/game_screen'),
-      gameObject = {},
       Daddy = require("../../script/feed_the_quinn/daddy.js"),
       ProgressBar = require("../../script/feed_the_quinn/progress_bar.js"),
+      gameSpec,
       screen;
-
 
   afterEach(function() {
     sandbox.restore();
   });
 
   describe("load", function() {
-    var levelLoad;
-  
     beforeEach(function() {
-      levelLoad = sandbox.stub(level, 'load');
-      levelLoad.callsArg(1);
-      sandbox.stub(level, 'gameObject', function(key) {
-        return gameObject[key];
-      });
-      var Screen = require('eskimo').Screen;
-      var Canvas = require('canvas');
-      var canvas = new Canvas(200, 200);
-      var $ = require('jquery');
 
-      screen = new Screen($(canvas));
+       gameSpec = {
+         load: function(name, func) {
+           this.levelName = name;
+           func(this.level);
+         },
+         level: {
+           gameObject: function(key) {
+             return this.internalGameObjects[key];
+           },
+           internalGameObjects: {}
+         }
+       };
+       var Screen = require('eskimo').Screen;
+       var Canvas = require('canvas');
+       var canvas = new Canvas(200, 200);
+       var $ = require('jquery');
+
+       screen = new Screen($(canvas));
     });
 
-    // Note - should add a test method to the level and say "is this level loaded?"
     it("loads the levelOne on load", function() {
-      game.load(screen);
-
-      levelLoad.calledWith('levelOne').should.be.true;
+      game.load(gameSpec, screen);
+      
+      Assert.equal(gameSpec.levelName, 'levelOne');
     });
 
     it("creates the daddy object in the load", function() {
-      gameObject['daddy'] = 'daddy object';
+      gameSpec.level.internalGameObjects['daddy'] = 'daddy object';
+
       var daddyMock = sandbox.spy(Daddy, 'create');
 
-      game.load(screen);
+      game.load(gameSpec, screen);
 
-      daddyMock.calledWith('daddy object').should.be.true;
+      Assert.ok(daddyMock.calledWith('daddy object'));
+    });
+
+    it("puts a progress bar on the screen", function() {
+      gameSpec.level.internalGameObjects['progressBar'] = 'progress bar object';
+      var progressStub = sandbox.stub(ProgressBar, 'create');
+      var progressBar = { name: 'progressBar' };
+      progressStub.withArgs('progressBar', 'progress bar object').returns(progressBar);
+
+      game.load(gameSpec, screen);
+
+      var bar = screen.findObjectNamed('progressBar');
+      Assert.equal(bar, progressBar);
     });
 
     it("updates the progress bar with the state of daddy's stress", function() {
-      gameObject['progressBar'] = {stress: 0 };
+      var fakeProgressBar = {
+        stress: 0, 
+        update: function(stress) {
+          this.stress = stress;
+        }
+      };
+      
       var fakeDaddy = {
         stress: 40,
         update: sandbox.stub()
       };
+
       sandbox.stub(Daddy, 'create').returns(fakeDaddy);
-      game.load(screen);
+      sandbox.stub(ProgressBar, 'create').returns(fakeProgressBar);
+      game.load(gameSpec, screen);
 
       game.update();
 
-      gameObject['progressBar'].stress.should.equal(40);
-    });
-
-    it("puts a progress bar on the screen", function() {
-      gameObject['progressBar'] = 'progress bar';
-      var progressBarMock = sandbox.spy(ProgressBar, 'create');
-
-      game.load(screen);
-
-      var bar = screen.findObjectNamed('progressBar');
-      should.exist(bar);
-      progressBarMock.calledWith('progressBar', 'progress bar').should.eql(true);
-    });
-
-    it("does not do any of these things if the levelLoader doesn't make its callback", function() {
-      gameObject['daddy'] = 'daddy object';
-      var daddyMock = sandbox.spy(Daddy, 'create');
-      gameObject['progressBar'] = 'progress bar';
-      var progressBarMock = sandbox.spy(ProgressBar, 'create');
-      levelLoad.callArgAt = null;
-
-      game.load(screen);
-
-      daddyMock.called.should.eql(false);
-      progressBarMock.called.should.eql(false);
-      var bar = screen.findObjectNamed('progressBar');
-      should.not.exist(bar);
+      Assert.equal(fakeProgressBar.stress, 40);
     });
   });
 

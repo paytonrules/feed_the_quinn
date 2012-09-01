@@ -1,7 +1,7 @@
 describe("FeedTheQuinn", function() {
   var Game = require('../../script/feed_the_quinn/feed_the_quinn'),
       StateMachine = require('../../script/feed_the_quinn/state_machine'),
-      should = require('should'),
+      assert = require('assert'),
       machine = { 
         update: function() {
           this.updated = true;
@@ -31,11 +31,11 @@ describe("FeedTheQuinn", function() {
   });
 
   it("initializes the state machine on creation", function() {
-    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
+    sandbox.stub(StateMachine, 'init').returns(machine);
     
-    var game = Game.create('screen');
+    var game = Game.create('spec', 'screen');
 
-    stateMachineSpy.calledWith('screen').should.be.true;
+    assert(StateMachine.init.calledWith('spec', 'screen'));
   });
 
   it("delegates updates to initialized the state machine", function() {
@@ -44,7 +44,7 @@ describe("FeedTheQuinn", function() {
     
     game.update();
 
-    machine.updated.should.be.true;
+    assert(machine.updated);
   });
 
   it("sends clicks to the state machine", function() {
@@ -53,7 +53,7 @@ describe("FeedTheQuinn", function() {
     
     game.click({x: 0});
 
-    machine.location.should.eql({x: 0});
+    assert.deepEqual(machine.location, {x: 0});
   });
 
   it("delegates keydown to the state machine", function() {
@@ -61,8 +61,8 @@ describe("FeedTheQuinn", function() {
     var game = Game.create('screen');
     
     game.keydown({which: 3});
-    
-    machine.event.should.eql({which: 3});
+  
+    assert.deepEqual(machine.event, {which: 3});  
   });
 
   it("delegates keyup to the state machine", function() {
@@ -71,6 +71,6 @@ describe("FeedTheQuinn", function() {
     
     game.keyup({which: 3});
     
-    machine.event.should.eql({which: 3});
+    assert.deepEqual(machine.event, {which: 3});
   });
 });

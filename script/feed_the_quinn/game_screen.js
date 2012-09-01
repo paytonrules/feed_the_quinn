@@ -15,8 +15,8 @@ KEYMAP[String(Keyboard.UP_ARROW)] = 'up';
 KEYMAP[String(Keyboard.DOWN_ARROW)] = 'down';
 
 module.exports = {
-  load: function(screen) {
-    level.load('levelOne', function() {
+  load: function(gameSpec, screen) {
+    gameSpec.load('levelOne', function(level) {
       daddy = Daddy.create(level.gameObject('daddy'));
       progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
       screen.put(progressBar);
