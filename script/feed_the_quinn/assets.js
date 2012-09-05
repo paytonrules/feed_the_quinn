@@ -64,6 +64,9 @@ module.exports = {
         'x': 100,
         'y': 100
       },
+      'stressRate' : 100,
+      'maxStress' : 100,
+      'velocity' : 5,
       'visible' : true
     }
   }

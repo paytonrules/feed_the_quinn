@@ -25,7 +25,7 @@ describe("FeedTheQuinn#GameScreen", function() {
            gameObject: function(key) {
              return this.internalGameObjects[key];
            },
-           internalGameObjects: {}
+           internalGameObjects: {daddy: {}}
          }
        };
        var Screen = require('eskimo').Screen;
@@ -92,7 +92,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         daddyMock;
     
     beforeEach(function() {
-      daddy = Daddy.create();
+      daddy = Daddy.create({});
       game.setDaddy(daddy);
 
       daddyMock = sandbox.mock(daddy);

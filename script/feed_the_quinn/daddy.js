@@ -1,31 +1,37 @@
 var Daddy = module.exports = {
   create: function(gameObject) {
     var stressTicks = 0;
-    
-    function update(keystate) {
+    var stressRate = gameObject.stressRate || 1; // Default to 1 to avoid divide by 0
+    var deathLevel = gameObject.maxStress || 0;
+    var velocity = gameObject.velocity || 0;
+
+    function move(keystate) {
       if (keystate.left) {
-        gameObject.location.x -= Daddy.PLAYER_VELOCITY;
+        gameObject.location.x -= velocity;
       }
 
       if (keystate.right) {
-        gameObject.location.x += Daddy.PLAYER_VELOCITY;
+        gameObject.location.x += velocity; 
       }
 
       if (keystate.up) {
-        gameObject.location.y -= Daddy.PLAYER_VELOCITY;
+        gameObject.location.y -= velocity;
       }
 
       if (keystate.down) {
-        gameObject.location.y += Daddy.PLAYER_VELOCITY;
+        gameObject.location.y += velocity;
       }
+    }
 
+    function update(keystate) {
+      move(keystate);
       stressTicks++;
 
-      if (stressTicks % Daddy.STRESS_RATE == 0) {
+      if (stressTicks % stressRate == 0) {
         this.stress++;
       }
       
-      if (this.stress >= Daddy.MAX_STRESS) {
+      if (this.stress >= deathLevel) {
         this.isDead = true;
       }
     }
@@ -36,7 +42,4 @@ var Daddy = module.exports = {
       isDead: false
     };
   },
-  PLAYER_VELOCITY: 5,
-  MAX_STRESS: 100,
-  STRESS_RATE: 100
 };
