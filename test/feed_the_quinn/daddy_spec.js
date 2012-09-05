@@ -3,6 +3,34 @@ describe("Daddy", function() {
   var Daddy = require('../../script/feed_the_quinn/daddy.js'),
       assert = require('assert');
 
+  it("updates the stress level gradually on each update", function() {
+    var daddy = Daddy.create({});
+
+    for(var i = 0; i < Daddy.STRESS_RATE; i++) {
+      daddy.update({});
+    }
+
+    assert.strictEqual(1, daddy.stress);
+  });
+
+  it("dies when it reaches MAX_STRESS", function() {
+    var daddy = Daddy.create({});
+
+    for(var j = 0; j < Daddy.MAX_STRESS; j++) {
+      for(var i = 0; i < Daddy.STRESS_RATE; i++) {
+        daddy.update({});
+      }
+    }
+
+    assert.ok(daddy.isDead);
+  });
+
+  it("is not dead before it reaches MAX_STRESS", function() {
+    var daddy = Daddy.create({});
+
+    assert.strictEqual(false, daddy.isDead);
+  });
+
   it("does not change the location on update if it hasnt been moved yet", function() {
     var daddyGameObject = {location: {x: 0, y: 0}};
     var daddy = Daddy.create(daddyGameObject);
