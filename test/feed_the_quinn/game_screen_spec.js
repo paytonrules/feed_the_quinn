@@ -9,31 +9,32 @@ describe("FeedTheQuinn#GameScreen", function() {
       gameSpec,
       screen;
 
-  afterEach(function() {
-    sandbox.restore();
-  });
-
   describe("load", function() {
+    afterEach(function() {
+      sandbox.restore();
+    });
+
     beforeEach(function() {
+      // Expose something very much like this to test mode,
+      // but with a contractual obligation to match the gameScreen interface
+      gameSpec = {
+        load: function(name, func) {
+          this.levelName = name;
+          func(this.level);
+        },
+        level: {
+          gameObject: function(key) {
+            return this.internalGameObjects[key];
+          },
+          internalGameObjects: {daddy: {}}
+        }
+      };
+      var Screen = require('eskimo').Screen;
+      var Canvas = require('canvas');
+      var canvas = new Canvas(200, 200);
+      var $ = require('jquery');
 
-       gameSpec = {
-         load: function(name, func) {
-           this.levelName = name;
-           func(this.level);
-         },
-         level: {
-           gameObject: function(key) {
-             return this.internalGameObjects[key];
-           },
-           internalGameObjects: {daddy: {}}
-         }
-       };
-       var Screen = require('eskimo').Screen;
-       var Canvas = require('canvas');
-       var canvas = new Canvas(200, 200);
-       var $ = require('jquery');
-
-       screen = new Screen($(canvas));
+      screen = new Screen($(canvas));
     });
 
     it("loads the levelOne on load", function() {
@@ -85,11 +86,37 @@ describe("FeedTheQuinn#GameScreen", function() {
 
       Assert.equal(fakeProgressBar.stress, 40);
     });
+
+    it("Resets daddy's stress when Quinn is fed", function() {
+      var daddy = {stress: 50, stressRate: 100 };
+      gameSpec.level.internalGameObjects['daddy'] = daddy;
+     
+      // Better IOC
+      var QuinnStatus = require('../../script/feed_the_quinn/quinn_status');
+      var quinnChecker = {
+        check: function(daddy, baby) {
+          return true;
+        }
+      };
+      var ProgressBar = require('../../script/feed_the_quinn/progress_bar');
+      var progressBar = { update: sandbox.stub() };
+      sandbox.stub(ProgressBar, "create").returns(progressBar);
+      sandbox.stub(QuinnStatus, "create").returns(quinnChecker);
+
+      game.load(gameSpec, screen);
+      game.update();
+
+      Assert.equal(game.daddy.stress, 0);
+    });
   });
 
   describe("update", function() {
     var daddy,
         daddyMock;
+
+    afterEach(function() {
+      sandbox.restore();
+    });
     
     beforeEach(function() {
       daddy = Daddy.create({});
@@ -117,7 +144,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       daddyMock.verify();
     });
 
-    it("Stops moving left on a keyup", function() {
+    it("Stops moving direction on a keyup", function() {
       daddyMock.expects('update').withArgs({left: true});
       daddyMock.expects('update').withArgs({left: false});
       

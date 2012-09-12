@@ -36,10 +36,16 @@ var Daddy = module.exports = {
       }
     }
 
+    function reset() {
+      stressTicks = 0;
+      this.stress = 0;
+    }
+
     return {
       update: update,
-      stress: 0,
-      isDead: false
+      stress: gameObject.stress || 0,
+      isDead: false,
+      reset: reset
     };
   },
 };

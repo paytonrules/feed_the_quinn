@@ -20,7 +20,6 @@ module.exports = {
       keyup: function(event) {
         stateMachine.keyup(event);
       }
-
     };
   },
 };
