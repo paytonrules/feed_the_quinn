@@ -1,11 +1,10 @@
-var level = require('eskimo').Level,
-    Keyboard = require('eskimo').Keyboard,
-    Daddy = require('./daddy.js'),
-    ProgressBar = require('./progress_bar.js'),
+var Keyboard = require('eskimo').Keyboard,
     KEYMAP = {},
     keystate = {},
     _ = require('underscore'),
+    Daddy = require('./daddy.js'),
     daddy,
+    ProgressBar = require('./progress_bar.js'),
     progressBar,
     FedQuinnChecker = require('./quinn_status.js'),
     fedQuinnChecker; // 6 dependencies already
@@ -13,10 +12,10 @@ var level = require('eskimo').Level,
 // Probably deserves to be moved into the FW
 // Don't think in terms of "framework" but make an object, then eventually
 // stick it there
-KEYMAP[String(Keyboard.LEFT_ARROW)] = 'left';
-KEYMAP[String(Keyboard.RIGHT_ARROW)] = 'right';
-KEYMAP[String(Keyboard.UP_ARROW)] = 'up';
-KEYMAP[String(Keyboard.DOWN_ARROW)] = 'down';
+KEYMAP[Keyboard.LEFT_ARROW] = 'left';
+KEYMAP[Keyboard.RIGHT_ARROW] = 'right';
+KEYMAP[Keyboard.UP_ARROW] = 'up';
+KEYMAP[Keyboard.DOWN_ARROW] = 'down';
 
 // This design fairly blows.  Fix
 // It even seems to cause test pollution
@@ -46,11 +45,11 @@ module.exports = {
 
   // Probably not at the right level of abstraction
   keydown: function(event) {
-    keystate[KEYMAP[String(event.which)]] = true;
+    keystate[KEYMAP[event.which]] = true;
   },
 
   keyup: function(event) {
-    keystate[KEYMAP[String(event.which)]] = false;
+    keystate[KEYMAP[event.which]] = false;
   },
 
   // Only for testing
