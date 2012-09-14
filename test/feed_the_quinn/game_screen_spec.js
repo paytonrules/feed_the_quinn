@@ -128,7 +128,7 @@ describe("FeedTheQuinn#GameScreen", function() {
     it("updates the daddy with the keystate when something is pressed", function() {
       daddyMock.expects('update').withArgs({left: true});
 
-      game.keydown({which: Keyboard.LEFT_ARROW});
+      game.keydown({which: 37});
       game.update();
 
       daddyMock.verify();
@@ -137,7 +137,7 @@ describe("FeedTheQuinn#GameScreen", function() {
     it("doesnt change the key state until a keyup is sent", function() {
       daddyMock.expects('update').twice().withArgs({left: true});
 
-      game.keydown({which: Keyboard.LEFT_ARROW});
+      game.keydown({which: 37});
       game.update();
       game.update();
 
@@ -148,9 +148,9 @@ describe("FeedTheQuinn#GameScreen", function() {
       daddyMock.expects('update').withArgs({left: true});
       daddyMock.expects('update').withArgs({left: false});
       
-      game.keydown({which: Keyboard.LEFT_ARROW});
+      game.keydown({which: 37});
       game.update();
-      game.keyup({which: Keyboard.LEFT_ARROW});
+      game.keyup({which: 37});
       game.update();
 
       daddyMock.verify();
