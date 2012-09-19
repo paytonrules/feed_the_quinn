@@ -7,21 +7,21 @@ var Keyboard = require('eskimo').Keyboard,
     FedQuinnChecker = require('./quinn_status.js'),
     fedQuinnChecker; // 6 dependencies already
 
-// This design fairly blows.  Fix
-// It even seems to cause test pollution
 module.exports = {
+  instantiator: function(level, screen) {
+    daddy = Daddy.create(level.gameObject('daddy'));
+
+    // I think I want this in the framework - a generic progress bar - 
+    progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
+    screen.put(progressBar);
+
+    fedQuinnChecker = FedQuinnChecker.create();
+  },
+
   load: function(gameSpec, screen) {
-    var that = this;
+    var self = this;
     gameSpec.load('levelOne', function(level) {
-      daddy = Daddy.create(level.gameObject('daddy'));
-      that.daddy = daddy;
-
-      // I think I want this in the framework - a generic progress bar - 
-      // (note daddy is not put on the // screen explicitly)
-      progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
-      screen.put(progressBar);
-
-      fedQuinnChecker = FedQuinnChecker.create();
+      self.instantiator(level, screen);
     });
   },
   
@@ -46,5 +46,10 @@ module.exports = {
   // Only for testing
   setDaddy: function(newDaddy) {
     daddy = newDaddy;
+  },
+
+  daddyStress: function() {
+    return daddy.stress;
   }
+
 };

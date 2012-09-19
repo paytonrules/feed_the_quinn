@@ -106,7 +106,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       game.load(gameSpec, screen);
       game.update();
 
-      Assert.equal(game.daddy.stress, 0);
+      Assert.equal(game.daddyStress(), 0);
     });
   });
 
