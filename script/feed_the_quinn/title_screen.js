@@ -1,6 +1,7 @@
 module.exports = (function() {
   var startButton,
       StartButton = require("./start_button"),
+      _ = require('underscore'),
       jukebox;
 
   function startGame(state_machine) {
