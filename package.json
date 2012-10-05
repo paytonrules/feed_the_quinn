@@ -1,0 +1,24 @@
+{
+  "name"          : "FeedTheQuinn",
+  "version"       : "0.0.1",
+  "description"   : "Node Package for My Feed the Quinn Game",
+  "author"        : "Eric Smith <esmith@8thlight.com>",
+  "engines": {
+    "node": ">=0.8.5"
+  },
+  "dependencies" : {
+    "jquery" : "*",
+    "underscore" : "*",
+    "eskimo" : "*"
+  },
+  "devDependencies" : {
+    "mocha" : "*",
+    "jsdom" : "*",
+    "html5" : "*",
+    "sinon" : "*",
+    "should" : "*",
+    "canvas" : "*"
+  },
+  "directories" : {"lib" : "./script/feed_the_quinn"},
+  "main" : "./script/feed_the_quinn/index.js"
+}
