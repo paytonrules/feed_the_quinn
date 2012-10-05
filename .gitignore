@@ -3,4 +3,4 @@ session.vim
 *.swp
 *.swo
 node_modules/
-script/feed_the_quinn_browserified.js
+script/feed_the_quinn_bundle.js

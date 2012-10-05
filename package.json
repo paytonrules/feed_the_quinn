@@ -20,5 +20,8 @@
     "canvas" : "*"
   },
   "directories" : {"lib" : "./script/feed_the_quinn"},
+  "scripts" : {
+   "test" : "./run_specs"
+  },
   "main" : "./script/feed_the_quinn/index.js"
 }
