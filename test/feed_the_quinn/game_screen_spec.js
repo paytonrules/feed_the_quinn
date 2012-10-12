@@ -75,6 +75,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       
       var fakeDaddy = {
         stress: 40,
+        location: {x: 0, y: 0},
         update: sandbox.stub()
       };
 

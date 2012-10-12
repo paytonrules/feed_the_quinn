@@ -41,4 +41,42 @@ describe("Quinn Status", function() {
     Assert.ok(checker.check());
   });
 
+  it("is not close to quinn when daddy is to the left of quinn", function() {
+    var daddy = {location: { x: 0, y: 12} };
+    var quinn = {location: { x: 1, y: 2}, boundingBox: {width: 10, height: 10} };
+    
+    var checker = FedQuinnChecker.create({ 
+      daddy: daddy, 
+      quinn: quinn,
+      keystate: {spacebar: true}
+    });
+
+    Assert.ok(!checker.check());
+  });
+
+  it("is not close to quinn when daddy is above quinn", function() {
+    var daddy = {location: { x: 2, y: 1} };
+    var quinn = {location: { x: 1, y: 2}, boundingBox: {width: 10, height: 10} };
+    
+    var checker = FedQuinnChecker.create({ 
+      daddy: daddy, 
+      quinn: quinn,
+      keystate: {spacebar: true}
+    });
+
+    Assert.ok(!checker.check());
+  });
+  
+  it("is not close to quinn when daddy is below quinn", function() {
+    var daddy = {location: { x: 2, y: 13} };
+    var quinn = {location: { x: 1, y: 2}, boundingBox: {width: 10, height: 10} };
+    
+    var checker = FedQuinnChecker.create({ 
+      daddy: daddy, 
+      quinn: quinn,
+      keystate: {spacebar: true}
+    });
+
+    Assert.ok(!checker.check());
+  });
 });

@@ -5,17 +5,19 @@ var Keyboard = require('eskimo').Keyboard,
     ProgressBar = require('./progress_bar.js'),
     progressBar,
     FedQuinnChecker = require('./quinn_status.js'),
-    fedQuinnChecker; // 6 dependencies already
+    fedQuinnChecker; 
 
 module.exports = {
   instantiator: function(level, screen) {
     daddy = Daddy.create(level.gameObject('daddy'));
 
-    // I think I want this in the framework - a generic progress bar - 
+    // I think I want this in the framework - a generic progress bar 
     progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
     screen.put(progressBar);
 
-    fedQuinnChecker = FedQuinnChecker.create();
+    fedQuinnChecker = FedQuinnChecker.create({daddy: daddy, 
+                                             quinn: {location: {x: 0}, boundingBox: {x: 0}},
+                                             keystate: {}});
   },
 
   load: function(gameSpec, screen) {
