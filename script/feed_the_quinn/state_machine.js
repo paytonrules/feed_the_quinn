@@ -2,10 +2,6 @@ var currentState;
 var gameScreen = require("./game_screen");
 var level = require("eskimo").Level;
 
-// This isn't a state machine.  Perhaps you could write it as one?  
-// Although update is not an event
-// Actually perhaps you need a delegate pattern here - anything automatically goes to its defined thingy
-
 module.exports = {
   init: function(spec, screen) {
     currentState = require('./title_screen');

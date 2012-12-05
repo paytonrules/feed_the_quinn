@@ -2,8 +2,7 @@ describe("StateMachine", function() {
   var StateMachine = require('../../script/feed_the_quinn/state_machine'),
       TitleScreen = require('../../script/feed_the_quinn/title_screen'),
       GameScreen = require('../../script/feed_the_quinn/game_screen'),
-      should = require("should"),
-      assert = require('assert'),
+      Assert = require('assert'),
       sandbox = require("sinon").sandbox.create(),
       loadStub;
 
@@ -17,14 +16,14 @@ describe("StateMachine", function() {
 
   it("returns a state machine object", function() {
     var sm = StateMachine.init();
-
-    should.exist(sm);
+    
+    Assert.ok(sm);
   });
 
   it("begins by loading the title screen state", function() {
     var sm = StateMachine.init('spec', 'screen');
 
-    assert(loadStub.calledWith('spec'));
+    Assert.ok(loadStub.calledWith('spec'));
   });
 
   it("delegates the update method to the current states update", function() {
@@ -73,7 +72,8 @@ describe("StateMachine", function() {
 
     sm.startGame();
 
-    sm.currentState().should.eql(require('../../script/feed_the_quinn/game_screen'));
+    var gameState = require('../../script/feed_the_quinn/game_screen');
+    Assert.equal(sm.currentState(), gameState);
   });
 
   it("delegates the keydown event to the current state", function() {
@@ -84,7 +84,7 @@ describe("StateMachine", function() {
 
     sm.keydown({which: 3});
 
-    assert(stateWithKeydown.keydown.calledWith({which: 3}));
+    Assert.ok(stateWithKeydown.keydown.calledWith({which: 3}));
   });
 
   it("delegates the keyup event to the current state", function() {
@@ -95,7 +95,7 @@ describe("StateMachine", function() {
 
     sm.keyup({which: 3});
 
-    assert(stateWithKeyup.keyup.calledWith({which: 3}));
+    Assert.ok(stateWithKeyup.keyup.calledWith({which: 3}));
   });
 
   it("does not throw an exception when the keydown wasn't defined", function() {

@@ -65,6 +65,12 @@ describe("FeedTheQuinn#GameScreen", function() {
       Assert.equal(bar, progressBar);
     });
 
+    it("constructs a fed quinn checker from the daddy and quinn", function() {
+      // Make a level constructable so you can test this
+      // me like
+//      Assert.ok(false);
+    });
+
     it("updates the progress bar with the state of daddy's stress", function() {
       var fakeProgressBar = {
         stress: 0, 
