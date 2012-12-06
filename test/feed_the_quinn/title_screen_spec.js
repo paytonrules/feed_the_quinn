@@ -9,20 +9,7 @@ describe("TitleScreen", function() { var TitleScreen = require('../../script/fee
     sandbox = sinon.sandbox.create();
     var levels = {
       "title" : {
-        "background" : {
-          'image': {
-            'src': 'images/title_screen_background.jpg'
-            },
-          'location': {
-            'x': 20,
-            'y': 4
-          },
-        },
-        'backgroundMusic': {
-          'sound' : {
-            'src': 'songs/The_Mighty_Quinn.MP3'
-          }
-        },
+        'backgroundMusic': {},
         "start_button" : {
           'location' : {
             'x' : 0,
@@ -71,12 +58,12 @@ describe("TitleScreen", function() { var TitleScreen = require('../../script/fee
       return button;
     });
 
-    TitleScreen.load(gameSpec);
-    return button;
+    var screen = new TitleScreen(gameSpec);
+    return {screen: screen, button: button};
   }
 
   it("loads the title screen images for the title", function() {
-    TitleScreen.load(gameSpec, 'screen');
+    new TitleScreen(gameSpec, 'screen');
 
     assert.equal('title', gameSpec.levelName);
   });
@@ -85,8 +72,8 @@ describe("TitleScreen", function() { var TitleScreen = require('../../script/fee
     var jukeboxMock = gameSpec.mockJukebox();
     jukeboxMock.expects("play").once().withArgs('backgroundMusic');
      
-    TitleScreen.load(gameSpec, 'screen');
-    TitleScreen.update();
+    var screen = new TitleScreen(gameSpec, 'screen');
+    screen.update();
 
     jukeboxMock.verify();
   });
@@ -96,7 +83,7 @@ describe("TitleScreen", function() { var TitleScreen = require('../../script/fee
       return {};
     });
 
-    TitleScreen.load(gameSpec);
+    new TitleScreen(gameSpec, 'screen');
 
     assert.deepEqual(startButtonSpy.args[0][0], {'location' : {'x' : 0, 'y' : 0}});
   });
@@ -113,8 +100,8 @@ describe("TitleScreen", function() { var TitleScreen = require('../../script/fee
       return button;
     });
 
-    TitleScreen.load(gameSpec);
-    TitleScreen.click('state_machine', 'location');
+    var screen = new TitleScreen(gameSpec, 'screen');
+    screen.click('state_machine', 'location');
 
     assert.equal(button.location, 'location');
   });
@@ -122,10 +109,12 @@ describe("TitleScreen", function() { var TitleScreen = require('../../script/fee
   it("also sends a callback to the button, which when called sends an event to the state machine", function() {
     var stateMachine = {startGame: sandbox.stub()} 
     var jukebox = { stop: function () {}};
-    var button = setupTitleScreenWithFakeButton(jukebox);
+    
+    var buttonAndScreen = setupTitleScreenWithFakeButton(jukebox);
+    var button = buttonAndScreen.button;
+    var screen = buttonAndScreen.screen;
 
-    TitleScreen.click(stateMachine, '');
-
+    screen.click(stateMachine, '');
     button.callback();
 
     assert(stateMachine.startGame.called);
@@ -134,12 +123,13 @@ describe("TitleScreen", function() { var TitleScreen = require('../../script/fee
   it("stops the song on click", function() {
     var jukebox = require('eskimo').Jukebox();
     var mockJukebox = sandbox.mock(jukebox);
-    var button = setupTitleScreenWithFakeButton(jukebox);
+    var buttonAndScreen = setupTitleScreenWithFakeButton(jukebox);
+    var button = buttonAndScreen.button;
+    var screen = buttonAndScreen.screen;
 
     mockJukebox.expects('stop').once(); 
 
-    TitleScreen.click({startGame: sandbox.stub()}, '');
-
+    screen.click({startGame: sandbox.stub()}, '');
     button.callback();
 
     mockJukebox.verify();

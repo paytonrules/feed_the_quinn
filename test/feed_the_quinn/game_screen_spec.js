@@ -3,20 +3,20 @@ describe("FeedTheQuinn#GameScreen", function() {
       eskimo = require('eskimo'),
       Keyboard = eskimo.Keyboard,
       Assert = require('assert'),
-      game = require('../../script/feed_the_quinn/game_screen'),
+      GameScreen = require('../../script/feed_the_quinn/game_screen'),
       Daddy = require("../../script/feed_the_quinn/daddy.js"),
       ProgressBar = require("../../script/feed_the_quinn/progress_bar.js"),
+      FedQuinnChecker = require("../../script/feed_the_quinn/quinn_status.js"),
       gameSpec,
       screen;
 
-  describe("load", function() {
+  describe("construction", function() {
     afterEach(function() {
       sandbox.restore();
     });
 
     beforeEach(function() {
-      // Expose something very much like this to test mode,
-      // but with a contractual obligation to match the gameScreen interface
+      // Change to test game spec thingy?
       gameSpec = {
         load: function(name, func) {
           this.levelName = name;
@@ -38,17 +38,17 @@ describe("FeedTheQuinn#GameScreen", function() {
     });
 
     it("loads the levelOne on load", function() {
-      game.load(gameSpec, screen);
+      new GameScreen(gameSpec, screen);
       
       Assert.equal(gameSpec.levelName, 'levelOne');
     });
-
+    
     it("creates the daddy object in the load", function() {
       gameSpec.level.internalGameObjects['daddy'] = 'daddy object';
 
       var daddyMock = sandbox.spy(Daddy, 'create');
 
-      game.load(gameSpec, screen);
+      new GameScreen(gameSpec, screen);
 
       Assert.ok(daddyMock.calledWith('daddy object'));
     });
@@ -59,7 +59,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       var progressBar = { name: 'progressBar' };
       progressStub.withArgs('progressBar', 'progress bar object').returns(progressBar);
 
-      game.load(gameSpec, screen);
+      new GameScreen(gameSpec, screen);
 
       var bar = screen.findObjectNamed('progressBar');
       Assert.equal(bar, progressBar);
@@ -68,7 +68,7 @@ describe("FeedTheQuinn#GameScreen", function() {
     it("constructs a fed quinn checker from the daddy and quinn", function() {
       // Make a level constructable so you can test this
       // me like
-//      Assert.ok(false);
+      Assert.ok(false);
     });
 
     it("updates the progress bar with the state of daddy's stress", function() {
@@ -87,7 +87,7 @@ describe("FeedTheQuinn#GameScreen", function() {
 
       sandbox.stub(Daddy, 'create').returns(fakeDaddy);
       sandbox.stub(ProgressBar, 'create').returns(fakeProgressBar);
-      game.load(gameSpec, screen);
+      var game = new GameScreen(gameSpec, screen);
 
       game.update();
 
@@ -110,16 +110,23 @@ describe("FeedTheQuinn#GameScreen", function() {
       sandbox.stub(ProgressBar, "create").returns(progressBar);
       sandbox.stub(QuinnStatus, "create").returns(quinnChecker);
 
-      game.load(gameSpec, screen);
-      game.update();
+      var gameScreen = new GameScreen(gameSpec, screen);
+      gameScreen.update();
 
-      Assert.equal(game.daddyStress(), 0);
+      Assert.equal(gameScreen.daddyStress(), 0);
     });
   });
 
-  describe("update", function() {
+  describe("update and keydowns", function() {
     var daddy,
-        daddyMock;
+        daddyMock,
+        game;
+
+    beforeEach(function() {
+      sandbox.stub(FedQuinnChecker, "create").returns({ check: function() { return false; }});
+      sandbox.stub(ProgressBar, "create").returns({ update: sandbox.stub() });
+      game = new GameScreen(gameSpec, screen);
+    });
 
     afterEach(function() {
       sandbox.restore();
@@ -127,6 +134,7 @@ describe("FeedTheQuinn#GameScreen", function() {
     
     beforeEach(function() {
       daddy = Daddy.create({});
+      
       game.setDaddy(daddy);
 
       daddyMock = sandbox.mock(daddy);

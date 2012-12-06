@@ -1,18 +1,8 @@
 describe("StateMachine", function() {
   var StateMachine = require('../../script/feed_the_quinn/state_machine'),
-      TitleScreen = require('../../script/feed_the_quinn/title_screen'),
       GameScreen = require('../../script/feed_the_quinn/game_screen'),
       Assert = require('assert'),
-      sandbox = require("sinon").sandbox.create(),
-      loadStub;
-
-  beforeEach(function() {
-    loadStub = sandbox.stub(TitleScreen, "load");
-  });
-
-  afterEach(function() {
-    sandbox.restore();
-  });
+      sandbox = require("sinon").sandbox.create();
 
   it("returns a state machine object", function() {
     var sm = StateMachine.init();
@@ -23,27 +13,27 @@ describe("StateMachine", function() {
   it("begins by loading the title screen state", function() {
     var sm = StateMachine.init('spec', 'screen');
 
-    Assert.ok(loadStub.calledWith('spec'));
+    Assert.equal(sm.currentState().constructor.name, "TitleScreen");
   });
 
   it("delegates the update method to the current states update", function() {
-    var mockScreen = sandbox.mock(TitleScreen);
     var sm = StateMachine.init();
-    mockScreen.expects("update").once().withArgs(sm);
+    var mockState = sandbox.mock(sm.currentState());
+    mockState.expects("update").once().withArgs(sm);
 
     sm.update();
 
-    mockScreen.verify();
+    mockState.verify();
   });
 
   it("delegates the click method to the current states click", function() {
-    var mockScreen = sandbox.mock(TitleScreen);
     var sm = StateMachine.init();
-    mockScreen.expects("click").once().withArgs(sm, 'location');
+    var mockState = sandbox.mock(sm.currentState());
+    mockState.expects("click").once().withArgs(sm, 'location');
 
     sm.click('location');
 
-    mockScreen.verify();
+    mockState.verify();
   });
 
   it("does not delegate to a click method if the currentState doesn't have one", function() {
@@ -52,28 +42,19 @@ describe("StateMachine", function() {
 
     sm.setState(simpleState);
 
-    sm.click('event');  // Test fails if this throws an exception
+    try {
+      sm.click('event');
+    } catch(e) {
+      Assert.fail("Threw exception we didn't expect: " + e.message);
+    }
   });
 
-  it("loads the gameScreen when the player hits start", function() {
+  it("creates the GameScreen when the player hits start", function() {
     var sm = StateMachine.init('spec', 'screen');
-    var mockGameScreen = sandbox.mock(GameScreen);
-    
-    mockGameScreen.expects('load').once().withExactArgs('spec', 'screen');
 
     sm.startGame();
 
-    mockGameScreen.verify();
-  });
-
-  it("sets the current state to be the gameScreen on startGame", function() {
-    var sm = StateMachine.init();
-    sandbox.stub(GameScreen, 'load');
-
-    sm.startGame();
-
-    var gameState = require('../../script/feed_the_quinn/game_screen');
-    Assert.equal(sm.currentState(), gameState);
+    Assert.equal(sm.currentState().constructor.name, "GameScreen");
   });
 
   it("delegates the keydown event to the current state", function() {

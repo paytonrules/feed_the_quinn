@@ -1,11 +1,11 @@
 var currentState;
-var gameScreen = require("./game_screen");
-var level = require("eskimo").Level;
+// I would like to remove this require game
+var GameScreen = require("./game_screen");
+var TitleScreen = require("./title_screen");
 
 module.exports = {
   init: function(spec, screen) {
-    currentState = require('./title_screen');
-    currentState.load(spec);
+    currentState = new TitleScreen();
 
     return {
       setState: function(state) {
@@ -35,8 +35,8 @@ module.exports = {
       },
 
       startGame: function() {
-        currentState = gameScreen;
-        currentState.load(spec, screen);
+        currentState = new GameScreen();
+//        currentState.load(spec, screen);
       },
 
       currentState: function() {

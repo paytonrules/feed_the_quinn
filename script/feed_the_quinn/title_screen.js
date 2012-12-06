@@ -1,28 +1,26 @@
 module.exports = (function() {
-  var startButton,
-      StartButton = require("./start_button"),
-      _ = require('underscore'),
-      jukebox;
+  var StartButton = require("./start_button"),
+      _ = require('underscore');
 
-  function startGame(state_machine) {
-    state_machine.startGame();
-  }
+  return function TitleScreen(gameSpec, screen) {
+    var startButton, jukebox;
+    var _ = require('underscore');
 
-  return {
-    load: function(gameSpec) {
-      gameSpec.load("title", function(level) {
-        jukebox = level.getJukebox();
-        startButton = StartButton.create(level.gameObject('start_button'));
-      });
-    },
+    gameSpec.load("title", function(level) {
+      jukebox = level.getJukebox();
+      startButton = StartButton.create(level.gameObject('start_button'));
+    });
 
-    update: function() {
+    this.update = function() {
       jukebox.play('backgroundMusic');
-    },
+    };
 
-    click: function(state_machine, location) {
+    this.click = function(stateMachine, location) {
       jukebox.stop('backgroundMusic');
-      startButton.click(location, _.bind(startGame, this, state_machine));
-    }
+      startButton.click(location, stateMachine.startGame);    
+    };
+
+    return this;
   };
+
 })();

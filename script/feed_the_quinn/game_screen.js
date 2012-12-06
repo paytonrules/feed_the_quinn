@@ -7,51 +7,49 @@ var Keyboard = require('eskimo').Keyboard,
     FedQuinnChecker = require('./quinn_status.js'),
     fedQuinnChecker; 
 
-module.exports = {
-  instantiator: function(level, screen) {
-    daddy = Daddy.create(level.gameObject('daddy'));
+module.exports = (function() {
+  return function GameScreen(gameSpec, screen) {
+    var instantiator = function(level, screen) {
+      daddy = Daddy.create(level.gameObject('daddy'));
 
-    // I think I want this in the framework - a generic progress bar 
-    progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
-    screen.put(progressBar);
+      // I think I want this in the framework - a generic progress bar 
+      progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
+      screen.put(progressBar);
 
-    fedQuinnChecker = FedQuinnChecker.create({daddy: daddy, 
-                                             quinn: {location: {x: 0}, boundingBox: {x: 0}},
-                                             keystate: {}});
-  },
+      fedQuinnChecker = FedQuinnChecker.create({daddy: daddy, 
+                                               quinn: {location: {x: 0}, boundingBox: {x: 0}},
+                                               keystate: {}});
+    };
 
-  load: function(gameSpec, screen) {
-    var self = this;
     gameSpec.load('levelOne', function(level) {
-      self.instantiator(level, screen);
+      instantiator(level, screen);
     });
-  },
-  
-  update: function() {
-    if (fedQuinnChecker.check()) {
-      daddy.reset();
-    }
-    daddy.update(keystate);
-    progressBar.update(daddy.stress);
-  },
 
-  // Probably not at the right level of abstraction
-  // Could definitely be a framework object
-  keydown: function(event) {
-    keystate[Keyboard[event.which]] = true;
-  },
+    this.update = function() {
+      if (fedQuinnChecker.check()) {
+        daddy.reset();
+      }
+      daddy.update(keystate);
+      progressBar.update(daddy.stress);
+    };
 
-  keyup: function(event) {
-    keystate[Keyboard[event.which]] = false;
-  },
+    // Probably not at the right level of abstraction
+    // Could definitely be a framework object
+    this.keydown = function(event) {
+      keystate[Keyboard[event.which]] = true;
+    };
 
-  // Only for testing
-  setDaddy: function(newDaddy) {
-    daddy = newDaddy;
-  },
+    this.keyup = function(event) {
+      keystate[Keyboard[event.which]] = false;
+    };
 
-  daddyStress: function() {
-    return daddy.stress;
-  }
+    // Only for testing
+    this.setDaddy = function(newDaddy) {
+      daddy = newDaddy;
+    };
 
-};
+    this.daddyStress = function() {
+      return daddy.stress;
+    };
+  };
+})();
