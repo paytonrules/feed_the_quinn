@@ -35,7 +35,8 @@ describe("FeedTheQuinn", function() {
     
     var game = Game.create('spec', 'screen');
 
-    assert(StateMachine.init.calledWith('spec', 'screen'));
+    var transitionTable = require("../../script/feed_the_quinn/transition_table.js");
+    assert(StateMachine.init.calledWith(transitionTable, {spec: 'spec', screen: 'screen'} ));
   });
 
   it("delegates updates to initialized the state machine", function() {

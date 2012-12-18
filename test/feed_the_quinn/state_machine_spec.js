@@ -2,22 +2,63 @@ describe("StateMachine", function() {
   var StateMachine = require('../../script/feed_the_quinn/state_machine'),
       GameScreen = require('../../script/feed_the_quinn/game_screen'),
       Assert = require('assert'),
-      sandbox = require("sinon").sandbox.create();
+      sandbox = require("sinon").sandbox.create(),
+      sm, options;
+
+  function FirstState(options) {
+    this.click = function() {} // Shouldnt be necessary
+    this.update = function() {}
+    this.options = options;
+    return this;
+  };
+
+  function SecondState(options) {
+    this.options = options;
+    return this;
+  };
+ 
+  beforeEach(function() {
+    options = {load: sandbox.stub() };
+    sm = StateMachine.init([
+                            [FirstState, "startGame", SecondState],
+                            [FirstState, "doNothing", FirstState],
+                            [FirstState, "update", FirstState, "update"],
+                            [FirstState, "keydown", SecondState],
+                            [SecondState, "keydown", FirstState],
+    ], options );
+  });
+
+  afterEach(function() {
+    sandbox.restore();
+  });
 
   it("returns a state machine object", function() {
-    var sm = StateMachine.init();
-    
     Assert.ok(sm);
   });
 
-  it("begins by loading the title screen state", function() {
-    var sm = StateMachine.init('spec', 'screen');
-
-    Assert.equal(sm.currentState().constructor.name, "TitleScreen");
+  it("begins by loading the first state", function() {
+    Assert.equal(sm.currentState().constructor.name, "FirstState");
+    Assert.equal(sm.currentState().options, options);
   });
 
-  it("delegates the update method to the current states update", function() {
-    var sm = StateMachine.init();
+  it("navigates to the next state on a transition", function() {
+    sm.startGame();
+
+    Assert.equal(sm.currentState().constructor.name, "SecondState");
+    Assert.equal(sm.currentState().options, options);
+  })
+
+  it("does not create the state twice if the transition goes to the same place", function() {
+    var firstState = sm.currentState();
+
+    sm.doNothing();
+
+    var secondState = sm.currentState();
+
+    Assert.equal(firstState, secondState);
+  });
+
+  it("delegates a transition method to the current states update before transitioning", function() {
     var mockState = sandbox.mock(sm.currentState());
     mockState.expects("update").once().withArgs(sm);
 
@@ -26,74 +67,20 @@ describe("StateMachine", function() {
     mockState.verify();
   });
 
-  it("delegates the click method to the current states click", function() {
-    var sm = StateMachine.init();
+  it("passes along any arguments to the event to the transition method", function() {
     var mockState = sandbox.mock(sm.currentState());
-    mockState.expects("click").once().withArgs(sm, 'location');
+    mockState.expects("update").once().withArgs(sm, 'location');
 
-    sm.click('location');
+    sm.update('location');
 
     mockState.verify();
   });
+  
+  it("ties each event to its state - two states can have the same event", function() {
+    sm.keydown();
+    Assert.equal(sm.currentState().constructor, SecondState);
 
-  it("does not delegate to a click method if the currentState doesn't have one", function() {
-    var simpleState = {};
-    var sm = StateMachine.init();
-
-    sm.setState(simpleState);
-
-    try {
-      sm.click('event');
-    } catch(e) {
-      Assert.fail("Threw exception we didn't expect: " + e.message);
-    }
-  });
-
-  it("creates the GameScreen when the player hits start", function() {
-    var sm = StateMachine.init('spec', 'screen');
-
-    sm.startGame();
-
-    Assert.equal(sm.currentState().constructor.name, "GameScreen");
-  });
-
-  it("delegates the keydown event to the current state", function() {
-    var sm = StateMachine.init();
-    var stateWithKeydown = {keydown: sandbox.spy()};
-
-    sm.setState(stateWithKeydown);
-
-    sm.keydown({which: 3});
-
-    Assert.ok(stateWithKeydown.keydown.calledWith({which: 3}));
-  });
-
-  it("delegates the keyup event to the current state", function() {
-    var sm = StateMachine.init();
-    var stateWithKeyup = {keyup: sandbox.spy()};
-
-    sm.setState(stateWithKeyup);
-
-    sm.keyup({which: 3});
-
-    Assert.ok(stateWithKeyup.keyup.calledWith({which: 3}));
-  });
-
-  it("does not throw an exception when the keydown wasn't defined", function() {
-    var sm = StateMachine.init();
-    var stateWithoutKeydown = {};
-
-    sm.setState(stateWithoutKeydown);
-
-    sm.keydown({which: 3});
-  });
-
-  it("does not throw an exception when the keyup wasn't defined", function() {
-    var sm = StateMachine.init();
-    var stateWithoutKeyup = {};
-
-    sm.setState(stateWithoutKeyup);
-
-    sm.keyup({which: 3});
+    sm.keydown();
+    Assert.equal(sm.currentState().constructor, FirstState);
   });
 });

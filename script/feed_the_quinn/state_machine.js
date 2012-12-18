@@ -1,47 +1,48 @@
 var currentState;
-// I would like to remove this require game
-var GameScreen = require("./game_screen");
-var TitleScreen = require("./title_screen");
+var _ = require('underscore');
 
 module.exports = {
-  init: function(spec, screen) {
-    currentState = new TitleScreen();
+  init: function(transitionTable, options) {
+    currentState = new transitionTable[0][0](options);
 
-    return {
+    var stateMachine = {
       setState: function(state) {
         currentState = state;
       },
       
-      update: function() {
-        currentState.update(this);
-      },
-      
-      click: function(location) {
-        if (currentState['click']) {
-          currentState.click(this, location);
-        }
-      },
-
-      keydown: function(event) {
-        if (currentState.keydown) {
-          currentState.keydown(event);
-        }
-      },
-
-      keyup: function(event) {
-        if (currentState.keyup) {
-          currentState.keyup(event);
-        }
-      },
-
-      startGame: function() {
-        currentState = new GameScreen();
-//        currentState.load(spec, screen);
-      },
-
       currentState: function() {
         return currentState;
       }
     };
+    
+    var transitionMap = {};
+    _.each(transitionTable, function(row) {
+      var startState = row[0];
+      var eventName = row[1];
+
+      transitionMap[startState] = transitionMap[startState] || {};
+
+      transitionMap[startState][eventName] = function() {
+        var transition = row[3];
+        if (transition) {
+          var args = Array.prototype.slice.call(arguments);
+          args.unshift(stateMachine);
+          currentState[transition].apply(currentState, args); 
+        }
+
+        var State = row[2];
+        if (currentState.constructor !== State) {
+          currentState = new State(options);
+        }
+      };
+
+      if (typeof stateMachine[eventName] == "undefined") {
+        stateMachine[eventName] = function() {
+          transitionMap[currentState.constructor][eventName].apply(stateMachine, arguments);
+        }
+      }
+    });
+
+    return stateMachine;
   }
 };

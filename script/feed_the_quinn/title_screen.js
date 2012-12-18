@@ -2,11 +2,11 @@ module.exports = (function() {
   var StartButton = require("./start_button"),
       _ = require('underscore');
 
-  return function TitleScreen(gameSpec, screen) {
+  return function TitleScreen(context) {
     var startButton, jukebox;
     var _ = require('underscore');
 
-    gameSpec.load("title", function(level) {
+    context.spec.load("title", function(level) {
       jukebox = level.getJukebox();
       startButton = StartButton.create(level.gameObject('start_button'));
     });
