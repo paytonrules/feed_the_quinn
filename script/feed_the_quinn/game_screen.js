@@ -9,10 +9,9 @@ var Keyboard = require('eskimo').Keyboard,
 
 module.exports = (function() {
   return function GameScreen(gameSpec, screen) {
-    var instantiator = function(level, screen) {
+    var init = function(level, screen) {
       daddy = Daddy.create(level.gameObject('daddy'));
 
-      // I think I want this in the framework - a generic progress bar 
       progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
       screen.put(progressBar);
 
@@ -22,7 +21,7 @@ module.exports = (function() {
     };
 
     gameSpec.load('levelOne', function(level) {
-      instantiator(level, screen);
+      init(level, screen);
     });
 
     this.update = function() {

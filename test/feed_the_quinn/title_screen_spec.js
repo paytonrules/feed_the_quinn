@@ -28,8 +28,6 @@ describe("TitleScreen", function() {
   });
 
   it("uses the jukebox from the gameSpec to play the song", function() {
-    var gameSpec = TestGameSpecFactory.create(levels);
-
     var screen = new TitleScreen({spec: gameSpec, screen: 'screen'});
     screen.update();
 

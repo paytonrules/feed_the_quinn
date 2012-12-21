@@ -7,6 +7,14 @@ describe("FeedTheQuinn#GameScreen", function() {
       Daddy = require("../../script/feed_the_quinn/daddy.js"),
       ProgressBar = require("../../script/feed_the_quinn/progress_bar.js"),
       FedQuinnChecker = require("../../script/feed_the_quinn/quinn_status.js"),
+      TestGameSpecFactory = require('eskimo').TestGameSpecFactory,
+      level = { 
+        "levelOne" : {
+          "object" : "levelOneObject",
+          "daddy" : "daddy object",
+          "progressBar" : "progress bar object"
+        }
+      },
       gameSpec,
       screen;
 
@@ -16,19 +24,7 @@ describe("FeedTheQuinn#GameScreen", function() {
     });
 
     beforeEach(function() {
-      // Change to test game spec thingy?
-      gameSpec = {
-        load: function(name, func) {
-          this.levelName = name;
-          func(this.level);
-        },
-        level: {
-          gameObject: function(key) {
-            return this.internalGameObjects[key];
-          },
-          internalGameObjects: {daddy: {}}
-        }
-      };
+      gameSpec = TestGameSpecFactory.create(level);
       var Screen = require('eskimo').Screen;
       var Canvas = require('canvas');
       var canvas = new Canvas(200, 200);
@@ -40,12 +36,10 @@ describe("FeedTheQuinn#GameScreen", function() {
     it("loads the levelOne on load", function() {
       new GameScreen(gameSpec, screen);
       
-      Assert.equal(gameSpec.levelName, 'levelOne');
+      Assert.equal(gameSpec.level().gameObject("object"), 'levelOneObject');
     });
     
     it("creates the daddy object in the load", function() {
-      gameSpec.level.internalGameObjects['daddy'] = 'daddy object';
-
       var daddyMock = sandbox.spy(Daddy, 'create');
 
       new GameScreen(gameSpec, screen);
@@ -54,7 +48,6 @@ describe("FeedTheQuinn#GameScreen", function() {
     });
 
     it("puts a progress bar on the screen", function() {
-      gameSpec.level.internalGameObjects['progressBar'] = 'progress bar object';
       var progressStub = sandbox.stub(ProgressBar, 'create');
       var progressBar = { name: 'progressBar' };
       progressStub.withArgs('progressBar', 'progress bar object').returns(progressBar);
@@ -95,10 +88,12 @@ describe("FeedTheQuinn#GameScreen", function() {
     });
 
     it("Resets daddy's stress when Quinn is fed", function() {
-      var daddy = {stress: 50, stressRate: 100 };
-      gameSpec.level.internalGameObjects['daddy'] = daddy;
+      gameSpec.load('levelOne', function(level) {
+        level.addGameObject('daddy', { stress: 50, stressRate: 100});
+      });
      
       // Better IOC
+      // Fuck IOC - treat as internals
       var QuinnStatus = require('../../script/feed_the_quinn/quinn_status');
       var quinnChecker = {
         check: function(daddy, baby) {
