@@ -2,6 +2,7 @@ var Keyboard = require('eskimo').Keyboard,
     keystate = {},
     Daddy = require('./daddy.js'),
     daddy,
+    quinn,
     ProgressBar = require('./progress_bar.js'),
     progressBar,
     FedQuinnChecker = require('./quinn_status.js'),
@@ -11,13 +12,13 @@ module.exports = (function() {
   return function GameScreen(gameSpec, screen) {
     var init = function(level, screen) {
       daddy = Daddy.create(level.gameObject('daddy'));
+      quinn = level.gameObject('baby');
 
       progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
       screen.put(progressBar);
 
       fedQuinnChecker = FedQuinnChecker.create({daddy: daddy, 
-                                               quinn: {location: {x: 0}, boundingBox: {x: 0}},
-                                               keystate: {}});
+                                               quinn: quinn});
     };
 
     gameSpec.load('levelOne', function(level) {
@@ -25,11 +26,11 @@ module.exports = (function() {
     });
 
     this.update = function() {
-      if (fedQuinnChecker.check()) {
+      if (fedQuinnChecker.check(keystate)) {
         daddy.reset();
       }
       daddy.update(keystate);
-      progressBar.update(daddy.stress);
+      progressBar.update(daddy.stress());
     };
 
     // Probably not at the right level of abstraction

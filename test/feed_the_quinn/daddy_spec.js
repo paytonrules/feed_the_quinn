@@ -10,7 +10,7 @@ describe("Daddy", function() {
       daddy.update({});
     }
 
-    assert.strictEqual(1, daddy.stress);
+    assert.strictEqual(1, daddy.stress());
   });
 
   it("dies when it reaches maxStress", function() {

@@ -8,11 +8,10 @@ describe("Quinn Status", function() {
     
     var checker = FedQuinnChecker.create({ 
       daddy: daddy, 
-      quinn: quinn, 
-      keystate: {spacebar: true}
+      quinn: quinn
     });
 
-    Assert.ok(!checker.check());
+    Assert.ok(!checker.check({spacebar: true}));
   });
 
   it("returns false when the daddy is within the objects bounding box but the spacebar is not pressed", function() {
@@ -21,11 +20,10 @@ describe("Quinn Status", function() {
     
     var checker = FedQuinnChecker.create({
       daddy: daddy,
-      quinn: quinn, 
-      keystate: {spacebar: false}
+      quinn: quinn 
     });
 
-    Assert.ok(!checker.check());
+    Assert.ok(!checker.check({spacebar: false}));
   });
 
   it("returns true when the spacebar is pressed and the quinn is in the bounding box", function() {
@@ -34,11 +32,10 @@ describe("Quinn Status", function() {
     
     var checker = FedQuinnChecker.create({ 
       daddy: daddy, 
-      quinn: quinn,
-      keystate: {spacebar: true}
+      quinn: quinn
     });
 
-    Assert.ok(checker.check());
+    Assert.ok(checker.check({spacebar: true}));
   });
 
   it("is not close to quinn when daddy is to the left of quinn", function() {
@@ -47,11 +44,10 @@ describe("Quinn Status", function() {
     
     var checker = FedQuinnChecker.create({ 
       daddy: daddy, 
-      quinn: quinn,
-      keystate: {spacebar: true}
+      quinn: quinn
     });
 
-    Assert.ok(!checker.check());
+    Assert.ok(!checker.check({spacebar: true}));
   });
 
   it("is not close to quinn when daddy is above quinn", function() {
@@ -60,11 +56,10 @@ describe("Quinn Status", function() {
     
     var checker = FedQuinnChecker.create({ 
       daddy: daddy, 
-      quinn: quinn,
-      keystate: {spacebar: true}
+      quinn: quinn
     });
 
-    Assert.ok(!checker.check());
+    Assert.ok(!checker.check({spacebar: true}));
   });
   
   it("is not close to quinn when daddy is below quinn", function() {
@@ -73,10 +68,23 @@ describe("Quinn Status", function() {
     
     var checker = FedQuinnChecker.create({ 
       daddy: daddy, 
-      quinn: quinn,
-      keystate: {spacebar: true}
+      quinn: quinn
     });
 
-    Assert.ok(!checker.check());
+    Assert.ok(!checker.check({spacebar: true}));
+  });
+
+  it("allows the objects to move after they are set in the checker", function() {
+    var daddy = {location: { x: 2, y: 13} };
+    var quinn = {location: { x: 1, y: 2}, boundingBox: {width: 10, height: 10} };
+    
+    var checker = FedQuinnChecker.create({ 
+      daddy: daddy, 
+      quinn: quinn
+    });
+
+    daddy.location = {x: 1, y: 2};
+
+    Assert.ok(checker.check({spacebar: true}));
   });
 });
