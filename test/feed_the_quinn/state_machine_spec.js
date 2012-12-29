@@ -6,8 +6,8 @@ describe("StateMachine", function() {
       sm, options;
 
   function FirstState(options) {
-    this.click = function() {} // Shouldnt be necessary
-    this.update = function() {}
+    this.update = function() {};
+    this.moveToSecondState = function() {};
     this.options = options;
     return this;
   };
@@ -23,6 +23,7 @@ describe("StateMachine", function() {
                             [FirstState, "startGame", SecondState],
                             [FirstState, "doNothing", FirstState],
                             [FirstState, "update", FirstState, "update"],
+                            [FirstState, "click", FirstState, "moveToSecondState"],
                             [FirstState, "keydown", SecondState],
                             [SecondState, "keydown", FirstState],
     ], options );
@@ -82,5 +83,15 @@ describe("StateMachine", function() {
 
     sm.keydown();
     Assert.equal(sm.currentState().constructor, FirstState);
+  });
+
+  it("does not continue with the state transition if the transition action changes the state", function() {
+    sandbox.stub(sm.currentState(), "moveToSecondState", function(theState) {
+      theState.keydown();
+    });
+
+    sm.click();
+
+    Assert.equal(sm.currentState().constructor, SecondState);
   });
 });

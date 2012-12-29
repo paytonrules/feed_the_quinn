@@ -31,7 +31,7 @@ module.exports = {
         }
 
         var State = row[2];
-        if (currentState.constructor !== State) {
+        if (currentState.constructor !== State && currentState.constructor === row[0]) {
           currentState = new State(options);
         }
       };

@@ -6,6 +6,6 @@ module.exports = [
   [TitleScreen, "update", TitleScreen, "update"],
   [TitleScreen, "click", TitleScreen, "click"],
   [GameScreen, "update", GameScreen, "update"],
-  [GameScreen, "keydown", GameScreen, "keydown"]
+  [GameScreen, "keydown", GameScreen, "keydown"],
   [GameScreen, "keyup", GameScreen, "keyup"]
 ];

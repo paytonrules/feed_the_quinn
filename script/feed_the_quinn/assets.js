@@ -1,5 +1,6 @@
 module.exports = {
   'title': {
+    'four' : {},
     'background': {
       'image': {
         'src': 'images/title_screen_background.jpg'

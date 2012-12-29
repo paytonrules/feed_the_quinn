@@ -45,7 +45,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
 
       it("updates the daddy with the keystate when something is pressed", function() {
-        var game = new GameScreen(gameSpec, screen);
+        var game = new GameScreen({spec: gameSpec, screen: screen});
 
         game.keydown({which: 37});
         game.update();
@@ -54,7 +54,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
 
       it("doesnt change the key state until a keyup is sent", function() {
-        var game = new GameScreen(gameSpec, screen);
+        var game = new GameScreen({spec: gameSpec, screen: screen});
 
         game.keydown({which: 37});
         game.update();
@@ -64,7 +64,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
 
       it("Stops moving direction on a keyup", function() {
-        var game = new GameScreen(gameSpec, screen);
+        var game = new GameScreen({spec: gameSpec, screen: screen});
 
         game.keydown({which: 37});
         game.update();
@@ -80,7 +80,7 @@ describe("FeedTheQuinn#GameScreen", function() {
           level.addGameObject('baby', { location: {x: 10, y: 10}, boundingBox: {width:10, height: 10}});
         });
 
-        var game = new GameScreen(gameSpec, screen);
+        var game = new GameScreen({spec: gameSpec, screen: screen});
         game.keydown({which: 32}); // Spacebar
         game.update();
 
@@ -93,7 +93,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       it("is put on the screen", function() {
         var progressBarCreation = sandbox.spy(ProgressBar, 'create');
 
-        var game = new GameScreen(gameSpec, screen);
+        var game = new GameScreen({spec: gameSpec, screen: screen});
         
         Assert.strictEqual(screen.findObjectNamed('progressBar'),
                            progressBarCreation.returnValues[0]);
@@ -111,7 +111,7 @@ describe("FeedTheQuinn#GameScreen", function() {
           });
         });
 
-        var game = new GameScreen(gameSpec, screen);
+        var game = new GameScreen({spec: gameSpec, screen: screen});
 
         game.update();
 

@@ -1,9 +1,9 @@
 var StateMachine = require("./state_machine");
+var TransitionTable = require("./transition_table");
 
 module.exports = {
   create: function(spec, screen) {
-    var transitionTable = require("./transition_table");
-    var stateMachine = StateMachine.init(transitionTable, 
+    var stateMachine = StateMachine.init(TransitionTable, 
                                          { 
                                            spec: spec, 
                                            screen: screen

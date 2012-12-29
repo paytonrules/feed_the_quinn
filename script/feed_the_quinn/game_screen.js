@@ -9,7 +9,9 @@ var Keyboard = require('eskimo').Keyboard,
     fedQuinnChecker; 
 
 module.exports = (function() {
-  return function GameScreen(gameSpec, screen) {
+  return function GameScreen(context) {
+    var gameSpec = context.spec;
+    var screen = context.screen;
     var init = function(level, screen) {
       daddy = Daddy.create(level.gameObject('daddy'));
       quinn = level.gameObject('baby');
