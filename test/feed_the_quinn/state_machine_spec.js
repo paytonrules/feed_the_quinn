@@ -94,4 +94,12 @@ describe("StateMachine", function() {
 
     Assert.equal(sm.currentState().constructor, SecondState);
   });
+
+  it("doesnt give a stupid exception when a state machine event is not defined", function() {
+    sm.startGame();
+
+    Assert.doesNotThrow(function() {
+      sm.doNothing();
+    });
+  });
 });

@@ -16,7 +16,17 @@ describe("FeedTheQuinn#GameScreen", function() {
           "object" : "levelOneObject",
           "daddy" : {location: {x: 0, y: 0}},
           "progressBar" : "progress bar object",
-          "baby" : {location: { x: 100, y: 100}, boundingBox: {width: 0, height: 0}}
+          "baby" : { 'image' : {
+                      'src' : 'images/baby_mario.png'
+                      },
+                      'asset' : {
+                        'width' : 50,
+                        'height' : 50
+                      },
+                      'location' : { 
+                        x: 100, y: 100
+                      },
+          }
         }
       };
 
@@ -47,7 +57,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       it("updates the daddy with the keystate when something is pressed", function() {
         var game = new GameScreen({spec: gameSpec, screen: screen});
 
-        game.keydown({which: 37});
+        game.keydown({}, {which: 37});
         game.update();
 
         Assert.equal(1, gameSpec.level().gameObject('daddy').location.x);
@@ -56,7 +66,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       it("doesnt change the key state until a keyup is sent", function() {
         var game = new GameScreen({spec: gameSpec, screen: screen});
 
-        game.keydown({which: 37});
+        game.keydown({}, {which: 37});
         game.update();
         game.update();
 
@@ -66,9 +76,9 @@ describe("FeedTheQuinn#GameScreen", function() {
       it("Stops moving direction on a keyup", function() {
         var game = new GameScreen({spec: gameSpec, screen: screen});
 
-        game.keydown({which: 37});
+        game.keydown({}, {which: 37});
         game.update();
-        game.keyup({which: 37});
+        game.keyup({}, {which: 37});
         game.update();
 
         Assert.equal(1, gameSpec.level().gameObject('daddy').location.x);
@@ -77,11 +87,11 @@ describe("FeedTheQuinn#GameScreen", function() {
       it("Resets daddy's stress when Baby is fed", function() {
         gameSpec.load('levelOne', function(level) {
           level.addGameObject('daddy', { location: {x: 10, y: 10}, stress: 50, stressRate: 100});
-          level.addGameObject('baby', { location: {x: 10, y: 10}, boundingBox: {width:10, height: 10}});
+          level.addGameObject('baby', { location: {x: 10, y: 10}, asset: {width:10, height: 10}});
         });
 
         var game = new GameScreen({spec: gameSpec, screen: screen});
-        game.keydown({which: 32}); // Spacebar
+        game.keydown({}, {which: 32}); // Spacebar
         game.update();
 
         Assert.equal(gameSpec.level().gameObject('daddy').stress, 0);

@@ -6,7 +6,8 @@ var Keyboard = require('eskimo').Keyboard,
     ProgressBar = require('./progress_bar.js'),
     progressBar,
     FedQuinnChecker = require('./quinn_status.js'),
-    fedQuinnChecker; 
+    fedQuinnChecker, 
+    Image = require('eskimo').Image;
 
 module.exports = (function() {
   return function GameScreen(context) {
@@ -20,7 +21,7 @@ module.exports = (function() {
       screen.put(progressBar);
 
       fedQuinnChecker = FedQuinnChecker.create({daddy: daddy, 
-                                               quinn: quinn});
+                                                quinn: Image("", quinn)});
     };
 
     gameSpec.load('levelOne', function(level) {
@@ -37,11 +38,11 @@ module.exports = (function() {
 
     // Probably not at the right level of abstraction
     // Could definitely be a framework object
-    this.keydown = function(event) {
+    this.keydown = function(sm, event) {
       keystate[Keyboard[event.which]] = true;
     };
 
-    this.keyup = function(event) {
+    this.keyup = function(sm, event) {
       keystate[Keyboard[event.which]] = false;
     };
 

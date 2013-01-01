@@ -6,10 +6,7 @@ module.exports = {
 
     return {
       check: function(keystate) {
-        if (daddy.location.x <= (quinn.location.x + quinn.boundingBox.width)
-           && daddy.location.x >= quinn.location.x
-           && daddy.location.y >= quinn.location.y
-           && daddy.location.y <= (quinn.location.y + quinn.boundingBox.height)) {
+        if (quinn.contains(daddy.location.x, daddy.location.y)) {
           return keystate.spacebar;
         }
         return false;

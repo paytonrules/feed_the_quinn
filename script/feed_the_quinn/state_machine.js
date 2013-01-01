@@ -38,7 +38,9 @@ module.exports = {
 
       if (typeof stateMachine[eventName] == "undefined") {
         stateMachine[eventName] = function() {
-          transitionMap[currentState.constructor][eventName].apply(stateMachine, arguments);
+          if (transitionMap[currentState.constructor][eventName]) {
+            transitionMap[currentState.constructor][eventName].apply(stateMachine, arguments);
+          }
         }
       }
     });
