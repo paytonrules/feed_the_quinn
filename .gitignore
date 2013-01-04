@@ -4,3 +4,4 @@ session.vim
 *.swo
 node_modules/
 script/feed_the_quinn_bundle.js
+.DS_Store

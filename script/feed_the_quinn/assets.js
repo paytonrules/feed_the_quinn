@@ -1,6 +1,5 @@
 module.exports = {
   'title': {
-    'four' : {},
     'background': {
       'image': {
         'src': 'images/title_screen_background.jpg'
@@ -52,8 +51,8 @@ module.exports = {
         'src' : 'images/baby_mario.png'
       },
       'location': {
-        'x': 200,
-        'y': 200
+        'x': 710,
+        'y': 505
       },
       'visible' : true
     },
@@ -62,13 +61,22 @@ module.exports = {
         'src' : 'images/king_0.svg'
       },
       'location': {
-        'x': 100,
-        'y': 100
+        'x': 350,
+        'y': 470
       },
       'stressRate' : 100,
       'maxStress' : 100,
       'velocity' : 5,
       'visible' : true
+    },
+    'food' : {
+      'image' : {
+        'src' : 'images/food.png'
+      },
+      'location' : {
+        'x' : 0,
+        'y' : 0
+      }
     }
   }
 };

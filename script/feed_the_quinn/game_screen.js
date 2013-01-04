@@ -11,11 +11,27 @@ var Keyboard = require('eskimo').Keyboard,
 
 module.exports = (function() {
   return function GameScreen(context) {
-    var gameSpec = context.spec;
-    var screen = context.screen;
+    var gameSpec = context.spec,
+        screen = context.screen,
+        updates = 0,
+        foodDataSpec;
+
+    function putFoodOnScreenInRandomSpot(foodDataSpec) {
+      var food = {};
+      
+      for(var key in foodDataSpec) {
+        food[key] = foodDataSpec[key];
+      }
+      food.location.x = Math.random();
+      food.location.y = Math.random();
+
+      screen.put(Image("food", food));
+    }
+
     var init = function(level, screen) {
       daddy = Daddy.create(level.gameObject('daddy'));
       quinn = level.gameObject('baby');
+      foodDataSpec = level.gameObject('food');
 
       progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
       screen.put(progressBar);
@@ -28,12 +44,22 @@ module.exports = (function() {
       init(level, screen);
     });
 
-    this.update = function() {
+    this.update = function(sm) {
+      updates++;
+
+      if (updates % 100 == 0) {
+        putFoodOnScreenInRandomSpot(foodDataSpec);
+      }
+
       if (fedQuinnChecker.check(keystate)) {
         daddy.reset();
       }
       daddy.update(keystate);
       progressBar.update(daddy.stress());
+
+      if (daddy.isDead) {
+        sm.daddyDies();
+      }
     };
 
     // Probably not at the right level of abstraction
