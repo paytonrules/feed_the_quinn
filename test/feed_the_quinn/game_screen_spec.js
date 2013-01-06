@@ -5,20 +5,20 @@ describe("FeedTheQuinn#GameScreen", function() {
       GameScreen = require('../../script/feed_the_quinn/game_screen'),
       ProgressBar = require("../../script/feed_the_quinn/progress_bar.js"),
       TestGameSpecFactory = require('eskimo').TestGameSpecFactory,
-      level,      
+      assets,      
       gameSpec,
       screen,
       mockSm;
 
   describe("Game Screen / Level One", function() {
     beforeEach(function() {
-      level = { 
+      assets = { 
         "levelOne" : {
           "object" : "levelOneObject",
           "daddy" : {location: {x: 0, y: 0},
                      stressRate: 0
           },
-          "progressBar" : "progress bar object",
+          "progressBar" : {},
           "baby" : {'asset' : {
                         'width' : 50,
                         'height' : 50
@@ -42,7 +42,6 @@ describe("FeedTheQuinn#GameScreen", function() {
         }
       };
 
-      gameSpec = TestGameSpecFactory.create(level);
       var Screen = require('eskimo').Screen;
       var Canvas = require('canvas');
       var canvas = new Canvas(200, 200);
@@ -58,12 +57,9 @@ describe("FeedTheQuinn#GameScreen", function() {
     describe("moving daddy", function() {
 
       beforeEach(function() {
-        gameSpec.load("levelOne", function(level) {
-          level.addGameObject('daddy', {
-            velocity: 1,
-            location: {x: 2, y: 0}
-          });
-        });
+        assets.levelOne.daddy.velocity = 1;
+        assets.levelOne.daddy.location = {x: 2, y: 2};
+        gameSpec = TestGameSpecFactory.create(assets);
       });
 
       it("updates the daddy with the keystate when something is pressed", function() {
@@ -97,10 +93,11 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
       
       it("Resets daddy's stress when Baby is fed", function() {
-        gameSpec.load('levelOne', function(level) {
-          level.addGameObject('daddy', { location: {x: 10, y: 10}, stress: 50, stressRate: 100});
-          level.addGameObject('baby', { location: {x: 10, y: 10}, asset: {width:10, height: 10}});
-        });
+        assets.levelOne.daddy.location = {x: 10, y: 10};
+        assets.levelOne.daddy.stress = 50;
+        assets.levelOne.daddy.stressRate = 100;
+        assets.levelOne.baby.location = {x: 10, y: 10};
+        assets.levelOne.baby.asset = {width:10, height: 10};
 
         var game = new GameScreen({spec: gameSpec, screen: screen});
         game.keydown({}, {which: 32}); // Spacebar
@@ -112,6 +109,7 @@ describe("FeedTheQuinn#GameScreen", function() {
 
     describe("progress bar", function() {
 
+      // Can you demockify this?
       it("is put on the screen", function() {
         var progressBarCreation = sandbox.spy(ProgressBar, 'create');
 
@@ -122,18 +120,11 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
       
       it("updates the progress bar with the state of daddy's stress", function() {
-        gameSpec.load("levelOne", function(level) {
-          level.addGameObject('progressBar', {
-            stress: 0,
-            stressRate: 100
-          });
+        assets.levelOne.progressBar.stress = 0;
+        assets.levelOne.daddy.stress = 39;
+        assets.levelOne.daddy.location = {x: 0, y: 0}; 
 
-          level.addGameObject('daddy', {
-            stress: 39,
-            location: {x: 0, y: 0}
-          });
-        });
-
+        gameSpec = TestGameSpecFactory.create(assets);
         var game = new GameScreen({spec: gameSpec, screen: screen});
 
         game.update(mockSm);
@@ -142,15 +133,12 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
 
       it("sends a death notice to the state machine when daddy dies", function() {
-        gameSpec.load("levelOne", function(level) {
-          level.addGameObject('daddy', {
-            maxStress: 100,
-            stressRate: 1,
-            location: {x: 0, y: 0},
-            stress: 99
-          });
-        });
+        assets.levelOne.daddy.maxStress = 100;
+        assets.levelOne.daddy.stressRate = 1;
+        assets.levelOne.daddy.location = {x: 0, y: 0};
+        assets.levelOne.daddy.stress = 99;
 
+        gameSpec = TestGameSpecFactory.create(assets);
         var game = new GameScreen({spec: gameSpec,
                                    screen: screen});
 
@@ -160,20 +148,19 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
 
       it("does not send a death notice when daddy is alive", function() {
-        gameSpec.load("levelOne", function(level) {
-          level.addGameObject('daddy', {
-            maxStress: 100,
-            stressRate: 1,
-            location: {x: 0, y: 0},
-            stress: 1 
-          });
-        });
+        assets.levelOne.daddy ={
+          maxStress: 100,
+          stressRate: 1,
+          location: {x: 0, y: 0},
+          stress: 1 
+        };
 
+        gameSpec = TestGameSpecFactory.create(assets);
         var game = new GameScreen({spec: gameSpec,
-                                   screen: screen});
+                                  screen: screen});
 
         game.update(mockSm);
-
+        
         Assert.ok(!mockSm.isDead);
       });
 
@@ -216,11 +203,11 @@ describe("FeedTheQuinn#GameScreen", function() {
                                     screen: screen});
 
           var mockContext = new MockContext();
-        
+
           placeAPieceOfFood(game);
-          
+
           var foodObject = screen.findObjectNamed("food");
-          
+
           foodObject.draw(mockContext);
           Assert.equal('images/food.png', mockContext.asset.src);
         });
@@ -245,30 +232,30 @@ describe("FeedTheQuinn#GameScreen", function() {
           Assert.equal(mockContext.x, 1);
           Assert.equal(mockContext.y, 2);
         });
-
+ 
         it("generates successive pieces of food, with new random locations", function() {
           var game = new GameScreen({spec: gameSpec,
                                     screen: screen});
           var mockContextOne = new MockContext();
           var mockContextTwo = new MockContext();
-
+ 
           var randoms = [1, 2, 3, 4];
           sandbox.stub(Math, "random", function() {
             return randoms.shift();
           });
-
+ 
           placeAPieceOfFood(game);
           placeAPieceOfFood(game);
-
+ 
           var foodObjects = screen.findObjectsNamed("food");
           foodObjects[0].draw(mockContextOne);
           foodObjects[1].draw(mockContextTwo);
-
+ 
           Assert.equal(mockContextOne.x, 1);
           Assert.equal(mockContextOne.y, 2);
           Assert.equal(mockContextTwo.x, 3);
-          Assert.equal(mockContextTwo.y, 4);
-        });
+          Assert.equal(mockContextTwo.y, 4); 
+        }); 
       });
     });
   });

@@ -7,6 +7,7 @@ var Keyboard = require('eskimo').Keyboard,
     progressBar,
     FedQuinnChecker = require('./quinn_status.js'),
     fedQuinnChecker, 
+    jquery = require('jquery'), // Temp
     Image = require('eskimo').Image;
 
 module.exports = (function() {
@@ -14,7 +15,8 @@ module.exports = (function() {
     var gameSpec = context.spec,
         screen = context.screen,
         updates = 0,
-        foodDataSpec;
+        foodDataSpec,
+        progressBarSpec = {};
 
     function putFoodOnScreenInRandomSpot(foodDataSpec) {
       var food = {};
@@ -22,8 +24,10 @@ module.exports = (function() {
       for(var key in foodDataSpec) {
         food[key] = foodDataSpec[key];
       }
-      food.location.x = Math.random();
-      food.location.y = Math.random();
+      food.location = {
+        x: Math.random(),
+        y: Math.random()
+      };
 
       screen.put(Image("food", food));
     }
@@ -33,7 +37,8 @@ module.exports = (function() {
       quinn = level.gameObject('baby');
       foodDataSpec = level.gameObject('food');
 
-      progressBar = ProgressBar.create('progressBar', level.gameObject('progressBar'));
+      progressBarSpec = level.gameObject('progressBar');
+      progressBar = ProgressBar.create('progressBar', progressBarSpec);
       screen.put(progressBar);
 
       fedQuinnChecker = FedQuinnChecker.create({daddy: daddy, 

@@ -31,7 +31,7 @@ var Daddy = module.exports = {
       if (stressTicks % stressRate == 0) {
         gameObject.stress++;
       }
-      
+     
       if (gameObject.stress >= deathLevel) {
         this.isDead = true;
       }
