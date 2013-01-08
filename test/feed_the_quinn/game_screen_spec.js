@@ -28,6 +28,10 @@ describe("FeedTheQuinn#GameScreen", function() {
                       },
           },
           "food" : {
+            'testAsset' : {
+              'height' : 0,
+              'width' : 0
+            },
             'image' : { 
               'src' : 'images/food.png'
             },
@@ -48,6 +52,8 @@ describe("FeedTheQuinn#GameScreen", function() {
       var $ = require('jquery');
 
       screen = new Screen($(canvas));
+      screen.height = function() {return 1;}
+      screen.width = function() {return 1;}
     });
 
     afterEach(function() {
@@ -207,37 +213,61 @@ describe("FeedTheQuinn#GameScreen", function() {
           placeAPieceOfFood(game);
 
           var foodObject = screen.findObjectNamed("food");
-
           foodObject.draw(mockContext);
           Assert.equal('images/food.png', mockContext.asset.src);
         });
 
-        it("multiplies the random numbers by height and width");
+        it("puts the pieces of food in random locations on the screen, multipled by screen width/height", function() {
+          screen.width = function() {return 100;}
+          screen.height = function() {return 200;}
 
-        it("puts the pieces of food in random locations", function() {
           var game = new GameScreen({spec: gameSpec,
                                     screen: screen});
 
-          var mockContext = new MockContext();   
-
-          var randoms = [1, 2];
+          var randoms = [0.5, 1];
           sandbox.stub(Math, "random", function() {
             return randoms.shift();
           });
           placeAPieceOfFood(game);
           
           var foodObject = screen.findObjectNamed("food");
-          foodObject.draw(mockContext);
 
-          Assert.equal(mockContext.x, 1);
-          Assert.equal(mockContext.y, 2);
+          Assert.equal(foodObject.location.x, 50);
+          Assert.equal(foodObject.location.y, 200);
+        });
+
+        it("removes the size of the asset", function() {
+          screen.width = function() {return 100;}
+          screen.height = function() {return 100;}
+          assets.levelOne.food.testAsset = {
+            width: 10,
+            height: 10
+          };
+
+          gameSpec = TestGameSpecFactory.create(assets);
+          var game = new GameScreen({spec: gameSpec,
+                                    screen: screen});
+
+          var randoms = [1, 1];
+          sandbox.stub(Math, "random", function() {
+            return randoms.shift();
+          });
+          placeAPieceOfFood(game);
+ 
+          var foodObject = screen.findObjectNamed("food");
+          Assert.equal(foodObject.location.x, 90);
+          Assert.equal(foodObject.location.y, 90);
         });
  
         it("generates successive pieces of food, with new random locations", function() {
+          assets.levelOne.food.testAsset = {
+            width: 0,
+            height: 0
+          };
+
+          gameSpec = TestGameSpecFactory.create(assets);
           var game = new GameScreen({spec: gameSpec,
                                     screen: screen});
-          var mockContextOne = new MockContext();
-          var mockContextTwo = new MockContext();
  
           var randoms = [1, 2, 3, 4];
           sandbox.stub(Math, "random", function() {
@@ -248,13 +278,11 @@ describe("FeedTheQuinn#GameScreen", function() {
           placeAPieceOfFood(game);
  
           var foodObjects = screen.findObjectsNamed("food");
-          foodObjects[0].draw(mockContextOne);
-          foodObjects[1].draw(mockContextTwo);
  
-          Assert.equal(mockContextOne.x, 1);
-          Assert.equal(mockContextOne.y, 2);
-          Assert.equal(mockContextTwo.x, 3);
-          Assert.equal(mockContextTwo.y, 4); 
+          Assert.equal(foodObjects[0].location.x, 1);
+          Assert.equal(foodObjects[0].location.y, 2);
+          Assert.equal(foodObjects[1].location.x, 3);
+          Assert.equal(foodObjects[1].location.y, 4); 
         }); 
       });
     });

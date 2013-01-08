@@ -25,11 +25,11 @@ module.exports = (function() {
         food[key] = foodDataSpec[key];
       }
       food.location = {
-        x: Math.random(),
-        y: Math.random()
+        x: Math.random() * (screen.width() - food.width()),
+        y: Math.random() * (screen.height() - food.height())
       };
 
-      screen.put(Image("food", food));
+      screen.put(food);
     }
 
     var init = function(level, screen) {
