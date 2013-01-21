@@ -1,14 +1,17 @@
 describe("StartButton", function() {
   var StartButton = require("../../script/feed_the_quinn/start_button"),
-      Image = require("eskimo").Image,
+      Sprite = require("eskimo").Sprite,
       assert = require('assert'),
       sm;
   
   beforeEach(function() {
     var jquery = require('jquery');
     var image = jquery("<img src='bleh' height='20' width='20'></img>")[0];
-    sm = StartButton.create({asset: image,
-                             location : {x: 1, y: 1}});
+    sm = StartButton.create(Sprite('button', 
+                                   {
+                                     asset: image,
+                                     location : {x: 1, y: 1}
+                                   }));
   });
 
   it("accepts a click, and calls the handler if the location is within the button", function() {

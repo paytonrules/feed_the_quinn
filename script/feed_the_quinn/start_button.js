@@ -1,12 +1,7 @@
 var Sprite = require("eskimo").Sprite;
 
 module.exports = {
-
-  create: function(objectData) {
-    // TODO - you dont need to construct this object
-    // decorate the game objects rather than wrapping them
-    var buttonSprite = Sprite('start_button', objectData);
-
+  create: function(buttonSprite) {
     return {
 
       click: function(location, callback) {
@@ -15,5 +10,5 @@ module.exports = {
         }
       }
     };
-  },
+  }
 };

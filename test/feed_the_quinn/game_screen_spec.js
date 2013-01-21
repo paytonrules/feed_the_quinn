@@ -14,28 +14,32 @@ describe("FeedTheQuinn#GameScreen", function() {
     beforeEach(function() {
       assets = { 
         "levelOne" : {
-          "object" : "levelOneObject",
-          "daddy" : {location: {x: 0, y: 0},
-                     stressRate: 0
-          },
-          "progressBar" : {},
-          "baby" : {'asset' : {
-                        'width' : 50,
-                        'height' : 50
-                      },
-                      'location' : { 
-                        x: 100, y: 100
-                      },
+          "object" : {"blob" : "levelOneObject"},
+          "daddy" : {"daddy" : {
+            location: {x: 0, y: 0},
+            stressRate: 0
+          }},
+          "progressBar" : {"bar" : {}},
+          "baby" : {
+            'sprite' : {
+              'asset' : {
+                'width' : 50,
+                'height' : 50
+              },
+              'location' : { 
+                x: 100, y: 100
+              }
+            }
           },
           "food" : {
-            'testAsset' : {
-              'height' : 0,
-              'width' : 0
-            },
-            'image' : { 
-              'src' : 'images/food.png'
-            },
-            'location' : {}
+            "sprite" : {
+              'testAsset' : {
+                'height' : 0,
+                'width' : 0
+              }, 
+              'src' : 'images/food.png',
+              'location' : {}
+            }
           }
         }
       };
@@ -52,8 +56,8 @@ describe("FeedTheQuinn#GameScreen", function() {
       var $ = require('jquery');
 
       screen = new Screen($(canvas));
-      screen.height = function() {return 1;}
-      screen.width = function() {return 1;}
+      screen.height = function() {return 1;};
+      screen.width = function() {return 1;};
     });
 
     afterEach(function() {
@@ -63,8 +67,8 @@ describe("FeedTheQuinn#GameScreen", function() {
     describe("moving daddy", function() {
 
       beforeEach(function() {
-        assets.levelOne.daddy.velocity = 1;
-        assets.levelOne.daddy.location = {x: 2, y: 2};
+        assets.levelOne.daddy.daddy.velocity = 1;
+        assets.levelOne.daddy.daddy.location = {x: 2, y: 2};
         gameSpec = TestGameSpecFactory.create(assets);
       });
 
@@ -99,11 +103,11 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
       
       it("Resets daddy's stress when Baby is fed", function() {
-        assets.levelOne.daddy.location = {x: 10, y: 10};
-        assets.levelOne.daddy.stress = 50;
-        assets.levelOne.daddy.stressRate = 100;
-        assets.levelOne.baby.location = {x: 10, y: 10};
-        assets.levelOne.baby.asset = {width:10, height: 10};
+        assets.levelOne.daddy.daddy.location = {x: 10, y: 10};
+        assets.levelOne.daddy.daddy.stress = 50;
+        assets.levelOne.daddy.daddy.stressRate = 100;
+        assets.levelOne.baby.sprite.location = {x: 10, y: 10};
+        assets.levelOne.baby.sprite.asset = {width:10, height: 10};
 
         var game = new GameScreen({spec: gameSpec, screen: screen});
         game.keydown({}, {which: 32}); // Spacebar
@@ -126,9 +130,9 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
       
       it("updates the progress bar with the state of daddy's stress", function() {
-        assets.levelOne.progressBar.stress = 0;
-        assets.levelOne.daddy.stress = 39;
-        assets.levelOne.daddy.location = {x: 0, y: 0}; 
+        assets.levelOne.progressBar.bar.stress = 0;
+        assets.levelOne.daddy.daddy.stress = 39;
+        assets.levelOne.daddy.daddy.location = {x: 0, y: 0}; 
 
         gameSpec = TestGameSpecFactory.create(assets);
         var game = new GameScreen({spec: gameSpec, screen: screen});
@@ -139,10 +143,10 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
 
       it("sends a death notice to the state machine when daddy dies", function() {
-        assets.levelOne.daddy.maxStress = 100;
-        assets.levelOne.daddy.stressRate = 1;
-        assets.levelOne.daddy.location = {x: 0, y: 0};
-        assets.levelOne.daddy.stress = 99;
+        assets.levelOne.daddy.daddy.maxStress = 100;
+        assets.levelOne.daddy.daddy.stressRate = 1;
+        assets.levelOne.daddy.daddy.location = {x: 0, y: 0};
+        assets.levelOne.daddy.daddy.stress = 99;
 
         gameSpec = TestGameSpecFactory.create(assets);
         var game = new GameScreen({spec: gameSpec,
@@ -218,8 +222,8 @@ describe("FeedTheQuinn#GameScreen", function() {
         });
 
         it("puts the pieces of food in random locations on the screen, multipled by screen width/height", function() {
-          screen.width = function() {return 100;}
-          screen.height = function() {return 200;}
+          screen.width = function() {return 100;};
+          screen.height = function() {return 200;};
 
           var game = new GameScreen({spec: gameSpec,
                                     screen: screen});
@@ -237,9 +241,9 @@ describe("FeedTheQuinn#GameScreen", function() {
         });
 
         it("removes the size of the asset", function() {
-          screen.width = function() {return 100;}
-          screen.height = function() {return 100;}
-          assets.levelOne.food.testAsset = {
+          screen.width = function() {return 100;};
+          screen.height = function() {return 100;};
+          assets.levelOne.food.sprite.testAsset = {
             width: 10,
             height: 10
           };
@@ -260,7 +264,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         });
  
         it("generates successive pieces of food, with new random locations", function() {
-          assets.levelOne.food.testAsset = {
+          assets.levelOne.food.sprite.testAsset = {
             width: 0,
             height: 0
           };

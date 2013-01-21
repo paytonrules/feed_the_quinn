@@ -40,7 +40,7 @@ module.exports = (function() {
       screen.put(progressBar);
 
       fedQuinnChecker = FedQuinnChecker.create({daddy: daddy, 
-                                                quinn: Sprite("", quinn)});
+                                                quinn: quinn});
     };
 
     gameSpec.load('levelOne', function(level) {

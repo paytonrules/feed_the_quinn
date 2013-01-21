@@ -10,9 +10,11 @@ describe("TitleScreen", function() {
         "title" : {
           'backgroundMusic': {},
           "start_button" : {
-            'location' : {
-              'x' : 0,
-              'y' : 0
+            'sprite' : {
+              'location' : {
+                'x' : 0,
+                'y' : 0
+              }
             }
           }
         }
@@ -41,7 +43,7 @@ describe("TitleScreen", function() {
 
     new TitleScreen({spec: gameSpec, screen: 'screen'});
 
-    assert.deepEqual(startButtonSpy.args[0][0], {'location' : {'x' : 0, 'y' : 0}});
+    assert.deepEqual(startButtonSpy.args[0][0].location, {'x' : 0, 'y' : 0});
   });
 
   function setupButton() {
@@ -68,7 +70,7 @@ describe("TitleScreen", function() {
 
   it("also sends a callback to the button, which when called sends an event to the state machine", function() {
     var button = setupButton();
-    var stateMachine = {startGame: sandbox.stub()} 
+    var stateMachine = {startGame: sandbox.stub()} ;
     var screen = new TitleScreen({spec: gameSpec, screen: 'screen'});
 
     screen.click(stateMachine, '');
