@@ -5,8 +5,6 @@ var Keyboard = require('eskimo').Keyboard,
     quinn,
     ProgressBar = require('./progress_bar.js'),
     progressBar,
-    FedQuinnChecker = require('./quinn_status.js'),
-    fedQuinnChecker, 
     Sprite = require('eskimo').Sprite;
 
 module.exports = (function() {
@@ -38,9 +36,6 @@ module.exports = (function() {
       progressBarSpec = level.gameObject('progressBar');
       progressBar = ProgressBar.create('progressBar', progressBarSpec);
       screen.put(progressBar);
-
-      fedQuinnChecker = FedQuinnChecker.create({daddy: daddy, 
-                                                quinn: quinn});
     };
 
     gameSpec.load('levelOne', function(level) {
@@ -54,7 +49,7 @@ module.exports = (function() {
         putFoodOnScreenInRandomSpot(foodSheet);
       }
 
-      if (fedQuinnChecker.check(keystate)) {
+      if (quinn.contains(daddy.location.x, daddy.location.y) && keystate.spacebar) {
         daddy.reset();
       }
       daddy.update(keystate);
