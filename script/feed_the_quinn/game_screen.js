@@ -14,13 +14,12 @@ module.exports = (function() {
     var gameSpec = context.spec,
         screen = context.screen,
         updates = 0,
-        foodDataSpec,
+        foodSheet,
         progressBarSpec = {};
 
-    function putFoodOnScreenInRandomSpot(foodDataSpec) {
+    function putFoodOnScreenInRandomSpot(foodSheet) {
       var jquery = require('jquery');
-
-      var food = jquery.extend(true, {}, foodDataSpec);
+      var food = jquery.extend(true, {}, foodSheet);
 
       food.location = {
         x: Math.random() * (screen.width() - food.width()),
@@ -31,10 +30,11 @@ module.exports = (function() {
     }
 
     var init = function(level, screen) {
-      daddy = Daddy.create(level.gameObject('daddy'));
       quinn = level.gameObject('baby');
-      foodDataSpec = level.gameObject('food');
+      foodSheet = level.gameObject('food');
 
+      // Could convert to custom objects
+      daddy = Daddy.create(level.gameObject('daddy'));
       progressBarSpec = level.gameObject('progressBar');
       progressBar = ProgressBar.create('progressBar', progressBarSpec);
       screen.put(progressBar);
@@ -50,8 +50,8 @@ module.exports = (function() {
     this.update = function(sm) {
       updates++;
 
-      if (updates % 100 == 0) {
-        putFoodOnScreenInRandomSpot(foodDataSpec);
+      if (updates % 100 === 0) {
+        putFoodOnScreenInRandomSpot(foodSheet);
       }
 
       if (fedQuinnChecker.check(keystate)) {

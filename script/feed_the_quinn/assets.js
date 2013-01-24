@@ -70,12 +70,13 @@ module.exports = {
       }
     },
     'food' : {
-      'sprite' : {
+      'sprite_sheet' : {
         'src' : 'images/food.png',
         'location' : {
           'x' : 0,
           'y' : 0
-        }
+        },
+        map : []
       }
     }
   }

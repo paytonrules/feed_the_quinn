@@ -14,11 +14,12 @@ describe("FeedTheQuinn#GameScreen", function() {
     beforeEach(function() {
       assets = { 
         "levelOne" : {
-          "object" : {"blob" : "levelOneObject"},
-          "daddy" : {"daddy" : {
-            location: {x: 0, y: 0},
-            stressRate: 0
-          }},
+          "daddy" : {
+            "daddy" : {
+              location: {x: 0, y: 0},
+              stressRate: 0 
+            }
+          },
           "progressBar" : {"bar" : {}},
           "baby" : {
             'sprite' : {
@@ -32,13 +33,13 @@ describe("FeedTheQuinn#GameScreen", function() {
             }
           },
           "food" : {
-            "sprite" : {
-              'testAsset' : {
-                'height' : 0,
-                'width' : 0
-              }, 
+            "sprite_sheet" : {
               'src' : 'images/food.png',
-              'location' : {}
+              'location' : {},
+              'map' : [ {
+                'width' : 0,
+                'height' : 0
+              } ]
             }
           }
         }
@@ -243,10 +244,10 @@ describe("FeedTheQuinn#GameScreen", function() {
         it("removes the size of the asset", function() {
           screen.width = function() {return 100;};
           screen.height = function() {return 100;};
-          assets.levelOne.food.sprite.testAsset = {
+          assets.levelOne.food.sprite_sheet.map = [ {
             width: 10,
             height: 10
-          };
+          } ];
 
           gameSpec = TestGameSpecFactory.create(assets);
           var game = new GameScreen({spec: gameSpec,
@@ -264,11 +265,6 @@ describe("FeedTheQuinn#GameScreen", function() {
         });
  
         it("generates successive pieces of food, with new random locations", function() {
-          assets.levelOne.food.sprite.testAsset = {
-            width: 0,
-            height: 0
-          };
-
           gameSpec = TestGameSpecFactory.create(assets);
           var game = new GameScreen({spec: gameSpec,
                                     screen: screen});
