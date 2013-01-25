@@ -76,7 +76,37 @@ module.exports = {
           'x' : 0,
           'y' : 0
         },
-        map : []
+        map : [ {
+          x: 0,
+          y: 0,
+          width: 27,
+          height: 31
+        }, {
+          x: 39,
+          y: 5,
+          width: 35,
+          height: 31
+        }, {
+          x: 82,
+          y: 8,
+          width: 34,
+          height: 28
+        }, {
+          x: 121,
+          y: 4,
+          width: 37,
+          height: 36
+        }, {
+          x: 162,
+          y: 13,
+          width: 36,
+          height: 22
+        }, {
+          x: 206,
+          y: 3,
+          width: 35,
+          height: 38
+        }]
       }
     }
   }
