@@ -1,6 +1,7 @@
 
 describe("Daddy", function() {
   var Daddy = require('../../script/feed_the_quinn/daddy.js'),
+      Sprite = require('eskimo').Sprite,
       assert = require('assert');
 
   it("updates the stress level gradually on each update", function() {
@@ -13,6 +14,46 @@ describe("Daddy", function() {
     assert.strictEqual(1, daddy.stress());
   });
 
+  it("delegates left to its sprite", function() {
+    var daddy = Daddy.create({
+      left: function() {
+        return 10;
+      }
+    });
+
+    assert.equal(10, daddy.left());
+  });
+
+  it("delegates right to its sprite", function() {
+    var daddy = Daddy.create({
+      right: function() {
+        return 20;
+      }
+    });
+
+    assert.equal(20, daddy.right());
+  });
+
+  it("delegates top to its sprite", function() {
+    var daddy = Daddy.create({
+      top: function() {
+        return 30;
+      }
+    });
+
+    assert.equal(30, daddy.top());
+  });
+
+  it("delegates bottom to its sprite", function() {
+    var daddy = Daddy.create({
+      bottom: function() {
+        return 40;
+      }
+    });
+
+    assert.equal(40, daddy.bottom());
+  });
+  
   it("dies when it reaches maxStress", function() {
     var daddy = Daddy.create({stressRate: 1, maxStress: 3});
 

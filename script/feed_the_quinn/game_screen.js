@@ -1,10 +1,7 @@
 var Keyboard = require('eskimo').Keyboard,
-    keystate = {},
     Daddy = require('./daddy.js'),
-    daddy,
-    quinn,
     ProgressBar = require('./progress_bar.js'),
-    progressBar,
+    jquery = require('jquery'),
     Sprite = require('eskimo').Sprite;
 
 module.exports = (function() {
@@ -13,10 +10,13 @@ module.exports = (function() {
         screen = context.screen,
         updates = 0,
         foodSheet,
-        progressBarSpec = {};
+        progressBarSpec = {},
+        daddy,
+        quinn,
+        progressBar,
+        keystate = {};
 
     function putFoodOnScreenInRandomSpot(foodSheet) {
-      var jquery = require('jquery');
       var food = jquery.extend(true, {}, foodSheet);
 
       food.location = {
@@ -31,7 +31,9 @@ module.exports = (function() {
       quinn = level.gameObject('baby');
       foodSheet = level.gameObject('food');
 
-      // Could convert to custom objects
+      // Could convert to custom objects using gameSpec.registerLoader
+      // Which is pretty awesome
+      // but wait - daddy should be a sprite
       daddy = Daddy.create(level.gameObject('daddy'));
       progressBarSpec = level.gameObject('progressBar');
       progressBar = ProgressBar.create('progressBar', progressBarSpec);
@@ -49,7 +51,7 @@ module.exports = (function() {
         putFoodOnScreenInRandomSpot(foodSheet);
       }
 
-      if (quinn.contains(daddy.location.x, daddy.location.y) && keystate.spacebar) {
+      if (quinn.intersects(daddy) && keystate.spacebar) {
         daddy.reset();
       }
       daddy.update(keystate);

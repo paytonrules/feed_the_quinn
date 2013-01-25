@@ -1,26 +1,26 @@
 var Daddy = module.exports = {
-  create: function(gameObject) {
+  create: function(sprite) {
     var stressTicks = 0;
-    gameObject.stress = gameObject.stress || 0;
-    var stressRate = gameObject.stressRate || 1; // Default to 1 to avoid divide by 0
-    var deathLevel = gameObject.maxStress || 0;
-    var velocity = gameObject.velocity || 0;
+    sprite.stress = sprite.stress || 0;
+    var stressRate = sprite.stressRate || 1; // Default to 1 to avoid divide by 0
+    var deathLevel = sprite.maxStress || 0;
+    var velocity = sprite.velocity || 0;
 
     function move(keystate) {
       if (keystate.left) {
-        gameObject.location.x -= velocity;
+        sprite.location.x -= velocity;
       }
 
       if (keystate.right) {
-        gameObject.location.x += velocity; 
+        sprite.location.x += velocity; 
       }
 
       if (keystate.up) {
-        gameObject.location.y -= velocity;
+        sprite.location.y -= velocity;
       }
 
       if (keystate.down) {
-        gameObject.location.y += velocity;
+        sprite.location.y += velocity;
       }
     }
 
@@ -28,28 +28,40 @@ var Daddy = module.exports = {
       move(keystate);
       stressTicks++;
 
-      if (stressTicks % stressRate == 0) {
-        gameObject.stress++;
+      if (stressTicks % stressRate === 0) {
+        sprite.stress++;
       }
      
-      if (gameObject.stress >= deathLevel) {
+      if (sprite.stress >= deathLevel) {
         this.isDead = true;
       }
     }
 
     function reset() {
       stressTicks = 0;
-      gameObject.stress = 0;
+      sprite.stress = 0;
     }
 
     return {
       update: update,
       stress: function() {
-        return gameObject.stress;
+        return sprite.stress;
       },
-      location: gameObject.location || {x: 0, y: 0},
+      location: sprite.location || {x: 0, y: 0},
       isDead: false,
-      reset: reset
+      reset: reset,
+      left: function() {
+        return sprite.left();
+      },
+      right: function() {
+        return sprite.right();
+      },
+      top: function() {
+        return sprite.top();
+      },
+      bottom: function() {
+        return sprite.bottom();
+      }
     };
-  },
+  }
 };
