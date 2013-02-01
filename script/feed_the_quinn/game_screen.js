@@ -30,10 +30,6 @@ module.exports = (function() {
     var init = function(level, screen) {
       quinn = level.gameObject('baby');
       foodSheet = level.gameObject('food');
-
-      // Could convert to custom objects using gameSpec.registerLoader
-      // Which is pretty awesome
-      // but wait - daddy should be a sprite
       daddy = level.gameObject('daddy');
       screen.put(daddy);
       
