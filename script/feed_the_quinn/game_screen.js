@@ -35,7 +35,7 @@ module.exports = (function() {
       // Which is pretty awesome
       // but wait - daddy should be a sprite
       daddy = level.gameObject('daddy');
-      // DONT FORGET TO PUT DADDY ON THE SCREEN
+      screen.put(daddy);
       
       progressBarSpec = level.gameObject('progressBar');
       progressBar = ProgressBar.create('progressBar', progressBarSpec);

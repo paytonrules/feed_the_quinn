@@ -1,8 +1,12 @@
-
 describe("Daddy", function() {
   var Daddy = require('../../script/feed_the_quinn/daddy.js'),
       Sprite = require('eskimo').Sprite,
+      sandbox = require('sinon').sandbox.create(),
       assert = require('assert');
+
+  beforeEach(function() {
+    sandbox.restore();
+  });
 
   it("updates the stress level gradually on each update", function() {
     var daddy = Daddy.create({stressRate: 90});
@@ -12,6 +16,21 @@ describe("Daddy", function() {
     }
 
     assert.strictEqual(1, daddy.stress());
+  });
+
+  it("has a name", function() {
+    var daddy = Daddy.create({name: "name"});
+
+    assert.equal(daddy.name, "name");
+  });
+
+  it("delegates its draw to its sprite", function() {
+    var draw = sandbox.stub();
+    var daddy = Daddy.create({draw: draw });
+
+    daddy.draw('context');
+
+    assert.ok(draw.calledWith('context'));
   });
 
   it("delegates left to its sprite", function() {

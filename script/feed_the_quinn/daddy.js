@@ -53,6 +53,7 @@ var Daddy = module.exports = {
       location: sprite.location || {x: 0, y: 0},
       isDead: false,
       reset: reset,
+      name: sprite.name,
       left: function() {
         return sprite.left();
       },
@@ -64,6 +65,9 @@ var Daddy = module.exports = {
       },
       bottom: function() {
         return sprite.bottom();
+      },
+      draw: function() {
+        sprite.draw.apply(sprite, arguments);
       },
       hasFood: function() {
         return true;

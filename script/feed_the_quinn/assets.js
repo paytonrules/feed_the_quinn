@@ -57,7 +57,7 @@ module.exports = {
       }
     },
     'daddy' : {
-      'sprite' : {
+      'daddy' : {
         'src' : 'images/king_0.svg',
         'location': {
           'x': 350,

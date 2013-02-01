@@ -85,6 +85,12 @@ describe("FeedTheQuinn#GameScreen", function() {
         gameSpec = createGameSpecWithDaddyObject(assets);
       });
 
+      it("puts the daddy on the screen", function() {
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+
+        Assert.equal(gameSpec.level().gameObject('daddy'), screen.findObjectNamed("daddy"));
+      });
+
       it("updates the daddy with the keystate when something is pressed", function() {
         var game = new GameScreen({spec: gameSpec, screen: screen});
 
