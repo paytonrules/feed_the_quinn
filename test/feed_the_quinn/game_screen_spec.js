@@ -11,11 +11,19 @@ describe("FeedTheQuinn#GameScreen", function() {
       mockSm;
 
   describe("Game Screen / Level One", function() {
+    function createGameSpecWithDaddyObject(assests) {
+      var daddyLoader = require("../../script/feed_the_quinn/loaders/daddy");
+      var spec = TestGameSpecFactory.create(assets);
+      var AssetLoader = require('eskimo').TestAssetLoader;
+      spec.registerLoader('daddy', daddyLoader.create(AssetLoader));
+      return spec;
+    }
+
     beforeEach(function() {
       assets = { 
         "levelOne" : {
           "daddy" : {
-            "sprite" : {
+            "daddy" : {
               'location' : {x: 0, y: 0},
               'stressRate' : 0,
               'asset' : {
@@ -72,9 +80,9 @@ describe("FeedTheQuinn#GameScreen", function() {
     describe("moving daddy", function() {
 
       beforeEach(function() {
-        assets.levelOne.daddy.sprite.velocity = 1;
-        assets.levelOne.daddy.sprite.location = {x: 2, y: 2};
-        gameSpec = TestGameSpecFactory.create(assets);
+        assets.levelOne.daddy.daddy.velocity = 1;
+        assets.levelOne.daddy.daddy.location = {x: 2, y: 2};
+        gameSpec = createGameSpecWithDaddyObject(assets);
       });
 
       it("updates the daddy with the keystate when something is pressed", function() {
@@ -108,10 +116,10 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
       
       it("Resets daddy's stress when Baby is fed (spacebar is placed during collision)", function() {
-        assets.levelOne.daddy.sprite.location = {x: 10, y: 10};
-        assets.levelOne.daddy.sprite.testAsset = {width: 10, height: 10};
-        assets.levelOne.daddy.sprite.stress = 50;
-        assets.levelOne.daddy.sprite.stressRate = 100;
+        assets.levelOne.daddy.daddy.location = {x: 10, y: 10};
+        assets.levelOne.daddy.daddy.testAsset = {width: 10, height: 10};
+        assets.levelOne.daddy.daddy.stress = 50;
+        assets.levelOne.daddy.daddy.stressRate = 100;
         assets.levelOne.baby.sprite.location = {x: 12, y: 12};
         assets.levelOne.baby.sprite.asset = {width:10, height: 10};
 
@@ -119,27 +127,27 @@ describe("FeedTheQuinn#GameScreen", function() {
         game.keydown({}, {which: 32}); // Spacebar
         game.update(mockSm);
 
-        Assert.equal(gameSpec.level().gameObject('daddy').stress, 0);
+        Assert.equal(gameSpec.level().gameObject('daddy').stress(), 0);
       });
 
       it("doesnt reset the daddy's stress if the spacebar isn't pressed", function() {
-        assets.levelOne.daddy.sprite.location = {x: 10, y: 10};
-        assets.levelOne.daddy.sprite.stress = 50;
-        assets.levelOne.daddy.sprite.stressRate = 100;
+        assets.levelOne.daddy.daddy.location = {x: 10, y: 10};
+        assets.levelOne.daddy.daddy.stress = 50;
+        assets.levelOne.daddy.daddy.stressRate = 100;
         assets.levelOne.baby.sprite.location = {x: 10, y: 10};
         assets.levelOne.baby.sprite.asset = {width:10, height: 10};
 
         var game = new GameScreen({spec: gameSpec, screen: screen});
         game.update(mockSm);
 
-        Assert.equal(gameSpec.level().gameObject('daddy').stress, 50);
+        Assert.equal(gameSpec.level().gameObject('daddy').stress(), 50);
       });
 
       it("doesnt reset the daddy's stress if the daddy isnt intersecting the baby", function() {
-        assets.levelOne.daddy.sprite.location = {x: 10, y: 10};
-        assets.levelOne.daddy.sprite.testAsset = {width: 1, height: 1};
-        assets.levelOne.daddy.sprite.stress = 50;
-        assets.levelOne.daddy.sprite.stressRate = 100;
+        assets.levelOne.daddy.daddy.location = {x: 10, y: 10};
+        assets.levelOne.daddy.daddy.testAsset = {width: 1, height: 1};
+        assets.levelOne.daddy.daddy.stress = 50;
+        assets.levelOne.daddy.daddy.stressRate = 100;
         assets.levelOne.baby.sprite.location = {x: 12, y: 12};
         assets.levelOne.baby.sprite.asset = {width:10, height: 10};
 
@@ -147,7 +155,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         game.keydown({}, {which: 32}); // Spacebar
         game.update(mockSm);
 
-        Assert.equal(gameSpec.level().gameObject('daddy').stress, 50);
+        Assert.equal(gameSpec.level().gameObject('daddy').stress(), 50);
       });
     });
 
@@ -165,10 +173,10 @@ describe("FeedTheQuinn#GameScreen", function() {
       
       it("updates the progress bar with the state of daddy's stress", function() {
         assets.levelOne.progressBar.bar.stress = 0;
-        assets.levelOne.daddy.sprite.stress = 39;
-        assets.levelOne.daddy.sprite.location = {x: 0, y: 0}; 
+        assets.levelOne.daddy.daddy.stress = 39;
+        assets.levelOne.daddy.daddy.location = {x: 0, y: 0}; 
 
-        gameSpec = TestGameSpecFactory.create(assets);
+        gameSpec = createGameSpecWithDaddyObject(assets);
         var game = new GameScreen({spec: gameSpec, screen: screen});
 
         game.update(mockSm);
@@ -177,12 +185,12 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
 
       it("sends a death notice to the state machine when daddy dies", function() {
-        assets.levelOne.daddy.sprite.maxStress = 100;
-        assets.levelOne.daddy.sprite.stressRate = 1;
-        assets.levelOne.daddy.sprite.location = {x: 0, y: 0};
-        assets.levelOne.daddy.sprite.stress = 99;
+        assets.levelOne.daddy.daddy.maxStress = 100;
+        assets.levelOne.daddy.daddy.stressRate = 1;
+        assets.levelOne.daddy.daddy.location = {x: 0, y: 0};
+        assets.levelOne.daddy.daddy.stress = 99;
 
-        gameSpec = TestGameSpecFactory.create(assets);
+        gameSpec = createGameSpecWithDaddyObject(assets);
         var game = new GameScreen({spec: gameSpec,
                                    screen: screen});
 
@@ -192,14 +200,14 @@ describe("FeedTheQuinn#GameScreen", function() {
       });
 
       it("does not send a death notice when daddy is alive", function() {
-        assets.levelOne.daddy.sprite ={
+        assets.levelOne.daddy.daddy = {
           maxStress: 100,
           stressRate: 1,
           location: {x: 0, y: 0},
           stress: 1 
         };
 
-        gameSpec = TestGameSpecFactory.create(assets);
+        gameSpec = createGameSpecWithDaddyObject(assets);
         var game = new GameScreen({spec: gameSpec,
                                   screen: screen});
 
@@ -282,7 +290,7 @@ describe("FeedTheQuinn#GameScreen", function() {
             height: 10
           } ];
 
-          gameSpec = TestGameSpecFactory.create(assets);
+          gameSpec = createGameSpecWithDaddyObject(assets);
           var game = new GameScreen({spec: gameSpec,
                                     screen: screen});
 
@@ -298,7 +306,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         });
  
         it("generates successive pieces of food, with new random locations", function() {
-          gameSpec = TestGameSpecFactory.create(assets);
+          gameSpec = createGameSpecWithDaddyObject(assets);
           var game = new GameScreen({spec: gameSpec,
                                     screen: screen});
  
@@ -316,7 +324,30 @@ describe("FeedTheQuinn#GameScreen", function() {
           Assert.equal(foodObjects[0].location.y, 2);
           Assert.equal(foodObjects[1].location.x, 3);
           Assert.equal(foodObjects[1].location.y, 4); 
-        }); 
+        });
+
+        // YOU WROTE THIS TWICE KILL THE DUP!
+        it("lets you pick up food by walking over it", function() {
+          assets.levelOne.food.sprite_sheet.map[0].width = 10;
+          assets.levelOne.food.sprite_sheet.map[0].height = 10;
+          // For some reason this is not returning a daddy
+          gameSpec = createGameSpecWithDaddyObject(assets);
+
+          var game = new GameScreen({spec: gameSpec,
+                                    screen: screen});
+
+          sandbox.stub(Math, "random").returns(1);
+
+          placeAPieceOfFood(game);
+          var daddy = gameSpec.level().gameObject("daddy");
+          daddy.location = {x: 2, y: 2};
+          game.update(mockSm);
+
+          // Check that the player has food
+          Assert.ok(daddy.hasFood());
+        });
+
+        // can you actually feed ...the ....QUINN!!
       });
     });
   });

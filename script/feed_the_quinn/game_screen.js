@@ -34,7 +34,9 @@ module.exports = (function() {
       // Could convert to custom objects using gameSpec.registerLoader
       // Which is pretty awesome
       // but wait - daddy should be a sprite
-      daddy = Daddy.create(level.gameObject('daddy'));
+      daddy = level.gameObject('daddy');
+      // DONT FORGET TO PUT DADDY ON THE SCREEN
+      
       progressBarSpec = level.gameObject('progressBar');
       progressBar = ProgressBar.create('progressBar', progressBarSpec);
       screen.put(progressBar);

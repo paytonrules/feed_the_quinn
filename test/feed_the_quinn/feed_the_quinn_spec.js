@@ -2,6 +2,8 @@ describe("FeedTheQuinn", function() {
   var Game = require('../../script/feed_the_quinn/feed_the_quinn'),
       StateMachine = require('../../script/feed_the_quinn/state_machine'),
       assert = require('assert'),
+      TestGameSpecFactory = require('eskimo').TestGameSpecFactory,
+      daddyLoader = require('../../script/feed_the_quinn/loaders/daddy'),
       machine = { 
         update: function() {
           this.updated = true;
@@ -32,16 +34,26 @@ describe("FeedTheQuinn", function() {
 
   it("initializes the state machine on creation", function() {
     sandbox.stub(StateMachine, 'init').returns(machine);
+    var spec = TestGameSpecFactory.create({}, 'screen');
     
-    var game = Game.create('spec', 'screen');
+    var game = Game.create(spec, 'screen');
 
     var transitionTable = require("../../script/feed_the_quinn/transition_table.js");
-    assert(StateMachine.init.calledWith(transitionTable, {spec: 'spec', screen: 'screen'} ));
+    assert.ok(StateMachine.init.calledWith(transitionTable, {spec: spec, screen: 'screen'} ));
+  });
+
+  it("wires up a custom daddy loader", function() {
+    var spec = TestGameSpecFactory.create({}, 'screen');
+    var game = Game.create(spec, 'screen');
+
+    assert.ok(spec.registeredLoader('daddy'));
   });
 
   it("delegates updates to initialized the state machine", function() {
-    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
-    var game = Game.create('screen');
+    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine),
+        spec = TestGameSpecFactory.create({});
+    
+    var game = Game.create(spec, 'screen');
     
     game.update();
 
@@ -49,8 +61,9 @@ describe("FeedTheQuinn", function() {
   });
 
   it("sends clicks to the state machine", function() {
-    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
-    var game = Game.create('screen');
+    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine),
+        spec = TestGameSpecFactory.create({});
+    var game = Game.create(spec,'screen');
     
     game.click({x: 0});
 
@@ -58,8 +71,10 @@ describe("FeedTheQuinn", function() {
   });
 
   it("delegates keydown to the state machine", function() {
-    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
-    var game = Game.create('screen');
+    var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine),
+        spec = TestGameSpecFactory.create({});
+
+    var game = Game.create(spec, 'screen');
     
     game.keydown({which: 3});
   
@@ -67,8 +82,10 @@ describe("FeedTheQuinn", function() {
   });
 
   it("delegates keyup to the state machine", function() {
+    var spec = TestGameSpecFactory.create({});
     var stateMachineSpy = sandbox.stub(StateMachine, 'init').returns(machine);
-    var game = Game.create('screen');
+    
+    var game = Game.create(spec, 'screen');
     
     game.keyup({which: 3});
     

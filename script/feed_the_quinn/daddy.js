@@ -1,4 +1,7 @@
 var Daddy = module.exports = {
+  // Eventually want to change the format to say daddy: { sprite: } 
+  // so that the custom fields like stress and stressRate are 
+  // on daddy not on the sprite.  But not today.
   create: function(sprite) {
     var stressTicks = 0;
     sprite.stress = sprite.stress || 0;
@@ -61,6 +64,9 @@ var Daddy = module.exports = {
       },
       bottom: function() {
         return sprite.bottom();
+      },
+      hasFood: function() {
+        return true;
       }
     };
   }

@@ -1,8 +1,12 @@
-var StateMachine = require("./state_machine");
-var TransitionTable = require("./transition_table");
+var StateMachine = require("./state_machine"),
+    TransitionTable = require("./transition_table"),
+    daddyLoader = require("./loaders/daddy"),
+    AssetLoader = require("eskimo").AssetLoader;
 
 module.exports = {
   create: function(spec, screen) {
+    spec.registerLoader('daddy', daddyLoader.create(AssetLoader));
+
     var stateMachine = StateMachine.init(TransitionTable, 
                                          { 
                                            spec: spec, 
@@ -26,5 +30,5 @@ module.exports = {
         stateMachine.keyup(event);
       }
     };
-  },
+  }
 };
