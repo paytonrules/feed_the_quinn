@@ -156,4 +156,14 @@ describe("Daddy", function() {
     assert.strictEqual(daddyGameObject.location.y, 0);
   });
 
+  it("allows directly setting its sprites location", function() {
+    var daddySprite = {location: {x: 20, y: 30}},
+        daddy = Daddy.create(daddySprite);
+
+    daddy.setLocation({x:1, y: 1});
+
+    assert.strictEqual(daddySprite.location.x, 1);
+    assert.strictEqual(daddySprite.location.y, 1);
+  });
+
 });

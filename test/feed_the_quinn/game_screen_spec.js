@@ -1,7 +1,7 @@
 describe("FeedTheQuinn#GameScreen", function() {
   var sandbox = require('sinon').sandbox.create(),
       eskimo = require('eskimo'),
-      Assert = require('assert'),
+      assert = require('assert'),
       GameScreen = require('../../script/feed_the_quinn/game_screen'),
       ProgressBar = require("../../script/feed_the_quinn/progress_bar.js"),
       TestGameSpecFactory = require('eskimo').TestGameSpecFactory,
@@ -88,7 +88,7 @@ describe("FeedTheQuinn#GameScreen", function() {
       it("puts the daddy on the screen", function() {
         var game = new GameScreen({spec: gameSpec, screen: screen});
 
-        Assert.equal(gameSpec.level().gameObject('daddy'), screen.findObjectNamed("daddy"));
+        assert.equal(gameSpec.level().gameObject('daddy'), screen.findObjectNamed("daddy"));
       });
 
       it("updates the daddy with the keystate when something is pressed", function() {
@@ -97,7 +97,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         game.keydown({}, {which: 37});
         game.update(mockSm);
 
-        Assert.equal(1, gameSpec.level().gameObject('daddy').location.x);
+        assert.equal(1, gameSpec.level().gameObject('daddy').location.x);
       });
 
       it("doesn't change the key state until a keyup is sent", function() {
@@ -107,7 +107,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         game.update(mockSm);
         game.update(mockSm);
 
-        Assert.equal(0, gameSpec.level().gameObject('daddy').location.x);
+        assert.equal(0, gameSpec.level().gameObject('daddy').location.x);
       });
 
       it("Stops moving direction on a keyup", function() {
@@ -118,7 +118,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         game.keyup({}, {which: 37});
         game.update(mockSm);
 
-        Assert.equal(1, gameSpec.level().gameObject('daddy').location.x);
+        assert.equal(1, gameSpec.level().gameObject('daddy').location.x);
       });
       
       it("Resets daddy's stress when Baby is fed (spacebar is placed during collision)", function() {
@@ -133,7 +133,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         game.keydown({}, {which: 32}); // Spacebar
         game.update(mockSm);
 
-        Assert.equal(gameSpec.level().gameObject('daddy').stress(), 0);
+        assert.equal(gameSpec.level().gameObject('daddy').stress(), 0);
       });
 
       it("doesnt reset the daddy's stress if the spacebar isn't pressed", function() {
@@ -146,7 +146,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         var game = new GameScreen({spec: gameSpec, screen: screen});
         game.update(mockSm);
 
-        Assert.equal(gameSpec.level().gameObject('daddy').stress(), 50);
+        assert.equal(gameSpec.level().gameObject('daddy').stress(), 50);
       });
 
       it("doesnt reset the daddy's stress if the daddy isnt intersecting the baby", function() {
@@ -161,7 +161,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         game.keydown({}, {which: 32}); // Spacebar
         game.update(mockSm);
 
-        Assert.equal(gameSpec.level().gameObject('daddy').stress(), 50);
+        assert.equal(gameSpec.level().gameObject('daddy').stress(), 50);
       });
     });
 
@@ -173,7 +173,7 @@ describe("FeedTheQuinn#GameScreen", function() {
 
         var game = new GameScreen({spec: gameSpec, screen: screen});
         
-        Assert.strictEqual(screen.findObjectNamed('progressBar'),
+        assert.strictEqual(screen.findObjectNamed('progressBar'),
                            progressBarCreation.returnValues[0]);
       });
       
@@ -187,7 +187,7 @@ describe("FeedTheQuinn#GameScreen", function() {
 
         game.update(mockSm);
 
-        Assert.equal(gameSpec.level().gameObject('progressBar').stress, 40);
+        assert.equal(gameSpec.level().gameObject('progressBar').stress, 40);
       });
 
       it("sends a death notice to the state machine when daddy dies", function() {
@@ -202,7 +202,7 @@ describe("FeedTheQuinn#GameScreen", function() {
 
         game.update(mockSm);
 
-        Assert.ok(mockSm.isDead);
+        assert.ok(mockSm.isDead);
       });
 
       it("does not send a death notice when daddy is alive", function() {
@@ -219,7 +219,7 @@ describe("FeedTheQuinn#GameScreen", function() {
 
         game.update(mockSm);
         
-        Assert.ok(!mockSm.isDead);
+        assert.ok(!mockSm.isDead);
       });
 
       describe("food generation", function() {
@@ -248,12 +248,12 @@ describe("FeedTheQuinn#GameScreen", function() {
           }
           var foodObject = screen.findObjectNamed("food");
 
-          Assert.ok(!foodObject);
+          assert.ok(!foodObject);
 
           game.update(mockSm);
 
           foodObject = screen.findObjectNamed("food");
-          Assert.ok(foodObject);
+          assert.ok(foodObject);
         });
 
         it("draws the piece of food with the food asset", function() {
@@ -266,7 +266,7 @@ describe("FeedTheQuinn#GameScreen", function() {
 
           var foodObject = screen.findObjectNamed("food");
           foodObject.draw(mockContext);
-          Assert.equal('images/food.png', mockContext.asset.src);
+          assert.equal('images/food.png', mockContext.asset.src);
         });
 
         it("puts the pieces of food in random locations on the screen, multipled by screen width/height", function() {
@@ -284,8 +284,8 @@ describe("FeedTheQuinn#GameScreen", function() {
           
           var foodObject = screen.findObjectNamed("food");
 
-          Assert.equal(foodObject.location.x, 50);
-          Assert.equal(foodObject.location.y, 200);
+          assert.equal(foodObject.location.x, 50);
+          assert.equal(foodObject.location.y, 200);
         });
 
         it("removes the size of the asset", function() {
@@ -307,8 +307,8 @@ describe("FeedTheQuinn#GameScreen", function() {
           placeAPieceOfFood(game);
  
           var foodObject = screen.findObjectNamed("food");
-          Assert.equal(foodObject.location.x, 90);
-          Assert.equal(foodObject.location.y, 90);
+          assert.equal(foodObject.location.x, 90);
+          assert.equal(foodObject.location.y, 90);
         });
  
         it("generates successive pieces of food, with new random locations", function() {
@@ -326,34 +326,58 @@ describe("FeedTheQuinn#GameScreen", function() {
  
           var foodObjects = screen.findObjectsNamed("food");
  
-          Assert.equal(foodObjects[0].location.x, 1);
-          Assert.equal(foodObjects[0].location.y, 2);
-          Assert.equal(foodObjects[1].location.x, 3);
-          Assert.equal(foodObjects[1].location.y, 4); 
+          assert.equal(foodObjects[0].location.x, 1);
+          assert.equal(foodObjects[0].location.y, 2);
+          assert.equal(foodObjects[1].location.x, 3);
+          assert.equal(foodObjects[1].location.y, 4); 
         });
 
-        // YOU WROTE THIS TWICE KILL THE DUP!
-        it("lets you pick up food by walking over it", function() {
-          assets.levelOne.food.sprite_sheet.map[0].width = 10;
-          assets.levelOne.food.sprite_sheet.map[0].height = 10;
-          // For some reason this is not returning a daddy
-          gameSpec = createGameSpecWithDaddyObject(assets);
+        describe("picking up food", function() {
+          var game;
+          
+          beforeEach(function() {
+            sandbox.stub(screen, "width").returns(100);
+            sandbox.stub(screen, "height").returns(100);
+            
+            assets.levelOne.food.sprite_sheet.map[0].width = 10;
+            assets.levelOne.food.sprite_sheet.map[0].height = 10;
+            assets.levelOne.daddy.daddy.asset.width = 10;
+            assets.levelOne.daddy.daddy.asset.height = 10;
+            
+            sandbox.stub(Math, "random").returns(1);
+            gameSpec = createGameSpecWithDaddyObject(assets);
 
-          var game = new GameScreen({spec: gameSpec,
-                                    screen: screen});
+            game = new GameScreen({spec: gameSpec,
+                                   screen: screen});
+          });
+         
+          it("lets you pick up food by walking over it", function() {
+            placeAPieceOfFood(game);
 
-          sandbox.stub(Math, "random").returns(1);
+            var daddy = gameSpec.level().gameObject("daddy");
+            assert.ifError(daddy.hasFood());
+            
+            daddy.setLocation({x: 91, y: 91});
+            game.update(mockSm);
 
-          placeAPieceOfFood(game);
-          var daddy = gameSpec.level().gameObject("daddy");
-          daddy.location = {x: 2, y: 2};
-          game.update(mockSm);
+            assert.ok(daddy.hasFood());
+          });
 
-          // Check that the player has food
-          Assert.ok(daddy.hasFood());
+          it("removes the food from the screen when it is picked up", function() {
+            placeAPieceOfFood(game);
+
+            var daddy = gameSpec.level().gameObject("daddy");
+            daddy.setLocation({x: 91, y: 91});
+            game.update(mockSm);
+
+            assert.ifError(screen.findObjectNamed("food"));
+          });
         });
 
-        // can you actually feed ...the ....QUINN!!
+        it("removes the RIGHT food from the screen");
+
+        it("only lets you pick up one piece of food");
+
       });
     });
   });

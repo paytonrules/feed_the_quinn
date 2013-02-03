@@ -14,17 +14,19 @@ module.exports = (function() {
         daddy,
         quinn,
         progressBar,
+        food = [],
         keystate = {};
 
     function putFoodOnScreenInRandomSpot(foodSheet) {
-      var food = jquery.extend(true, {}, foodSheet);
+      var newFood = jquery.extend(true, {}, foodSheet);
 
-      food.location = {
-        x: Math.random() * (screen.width() - food.width()),
-        y: Math.random() * (screen.height() - food.height())
+      newFood.location = {
+        x: Math.random() * (screen.width() - newFood.width()),
+        y: Math.random() * (screen.height() - newFood.height())
       };
 
-      screen.put(food);
+      screen.put(newFood);
+      food.push(newFood);
     }
 
     var init = function(level, screen) {
@@ -52,6 +54,12 @@ module.exports = (function() {
       if (quinn.intersects(daddy) && keystate.spacebar) {
         daddy.reset();
       }
+
+     if (food[0] && food[0].intersects(daddy)) {
+        daddy.pickUpFood();
+        screen.remove(food[0]);
+      }
+
       daddy.update(keystate);
       progressBar.update(daddy.stress());
 
