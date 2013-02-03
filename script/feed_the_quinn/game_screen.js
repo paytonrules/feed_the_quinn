@@ -2,7 +2,8 @@ var Keyboard = require('eskimo').Keyboard,
     Daddy = require('./daddy.js'),
     ProgressBar = require('./progress_bar.js'),
     jquery = require('jquery'),
-    Sprite = require('eskimo').Sprite;
+    Sprite = require('eskimo').Sprite,
+    _ = require('underscore');
 
 module.exports = (function() {
   return function GameScreen(context) {
@@ -55,9 +56,17 @@ module.exports = (function() {
         daddy.reset();
       }
 
-     if (food[0] && food[0].intersects(daddy)) {
-        daddy.pickUpFood();
-        screen.remove(food[0]);
+      if (!daddy.hasFood()) {
+        var intersectingFood = _(food).find(function(pieceOfFood) {
+          return pieceOfFood.intersects(daddy);
+        });
+
+        if (intersectingFood) {
+          daddy.pickUpFood();
+          food = _(food).reject(function(pieceOfFood) { return pieceOfFood === intersectingFood; });
+
+          screen.remove(intersectingFood);
+        }
       }
 
       daddy.update(keystate);

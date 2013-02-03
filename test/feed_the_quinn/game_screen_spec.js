@@ -344,7 +344,6 @@ describe("FeedTheQuinn#GameScreen", function() {
             assets.levelOne.daddy.daddy.asset.width = 10;
             assets.levelOne.daddy.daddy.asset.height = 10;
             
-            sandbox.stub(Math, "random").returns(1);
             gameSpec = createGameSpecWithDaddyObject(assets);
 
             game = new GameScreen({spec: gameSpec,
@@ -352,6 +351,7 @@ describe("FeedTheQuinn#GameScreen", function() {
           });
          
           it("lets you pick up food by walking over it", function() {
+            sandbox.stub(Math, "random").returns(1);
             placeAPieceOfFood(game);
 
             var daddy = gameSpec.level().gameObject("daddy");
@@ -364,6 +364,7 @@ describe("FeedTheQuinn#GameScreen", function() {
           });
 
           it("removes the food from the screen when it is picked up", function() {
+            sandbox.stub(Math, "random").returns(1);
             placeAPieceOfFood(game);
 
             var daddy = gameSpec.level().gameObject("daddy");
@@ -372,12 +373,39 @@ describe("FeedTheQuinn#GameScreen", function() {
 
             assert.ifError(screen.findObjectNamed("food"));
           });
+
+          it("removes the RIGHT food from the screen", function() {
+            var locations = [1, 1, 0.5, 0.5];
+            sandbox.stub(Math, "random", function() {
+              return locations.shift();
+            });
+            placeAPieceOfFood(game);
+            placeAPieceOfFood(game);
+
+            var daddy = gameSpec.level().gameObject("daddy");
+            daddy.setLocation({x: 45, y: 45});
+            game.update(mockSm);
+
+            var food = screen.findObjectsNamed("food");
+            assert.equal(1, food.length);
+            assert.equal(food[0].location.x, 90);
+            assert.equal(food[0].location.y, 90);
+          });
+
+          it("only lets you pick up one piece of food", function() {
+            sandbox.stub(Math, "random").returns(1);
+            placeAPieceOfFood(game);
+            placeAPieceOfFood(game);
+
+            var daddy = gameSpec.level().gameObject("daddy");
+            daddy.setLocation({x: 90, y: 90});
+            game.update(mockSm);
+            game.update(mockSm); // Two updates - but shouldn't get it again
+
+            var food = screen.findObjectsNamed("food");
+            assert.equal(1, food.length);
+          });
         });
-
-        it("removes the RIGHT food from the screen");
-
-        it("only lets you pick up one piece of food");
-
       });
     });
   });
