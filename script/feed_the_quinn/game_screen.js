@@ -3,6 +3,7 @@ var Keyboard = require('eskimo').Keyboard,
     ProgressBar = require('./progress_bar.js'),
     jquery = require('jquery'),
     Sprite = require('eskimo').Sprite,
+    Text = require('./text'),
     _ = require('underscore');
 
 module.exports = (function() {
@@ -15,6 +16,8 @@ module.exports = (function() {
         daddy,
         quinn,
         progressBar,
+        text,
+        score,
         food = [],
         keystate = {};
 
@@ -39,6 +42,22 @@ module.exports = (function() {
       progressBarSpec = level.gameObject('progressBar');
       progressBar = ProgressBar.create('progressBar', progressBarSpec);
       screen.put(progressBar);
+
+      score = level.gameObject('score');
+      screen.put(Text.create(score, 'score'));
+    };
+
+    var checkIfPickingUpFood = function() {
+      var intersectingFood = _(food).find(function(pieceOfFood) {
+        return pieceOfFood.intersects(daddy);
+      });
+
+      if (intersectingFood) {
+        daddy.pickUpFood();
+        food = _(food).reject(function(pieceOfFood) { return pieceOfFood === intersectingFood; });
+
+        screen.remove(intersectingFood);
+      }
     };
 
     gameSpec.load('levelOne', function(level) {
@@ -52,21 +71,13 @@ module.exports = (function() {
         putFoodOnScreenInRandomSpot(foodSheet);
       }
 
-      if (quinn.intersects(daddy) && keystate.spacebar) {
-        daddy.reset();
+      if (quinn.intersects(daddy) && daddy.hasFood()) {
+        daddy.dropFood();
+        score.score += 10;
       }
 
       if (!daddy.hasFood()) {
-        var intersectingFood = _(food).find(function(pieceOfFood) {
-          return pieceOfFood.intersects(daddy);
-        });
-
-        if (intersectingFood) {
-          daddy.pickUpFood();
-          food = _(food).reject(function(pieceOfFood) { return pieceOfFood === intersectingFood; });
-
-          screen.remove(intersectingFood);
-        }
+        checkIfPickingUpFood();
       }
 
       daddy.update(keystate);

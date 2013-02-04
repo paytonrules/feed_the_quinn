@@ -36,7 +36,7 @@ module.exports = {
         }
       }
     },
-    'floor' : {
+   'floor' : {
       'sprite' : {
         'src' : 'images/crete-pave2-0.jpg',
         'location': {
@@ -46,7 +46,18 @@ module.exports = {
         'visible' : true
       }
     },
-    'baby' : {
+    'score' : {
+      'text' : {
+        'font' : '40px Calibri',
+        'fillText' : 'white',
+        'location' : {
+          'x' : 20,
+          'y' : 50
+        },
+        'score' : 0
+      }
+    },
+     'baby' : {
       'sprite' : {
         'src' : 'images/baby_mario.png',
         'location': {

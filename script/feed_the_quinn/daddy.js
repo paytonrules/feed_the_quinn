@@ -48,29 +48,43 @@ var Daddy = function(sprite) {
   };
   
   this.location = sprite.location || {x: 0, y: 0};
+
   this.isDead = false;
+
   this.name =  sprite.name;
+
   this.left = function() {
     return sprite.left();
   };
+
   this.right = function() {
     return sprite.right();
   };
+
   this.top = function() {
     return sprite.top();
   };
+
   this.bottom = function() {
     return sprite.bottom();
   };
+
   this.draw = function() {
     sprite.draw.apply(sprite, arguments);
   };
+  
   this.pickUpFood = function() {
     carryingFood = true;
   };
+  
   this.hasFood = function() {
     return carryingFood;
   };
+
+  this.dropFood = function() {
+    carryingFood = false;
+  };
+
   this.setLocation = function(point) {
     sprite.location = point;
   };

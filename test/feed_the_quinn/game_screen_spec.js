@@ -3,7 +3,8 @@ describe("FeedTheQuinn#GameScreen", function() {
       eskimo = require('eskimo'),
       assert = require('assert'),
       GameScreen = require('../../script/feed_the_quinn/game_screen'),
-      ProgressBar = require("../../script/feed_the_quinn/progress_bar.js"),
+      ProgressBar = require('../../script/feed_the_quinn/progress_bar.js'),
+      Text = require('../../script/feed_the_quinn/text'),
       TestGameSpecFactory = require('eskimo').TestGameSpecFactory,
       assets,      
       gameSpec,
@@ -30,6 +31,12 @@ describe("FeedTheQuinn#GameScreen", function() {
                 'width' : 0,
                 'height' : 0
               }
+            }
+          },
+          "score" : {
+            'text' : {
+              'location' : {x: 1, y: 1},
+              'score' : 0
             }
           },
           "progressBar" : {"bar" : {}},
@@ -85,6 +92,22 @@ describe("FeedTheQuinn#GameScreen", function() {
         gameSpec = createGameSpecWithDaddyObject(assets);
       });
 
+      it("it creates the text object for the score", function() {
+        sandbox.stub(Text, 'create').returns({});
+        
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+
+        assert.ok(Text.create.calledWithMatch({'score' : 0}, 'score'));
+      });
+
+      it("puts the text object on the screen", function() {
+        sandbox.stub(Text, 'create').returns({name: "text"});
+        
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+
+        assert.ok(screen.findObjectNamed("text"));
+      });
+
       it("puts the daddy on the screen", function() {
         var game = new GameScreen({spec: gameSpec, screen: screen});
 
@@ -121,7 +144,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         assert.equal(1, gameSpec.level().gameObject('daddy').location.x);
       });
       
-      it("Resets daddy's stress when Baby is fed (spacebar is placed during collision)", function() {
+      it("Sets the score up 10 when quinn is fed", function() {
         assets.levelOne.daddy.daddy.location = {x: 10, y: 10};
         assets.levelOne.daddy.daddy.testAsset = {width: 10, height: 10};
         assets.levelOne.daddy.daddy.stress = 50;
@@ -130,10 +153,29 @@ describe("FeedTheQuinn#GameScreen", function() {
         assets.levelOne.baby.sprite.asset = {width:10, height: 10};
 
         var game = new GameScreen({spec: gameSpec, screen: screen});
-        game.keydown({}, {which: 32}); // Spacebar
+        var daddy = gameSpec.level().gameObject("daddy");
+        daddy.pickUpFood();
+        
         game.update(mockSm);
 
-        assert.equal(gameSpec.level().gameObject('daddy').stress(), 0);
+        assert.equal(gameSpec.level().gameObject('score').score, 10);
+      });
+
+      it("removes the food when the daddy gives it to quinn", function() {
+        assets.levelOne.daddy.daddy.location = {x: 10, y: 10};
+        assets.levelOne.daddy.daddy.testAsset = {width: 10, height: 10};
+        assets.levelOne.daddy.daddy.stress = 50;
+        assets.levelOne.daddy.daddy.stressRate = 100;
+        assets.levelOne.baby.sprite.location = {x: 12, y: 12};
+        assets.levelOne.baby.sprite.asset = {width:10, height: 10};
+
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+        var daddy = gameSpec.level().gameObject("daddy");
+        daddy.pickUpFood();
+        
+        game.update(mockSm);
+
+        assert.ifError(daddy.hasFood());
       });
 
       it("doesnt reset the daddy's stress if the spacebar isn't pressed", function() {
