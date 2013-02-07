@@ -41,4 +41,20 @@ describe("FeedTheQuinn#Text", function() {
 
     assert.ok(canvasSpy.calledWith(40));
   });
+
+  it("uses text align if the game object has it", function() {
+    var text = Text.create({textAlign: 'center', location: {}}, 'score');
+
+    text.draw(context);
+
+    assert.equal(context.textAlign, 'center');
+  });
+
+  it("defaults to start if the game object does not have text align", function() {
+    var text = Text.create({ location: {}}, 'score');
+
+    text.draw(context);
+
+    assert.equal(context.textAlign, 'start');
+  });
 });

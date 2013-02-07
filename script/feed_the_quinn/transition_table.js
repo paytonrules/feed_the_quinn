@@ -8,5 +8,7 @@ module.exports = [
   [GameScreen, "update", GameScreen, "update"],
   [GameScreen, "keydown", GameScreen, "keydown"],
   [GameScreen, "keyup", GameScreen, "keyup"],
-  [GameScreen, "daddyDies", TitleScreen]
+  [GameScreen, "daddyDies", GameScreen, "endGame"],
+  [GameScreen, "restart", GameScreen]
+  // Yes you could go through a transitory state
 ];

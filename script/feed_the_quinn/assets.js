@@ -49,7 +49,7 @@ module.exports = {
     'score' : {
       'text' : {
         'font' : '40px Calibri',
-        'fillText' : 'white',
+        'fillText' : 'yellow',
         'location' : {
           'x' : 20,
           'y' : 50
@@ -74,8 +74,8 @@ module.exports = {
           'x': 350,
           'y': 470
         },
-        'stressRate' : 100,
-        'maxStress' : 100,
+        'stressRate' : 10,
+        'maxStress' : 20,
         'velocity' : 5,
         'visible' : true
       }
@@ -118,6 +118,21 @@ module.exports = {
           width: 35,
           height: 38
         }]
+      }
+    },
+    'endGameScore' : {
+      'text' : {
+        font: '120px Calibri'
+      }
+    },
+    'newGameButton': {
+      'sprite' : {
+        'src': 'images/start.png',
+        'location': {
+          'x': 450,
+          'y': 450
+        },
+        'visible' : false
       }
     }
   }

@@ -1,11 +1,13 @@
 describe("FeedTheQuinn#GameScreen", function() {
-  var sandbox = require('sinon').sandbox.create(),
+  var sinon = require('sinon'),
+      sandbox = sinon.sandbox.create(),
       eskimo = require('eskimo'),
       assert = require('assert'),
       GameScreen = require('../../script/feed_the_quinn/game_screen'),
       ProgressBar = require('../../script/feed_the_quinn/progress_bar.js'),
       Text = require('../../script/feed_the_quinn/text'),
       TestGameSpecFactory = require('eskimo').TestGameSpecFactory,
+      StartButton = require('../../script/feed_the_quinn/start_button'),
       assets,      
       gameSpec,
       screen,
@@ -39,6 +41,11 @@ describe("FeedTheQuinn#GameScreen", function() {
               'score' : 0
             }
           },
+          "endGameScore" : {
+            'text' : {
+              'font' : 'end game font'
+            }
+          },
           "progressBar" : {"bar" : {}},
           "baby" : {
             'sprite' : {
@@ -60,6 +67,11 @@ describe("FeedTheQuinn#GameScreen", function() {
                 'height' : 0
               } ]
             }
+          },
+          'newGameButton' : {
+            'sprite' : {
+              'name' : 'newGameButton'
+            }
           }
         }
       };
@@ -67,6 +79,9 @@ describe("FeedTheQuinn#GameScreen", function() {
       mockSm = {
         daddyDies: function() {
           mockSm.isDead = true;
+        },
+        restart: function() {
+          mockSm.restarted = true;
         }
       };
 
@@ -92,7 +107,7 @@ describe("FeedTheQuinn#GameScreen", function() {
         gameSpec = createGameSpecWithDaddyObject(assets);
       });
 
-      it("it creates the text object for the score", function() {
+      it("creates the text object for the score", function() {
         sandbox.stub(Text, 'create').returns({});
         
         var game = new GameScreen({spec: gameSpec, screen: screen});
@@ -263,6 +278,80 @@ describe("FeedTheQuinn#GameScreen", function() {
         
         assert.ok(!mockSm.isDead);
       });
+
+      it("stops updating when the game is over", function() {
+        assets.levelOne.progressBar.bar.stress = 0;
+        assets.levelOne.daddy.daddy.stress = 39;
+        gameSpec = createGameSpecWithDaddyObject(assets);
+        
+        var game = new GameScreen({spec: gameSpec,
+                                  screen: screen});
+
+        game.endGame(mockSm);
+        game.update(mockSm);
+
+        assert.equal(0, gameSpec.level().gameObject("progressBar").stress);
+      });
+
+      it("changes the font to the end game font after the game is ended", function() {
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+        game.endGame();
+  
+        assert.equal('end game font', gameSpec.level().gameObject('score').font);
+      });
+
+      it('puts the end game score in the middle of the screen', function() {
+        sandbox.stub(screen, 'width').returns(100);
+        sandbox.stub(screen, 'height').returns(110);
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+        game.endGame();
+
+        var score = gameSpec.level().gameObject('score');
+        assert.equal('center', score.textAlign);
+        assert.equal('middle', score.textBaseline);
+        assert.equal(50, score.location.x);
+        assert.equal(55, score.location.y);
+      });
+
+      it('puts the newGameButton on the screen when daddy dies', function() {
+        assert.ifError(screen.findObjectNamed('newGameButton'));
+
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+        game.endGame();
+      
+        assert.ok(screen.findObjectNamed('newGameButton'));
+      });
+
+      it('creates a new game button from the newGameButton sprite when daddy dies and sends clicks to it', function() {
+        var button = StartButton.create({}),
+            buttonMock = sandbox.mock(button);
+
+        sandbox.stub(StartButton, 'create').withArgs(sinon.match({name: 'newGameButton'})).returns(button);
+
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+        game.endGame();
+        
+        var location = {x: 0, y: 2};
+        buttonMock.expects('click').withArgs(location);
+
+        game.click('statemachine', location);
+
+        buttonMock.verify();
+      });
+
+      it('restarts after the button is clicked', function() {
+        var button = {click: sandbox.stub().yields()};
+        sandbox.stub(StartButton, 'create').returns(button);
+
+        var game = new GameScreen({spec: gameSpec, screen: screen});
+        game.endGame(mockSm);
+
+        game.click(mockSm, {});
+
+        assert.ok(mockSm.restarted);
+      });
+
+      it('has an empty update until load is done');
 
       describe("food generation", function() {
         function MockContext() {
@@ -449,6 +538,6 @@ describe("FeedTheQuinn#GameScreen", function() {
           });
         });
       });
-    });
+    }); 
   });
 });
