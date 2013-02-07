@@ -22,6 +22,7 @@ module.exports = (function() {
 
     var that = this;
 
+    that.update = function() {};
     gameSpec.load('levelOne', function(level) {
       function putFoodOnScreenInRandomSpot(foodSheet) {
         var newFood = jquery.extend(true, {}, foodSheet);

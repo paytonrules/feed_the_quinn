@@ -351,7 +351,18 @@ describe("FeedTheQuinn#GameScreen", function() {
         assert.ok(mockSm.restarted);
       });
 
-      it('has an empty update until load is done');
+      it('doesnt do anything on update until load is complete', function(done) {
+        var game;
+        sandbox.stub(gameSpec, 'load', function() {
+          done();
+        });
+        
+        game = new GameScreen({spec: gameSpec, screen: screen});
+        
+        assert.doesNotThrow(function() {
+          game.update(mockSm);
+        });
+      });
 
       describe("food generation", function() {
         function MockContext() {
