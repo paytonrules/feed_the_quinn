@@ -38,7 +38,7 @@ module.exports = {
     },
    'floor' : {
       'sprite' : {
-        'src' : 'images/crete-pave2-0.jpg',
+        'src' : 'images/floor.png',
         'location': {
           'x': 0,
           'y': 0
@@ -49,7 +49,7 @@ module.exports = {
     'score' : {
       'text' : {
         'font' : '40px Calibri',
-        'fillText' : 'yellow',
+        'fillStyle' : '#FFFFFF',
         'location' : {
           'x' : 20,
           'y' : 50
@@ -59,23 +59,23 @@ module.exports = {
     },
      'baby' : {
       'sprite' : {
-        'src' : 'images/baby_mario.png',
+        'src' : 'images/baby.png',
         'location': {
-          'x': 710,
-          'y': 505
+          'x': 630,
+          'y': 425
         },
         'visible' : true
       }
     },
     'daddy' : {
       'daddy' : {
-        'src' : 'images/king_0.svg',
+        'src' : 'images/king_0.png',
         'location': {
           'x': 350,
-          'y': 470
+          'y': 270
         },
         'stressRate' : 10,
-        'maxStress' : 20,
+        'maxStress' : 100,
         'velocity' : 5,
         'visible' : true
       }
@@ -127,10 +127,10 @@ module.exports = {
     },
     'newGameButton': {
       'sprite' : {
-        'src': 'images/start.png',
+        'src': 'images/restart.png',
         'location': {
-          'x': 450,
-          'y': 450
+          'x': 250,
+          'y': 325
         },
         'visible' : false
       }
